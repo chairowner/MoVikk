@@ -4,15 +4,15 @@
             <a href="/" class="footer__logo">
                 <img src="/assets/icons/logo.svg" class="logo" alt="<?=$company->name?>">
             </a>
-            <div class="d-flex flex-column justify-content-around">
-                <div class="d-flex flex-row flex-wrap social">
+            <div class="footer__data">
+                <div class="social">
                     <div><?=$company->vk?></div>
                     <div><?=$company->inst?></div>
                 </div>
                 <span>Позвоните нам: <a href="tel:<?=$company->tel?>"><?=$company->tel_format?></a></span>
             </div>
         </div>
-        <ul class="d-flex flex-column company_data">
+        <ul class="company_data">
             <li>
                 <span class="fw-bold">ИНН:</span>
                 592011319403

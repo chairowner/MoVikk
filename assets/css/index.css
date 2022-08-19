@@ -1,0 +1,95 @@
+.device-cards {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+}
+.device-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px 30px;
+    overflow: hidden;
+    width: 320px;
+    height: 580px;
+    flex-grow: 1;
+    background-color: #FFFFFF;
+    box-shadow: 0px 0px 5px rgb(0 0 0 / 25%);
+    border-radius: 8px;
+}
+.device-card-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 280px;
+    max-height: 300px;
+}
+.device-card-image img {
+    width: auto;
+    height: auto;
+}
+.device-card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+}
+.device-card-title {
+    color: var(--primary-color);
+}
+.device-card-title, .device-card-text, .device-card-price {
+    cursor: default;
+    margin-bottom: 10px;
+}
+.device-card-text span {
+    margin: 0;
+    -webkit-line-clamp: 4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.device-card img {
+    max-height: 300px;
+}
+
+.main-categories {
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    flex-wrap: wrap;
+    gap:20px;
+}
+.main-categories .category, .all_categories {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    overflow: hidden;
+
+    /* width: 50%; */
+    height: 320px;
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+}
+.main-categories .category {flex-grow: 1;}
+.all_categories {
+    width: 100%;
+    margin-bottom: 20px;
+}
+.all_categories img,
+.main-categories .category img
+{width: 100%;}
+
+.main-categories .category p, .all_categories p {
+    /* position: absolute; */
+    text-transform: uppercase;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--addition-color);
+}
