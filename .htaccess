@@ -13,4 +13,5 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^([^\.]+)$ $1.php [NC,L]
 
 # product page
-RewriteRule ^product/([0-9]+) /product?id=$1 [NC,L]
+RewriteRule ^product/([a-z0-9\-]+)-([0-9]+) /product?href=$1&id=$2 [NC,L]
+RewriteRule ^shop/([a-z0-9]+) /shop?c=$1 [NC,L]

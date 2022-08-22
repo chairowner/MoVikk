@@ -2,37 +2,29 @@
     <div class="container">
         <div class="footer__left">
             <a href="/" class="footer__logo">
-                <img src="/assets/icons/logo.svg" class="logo" alt="<?=$company->name?>">
+                <img src="/assets/icons/logo.svg" class="logo" alt="<?=$_COMPANY->name?>">
             </a>
             <div class="footer__data">
                 <div class="social">
-                    <div><?=$company->vk?></div>
-                    <div><?=$company->inst?></div>
+                <a href="<?=$_COMPANY->socials['vk']['href']?>" title="<?=$_COMPANY->socials['vk']['name']?>">
+                    <i class="fa-brands fa-vk"></i>
+                    <span><?=$_COMPANY->socials['vk']['title']?></span>
+                </a>
+                <a href="<?=$_COMPANY->socials['instagram']['href']?>" title="<?=$_COMPANY->socials['instagram']['name']?>">
+                    <i class="fa-brands fa-instagram"></i>
+                    <span><?=$_COMPANY->socials['instagram']['title']?></span>
+                </a>
                 </div>
-                <span>Позвоните нам: <a href="tel:<?=$company->tel?>"><?=$company->tel_format?></a></span>
+                <span>Позвоните нам: <a href="tel:<?=$_COMPANY->phone?>"><?=$_COMPANY->phone_format?></a></span>
             </div>
         </div>
         <ul class="company_data">
-            <li>
-                <span class="fw-bold">ИНН:</span>
-                592011319403
-            </li>
-            <li>
-                <span class="fw-bold">ОГРН:</span>
-                314595810600339
-            </li>
-            <li>
-                <span class="fw-bold">Расчётный счет:</span>
-                40802810900000116741
-            </li>
-            <li>
-                <span class="fw-bold">БИК:</span>
-                044525974
-            </li>
-            <li>
-                <span class="fw-bold">K/С:</span>
-                30101810145250000974
-            </li>
+            <?php foreach($_COMPANY->info as $key => $value):?>
+                <li>
+                    <span class="fw-bold"><?=$key?>:</span>
+                    <span><?=$value?></span>
+                </li>
+            <?php endforeach;?>
         </div>
     </div>
 </footer>

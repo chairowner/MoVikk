@@ -23,6 +23,12 @@ p.primary, a.primary {
     padding: 0 15px;
     border-radius: 6px;
     transition: all .2s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    outline: none;
+    border: none;
 }
 .button, .button.primary {
     background-color: var(--primary-color);
@@ -41,9 +47,4 @@ p.primary, a.primary {
 
 .button img {
     pointer-events: none;
-}
-a.button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }

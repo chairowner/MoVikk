@@ -7,24 +7,37 @@ $nav_icons = [
 <header class="container">
     <div class="header__wrapper">
         <div class="header__social">
-            <a href="https://<?=$company->vk?>" class="text-uppercase" title="ВКонтакте"><?=$company->vk?></a>
-            <a href="https://instagram.com/<?=$company->inst?>" class="text-uppercase" title="Инстаграм">@<?=$company->inst?></a>
+            <a href="<?=$_COMPANY->socials['vk']['href']?>" class="text-uppercase" title="<?=$_COMPANY->socials['vk']['name']?>">
+                <i class="fa-brands fa-vk"></i>
+                <span><?=$_COMPANY->socials['vk']['title']?></span>
+            </a>
+            <a href="<?=$_COMPANY->socials['instagram']['href']?>" class="text-uppercase" title="<?=$_COMPANY->socials['instagram']['name']?>">
+                <i class="fa-brands fa-instagram"></i>
+                <span><?=$_COMPANY->socials['instagram']['title']?></span>
+            </a>
         </div>
-        <a href="/" class="text-uppercase" title="<?=$company->name?>">
-            <img src="/assets/icons/logo.svg" alt="<?=$company->name?>" class="logo">
+        <a href="/" class="text-uppercase" title="<?=$_COMPANY->name?>">
+            <img src="/assets/icons/logo.svg" alt="<?=$_COMPANY->name?>" class="logo">
         </a>
         <div class="header__social">
-            <span>Позвоните нам: <a href="tel:<?=$company->tel?>"><?=$company->tel_format?></a></span>
+            <span>Позвоните нам: <a href="tel:<?=$_COMPANY->phone?>"><?=$_COMPANY->phone_format?></a></span>
         </div>
     </div>
 </header>
 <nav class="header-nav">
     <div class="container d-flex justify-content-between flex-nowrap">
         <div class="header-nav__pages">
-            <?php foreach($pages as $key => $page):?>
-                <div class="item">
-                    <a href="<?=$page['href']?>"><?=$page['title']?></a>
-                </div>
+            <?php foreach($_PAGE->all as $key => $page):?>
+                <?php if($page['isMenuPage']):
+                    if ($page['fileName'] === 'index') {
+                        $page['fileName'] = '';
+                        $page['title'] = 'Главная';
+                    }
+                    ?>
+                    <div class="item">
+                        <a href="/<?=$page['fileName']?>"><?=$page['title']?></a>
+                    </div>
+                <?php endif;?>
             <?php endforeach;?>
         </div>
         <div class="header-nav__icons">
