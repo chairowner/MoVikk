@@ -121,6 +121,7 @@ header {
     font-weight: 600;
     height: 70px;
     background-color: white;
+    z-index: 9999999999999;
 }
     .header-nav__pages, .header-nav__icons {
         display: flex;
@@ -133,6 +134,7 @@ header {
         display: flex;
         justify-content: center;
         align-items: center;
+        cursor: pointer;
     }
     .header-nav__pages .item a {
         color: var(--addition-color);
@@ -171,7 +173,9 @@ header {
         background-color: var(--addition-color);
     }
     .header-nav__pages .item a:hover::after,
-    .header-nav__pages .item a:focus::after {
+    .header-nav__pages .item a:focus::after,
+    .header-nav__pages .item.open a::after,
+    .header-nav__pages .item.open a::after {
         width: 100%;
     }
     
@@ -216,7 +220,7 @@ form#search {
 }
 
 footer {
-    margin-top: 140px;
+    margin-top: 40px;
     min-height: 300px;
     font-size: 16px;
     background-color: white;
@@ -272,6 +276,18 @@ footer .social {
     flex-wrap: wrap;
 }
 
+.boxShadow {
+    -webkit-box-shadow: 0 0 20px rgb(0 0 0 / 10%);
+    box-shadow: 0 0 20px rgb(0 0 0 / 10%);
+}
+
+.page__title {
+    margin: 10px 0 40px 0;
+    background-color: white;
+    padding: 40px 0;
+}
+.page__title h1 {font-size: 28px;color: var(--main-color);}
+
 /* сокращения */
 .user-select-none {
     /* iOS Safari */
@@ -286,6 +302,16 @@ footer .social {
     -ms-user-select: none;
     /* Chrome, Edge, Opera and Firefox */
     user-select: none;
+}
+.color-vk {color: #0077ff;}
+.icon-instagram {
+    color: white;
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
+    padding: 2px;
+    width: 14px;
+    height: 14px;
+    border-radius: 5px;
+    font-size: 20px;
 }
 .fw-bold {font-weight: bold!important;}
 .text-uppercase {text-transform: uppercase!important;}

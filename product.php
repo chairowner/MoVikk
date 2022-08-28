@@ -9,10 +9,10 @@
 </head>
 <body>
     <?php include_once('includes/header.php')?>
+    <div class="page__title">
+        <h1 class="container"><?=$_PRODUCT->name?></h1>
+    </div>
     <main>
-        <div class="product__title">
-            <h1 class="container"><?=$_PRODUCT->name?></h1>
-        </div>
         <section class="m-0">
             <div class="container">
                 <div class="product">
@@ -27,7 +27,7 @@
                                     <?php endforeach;?>
                                 </div>
                             <?php else: $noAddImgs = true; endif;?>
-                            <div class="product__images__main<?=$noAddImgs ? ' noAddImgs' : null?>">
+                            <div class="product__images__main boxShadow<?=$noAddImgs ? ' noAddImgs' : null?>">
                                 <a class="item" data-fancybox="images" data-src="/assets/images/products/<?=$_PRODUCT->images['main']?>">
                                     <?php if(isset($_PRODUCT->images['main'])):?>
                                         <img src="/assets/images/products/<?=$_PRODUCT->images['main']?>" alt="<?=$_PRODUCT->name?>">
@@ -37,23 +37,13 @@
                                 </a>
                             </div>
                         </div>
-                            <div class="product__shortInfo_desc custom-scroll">
+                            <div class="product__shortInfo_desc boxShadow custom-scroll">
                                 <div class="shortInfo__desc__country item">
                                     <div class="d-flex flex-column">
                                         <strong class="headTitle">Страна</strong>
                                         <span class="countryName"><?=$_PRODUCT->country?></span>
                                     </div>
                                 </div>
-                                <?php if(!empty($_PRODUCT->features)):?>
-                                    <div class="shortInfo__desc__lists item">
-                                        <strong class="headTitle">Функции товара</strong>
-                                        <div class="shortInfo__desc__lists__list">
-                                            <?php foreach($_PRODUCT->features as $key => $feature):?>
-                                                <span class="item"><?=$feature?></span>
-                                            <?php endforeach;?>
-                                        </div>
-                                    </div>
-                                <?php endif;?>
                                 <?php if(!empty($_PRODUCT->techSpec)):?>
                                     <div class="shortInfo__desc__lists item">
                                         <strong class="headTitle">Технические характеристики</strong>
@@ -64,9 +54,19 @@
                                         </div>
                                     </div>
                                 <?php endif;?>
+                                <?php if(!empty($_PRODUCT->features)):?>
+                                    <div class="shortInfo__desc__lists item">
+                                        <strong class="headTitle">Функции товара</strong>
+                                        <div class="shortInfo__desc__lists__list">
+                                            <?php foreach($_PRODUCT->features as $key => $feature):?>
+                                                <span class="item"><?=$feature?></span>
+                                            <?php endforeach;?>
+                                        </div>
+                                    </div>
+                                <?php endif;?>
                             </div>
-                            <div>
-                                <div class="addCart">
+                            <div class="addCart_wrapper">
+                                <div class="addCart boxShadow">
                                     <?php
                                     $noProduct = formatPrice($_PRODUCT->price);
                                     $noProduct = (int) $noProduct;
@@ -95,7 +95,10 @@
                             </div>
                     </div>
                     <div class="product__row">
-
+                        <div class="product__description boxShadow">
+                            <h2 class="product__description__title">Описание</h2>
+                            <p class="product__description__data"><?=$_PRODUCT->description?></p>
+                        </div>
                     </div>
                 </div>
             </div>

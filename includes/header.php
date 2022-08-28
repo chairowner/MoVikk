@@ -7,12 +7,12 @@ $nav_icons = [
 <header class="container">
     <div class="header__wrapper">
         <div class="header__social">
-            <a href="<?=$_COMPANY->socials['vk']['href']?>" class="text-uppercase" title="<?=$_COMPANY->socials['vk']['name']?>">
-                <i class="fa-brands fa-vk"></i>
+            <a target="_blank" href="<?=$_COMPANY->socials['vk']['href']?>" class="text-uppercase" title="<?=$_COMPANY->socials['vk']['name']?>">
+                <i class="fa-brands fa-vk color-vk" style="font-size:20px;"></i>
                 <span><?=$_COMPANY->socials['vk']['title']?></span>
             </a>
-            <a href="<?=$_COMPANY->socials['instagram']['href']?>" class="text-uppercase" title="<?=$_COMPANY->socials['instagram']['name']?>">
-                <i class="fa-brands fa-instagram"></i>
+            <a target="_blank" href="<?=$_COMPANY->socials['instagram']['href']?>" class="text-uppercase" title="<?=$_COMPANY->socials['instagram']['name']?>">
+                <i class="fa-brands fa-instagram icon-instagram"></i>
                 <span><?=$_COMPANY->socials['instagram']['title']?></span>
             </a>
         </div>
@@ -34,7 +34,7 @@ $nav_icons = [
                         $page['title'] = 'Главная';
                     }
                     ?>
-                    <div class="item">
+                    <div class="item<?=$page['fileName'] === $_PAGE->current ? ' open' : null?>">
                         <a href="/<?=$page['fileName']?>"><?=$page['title']?></a>
                     </div>
                 <?php endif;?>

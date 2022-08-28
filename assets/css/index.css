@@ -1,3 +1,4 @@
+footer {margin-top: 140px;}
 .product-cards {
     width: 100%;
     display: flex;
@@ -152,7 +153,4 @@
     font-size: 24px;
     color: var(--primary-color);
     margin: 0 0 20px 0;
-}
-.feature .feature__text {
-    
 }

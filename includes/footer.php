@@ -6,12 +6,12 @@
             </a>
             <div class="footer__data">
                 <div class="social">
-                <a href="<?=$_COMPANY->socials['vk']['href']?>" title="<?=$_COMPANY->socials['vk']['name']?>">
-                    <i class="fa-brands fa-vk"></i>
+                <a target="_blank" href="<?=$_COMPANY->socials['vk']['href']?>" title="<?=$_COMPANY->socials['vk']['name']?>">
+                    <i class="fa-brands fa-vk color-vk" style="font-size: 20px;"></i>
                     <span><?=$_COMPANY->socials['vk']['title']?></span>
                 </a>
-                <a href="<?=$_COMPANY->socials['instagram']['href']?>" title="<?=$_COMPANY->socials['instagram']['name']?>">
-                    <i class="fa-brands fa-instagram"></i>
+                <a target="_blank" href="<?=$_COMPANY->socials['instagram']['href']?>" title="<?=$_COMPANY->socials['instagram']['name']?>">
+                    <i class="fa-brands fa-instagram icon-instagram"></i>
                     <span><?=$_COMPANY->socials['instagram']['title']?></span>
                 </a>
                 </div>
