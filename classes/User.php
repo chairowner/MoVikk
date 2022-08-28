@@ -27,13 +27,13 @@ class User {
             if (isset($session) && !empty($session) && isset($session['user'])) {
                 $user = $conn->prepare("SELECT * FROM `users` WHERE `id` = :id AND `login` = :login");
                 $user->execute([
-                    'id' => intval($session['user']['id']),
+                    'id' => (int) ($session['user']['id']),
                     'login' => trim($session['user']['login'])
                 ]);
                 $user = $user->fetch(PDO::FETCH_ASSOC);
                 if (isset($user) && !empty($user)) {
-                    $this->id = intval($user['id']);
-                    $this->isAdmin = intval($user['isAdmin']) === 1 ? true : false;
+                    $this->id = (int) ($user['id']);
+                    $this->isAdmin = (int) ($user['isAdmin']) === 1 ? true : false;
                     $this->isGuest = false;
                     $this->login = trim($user['login']);
                     $this->name = trim($user['name']);

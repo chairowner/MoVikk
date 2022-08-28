@@ -48,3 +48,4 @@ p.primary, a.primary {
 .button img {
     pointer-events: none;
 }
+.button span, .button i, .button img {cursor: pointer!important;}

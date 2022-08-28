@@ -1,8 +1,8 @@
 <?php
-function formatPrice(float $value, string $unit = '₽') {
+function formatPrice(float $value, string $unit = '₽', string $separator = ' ', string $floatSign = ',') {
 	if ($value > 0) {
-		$value = number_format($value, 2, ',', '.');
-		$value = str_replace(',00', '', $value);
+		$value = number_format($value, 2, $floatSign, $separator);
+		$value = str_replace(($floatSign.'00'), '', $value);
  
 		if (!empty($unit)) {
 			$value .= " {$unit}";

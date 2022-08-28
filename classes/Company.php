@@ -27,7 +27,7 @@ class Company {
                 $this->phone = $company['phone'];
                 $this->phone_format = sprintf(
                     "%s (%s) %s-%s-%s",
-                    intval(substr($this->phone, 1, 1)) + 1,
+                    (int) ((substr($this->phone, 1, 1)) + 1),
                     substr($this->phone, 2, 3),
                     substr($this->phone, 5, 3),
                     substr($this->phone, 8, 2),
