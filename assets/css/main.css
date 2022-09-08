@@ -129,7 +129,7 @@ header {
     font-weight: 600;
     height: 70px;
     background-color: white;
-    z-index: 9999999999999;
+    z-index: 1009;
 }
     .header-nav__pages, .header-nav__icons {
         display: flex;

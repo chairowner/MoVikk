@@ -148,8 +148,5 @@ $products = $products->fetchAll(PDO::FETCH_ASSOC);
     <?php include_once('includes/footer.php')?>
     <?php include_once('includes/scripts.php')?>
     <script src="/assets/js/shop.js"></script>
-    <script>
-        console.log(<?=json_encode($_GET)?>);
-    </script>
 </body>
 </html>
