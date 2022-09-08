@@ -51,8 +51,7 @@ class Page {
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
         <link rel="stylesheet" href="/assets/css/fontawesome.all.min.css">
         <link rel="stylesheet" href="/assets/css/fancybox.min.css">
-        <link rel="stylesheet" href="/assets/css/main.css">
-        <link rel="stylesheet" href="/assets/css/adaptive.css">';
+        <link rel="stylesheet" href="/assets/css/main.css">';
 
         if (isset($title) && !empty($title)) {
             $response .= '<title>'.$title.'</title>';

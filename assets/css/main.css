@@ -90,6 +90,14 @@ header, .header-nav {
     font-size: 16px;
 }
 
+.header-nav-main {
+    display: flex;
+    justify-content: space-between;
+}
+.header-nav-addition {
+    display: none;
+}
+
 header {
     background-color: var(--main-background);
     padding: 20px 0;
@@ -130,7 +138,9 @@ header {
         justify-content: space-between;
         align-items: center;
     }
-    .header-nav__pages .item, .header-nav__icons .item .item__data {
+    .header-nav__pages .item,
+    .header-nav__icons .item .item__data,
+    .header-nav__icons .item .item__data > *{
         display: flex;
         justify-content: center;
         align-items: center;
@@ -142,13 +152,9 @@ header {
         line-height: 1.7;
     }
 
-    .header-nav__pages .item:not(:last-child) {
-        margin-right: 80px;
-    }
-
-    .header-nav__icons .item:not(:last-child) {
-        margin-right: 30px;
-    }
+    .header-nav__pages {gap: 80px;}
+    .header-nav__icons {gap: 30px;}
+    
         .header-nav__icons .item img {
             width: 27px;
             user-select: none;
@@ -195,6 +201,7 @@ header {
         z-index: -1;
     }
     
+    .header-nav__icons .item.mobile .item__data::after,
     .header-nav__icons .item .item__data:hover::after {
         width: 48px;
         height: 48px;
@@ -215,42 +222,58 @@ header {
     color: var(--addition-color);
 }
 
-form#search {
-    
-}
-
 footer {
+    padding: 50px;
     margin-top: 40px;
     min-height: 300px;
     font-size: 16px;
-    background-color: white;
+    /* background-color: white; */
+    background: linear-gradient(360deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 109.6%);
     display: flex;
     align-items: center;
 }
 
 footer .container {
+    width: 100%;
     display: flex;
     justify-content: space-between;
-    width: 100%;
+    flex-wrap: wrap;
+    gap: 40px;
 }
 
 .footer__data {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    gap: 20px;
 }
 
 footer .social {
-    font-size: 24px;
     max-width: 420px;
     width: 100%;
-
+    
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-
-    gap: 70px;
+    
+    gap: 50px;
+}
+footer .social a {
+    display: flex;
+    align-items: flex-end;
+}
+footer .social a > *{
+    font-size: 24px;
     letter-spacing: 2px;
+}
+footer .social a .social-icon{
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+}
+footer .social a .social-icon.icon-instagram {
+    width: 26px;
+    height: 26px;
 }
 
 .company_data {
@@ -270,15 +293,15 @@ footer .social {
 
 .footer__left {
     max-width: 685px;
-    width:100%;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    gap: 90px;
 }
 
-.boxShadow {
-    -webkit-box-shadow: 0 0 20px rgb(0 0 0 / 10%);
-    box-shadow: 0 0 20px rgb(0 0 0 / 10%);
+.shadowBox {
+    -webkit-box-shadow: 0 0 20px #0000001a;
+    box-shadow: 0 0 20px #0000001a;
 }
 
 .page__title {
@@ -313,6 +336,76 @@ footer .social {
     border-radius: 5px;
     font-size: 20px;
 }
+
+/* для элемента input c type="radio" */
+.radioInp {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+    cursor: pointer;
+    transition: all 200ms ease-in-out;
+}
+/* для элемента label связанного с .radioInp */
+.radioInp+label {
+    display: inline-flex;
+    align-items: center;
+    user-select: none;
+    cursor: pointer;
+    transition: all 200ms ease-in-out;
+}
+/* создание в label псевдоэлемента  before со следующими стилями */
+.radioInp+label::before {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    flex-grow: 0;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    margin-right: 0.5em;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 50% 50%;
+    transition: all 200ms ease-in-out;
+}
+/* стили при наведении курсора на радио */
+.radioInp:not(:disabled):not(:checked)+label:hover::before {
+    border-color: var(--primary-color-light);
+}
+/* стили для активной радиокнопки (при нажатии на неё) */
+.radioInp:not(:disabled):active+label::before {
+    border-color: var(--primary-color-light);
+    background-color: var(--primary-hover-color-light);
+}
+/* стили для радиокнопки, находящейся в фокусе */
+/* .radioInp:focus+label::before {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+} */
+/* стили для радиокнопки, находящейся в фокусе и не находящейся в состоянии checked */
+.radioInp:focus:not(:checked)+label::before {
+    border-color: var(--primary-hover-color);
+}
+/* стили для радиокнопки, находящейся в состоянии checked */
+.radioInp:checked+label::before {
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+    background-size: 11px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="white" d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>');
+}
+/* стили для радиокнопки, находящейся в состоянии disabled */
+.radioInp:disabled+label::before {
+    background-color: #e9ecef;
+}
+
+.container {
+    margin: 0 auto;
+    max-width: 1600px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+}
+
 .fw-bold {font-weight: bold!important;}
 .text-uppercase {text-transform: uppercase!important;}
 .text-lowercase {text-transform: lowercase!important;}
@@ -352,3 +445,77 @@ footer .social {
 .pe-0 {padding-right: 0!important;}
 .pt-0 {padding-top: 0!important;}
 .pb-0 {padding-bottom: 0!important;}
+.text-none {color: #cccccc;}
+
+@media (max-width: 1167px) {
+    footer .social {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .footer__left {
+        gap: 50px;
+        flex-direction: column;
+    }
+}
+@media (max-width: 768px) {
+    .header-nav-main {display: none;}
+    .header-nav-addition {display: block;}
+    .header-nav-addition .header-nav__icons {justify-content: space-evenly;}
+    footer {padding: 10px;}
+    footer .container {
+        flex-direction: column;
+        align-items: center;
+    }
+    footer .social {align-items: center;}
+    footer .social a {
+        display: flex;
+        gap: 10px;
+    }
+    .footer__callUs {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .company_data {align-items: center;}
+    .company_data li {text-align: center;}
+}
+
+@media (max-width: 500px) {
+    .header__wrapper {justify-content: center;}
+    .header__social {display: none;}
+    .footer__left {flex-direction: column;}
+}
+
+@media (max-width: 320px) {
+    .social a {
+        justify-content: center;
+    }
+    .social a span{
+        display: none;
+    }
+    footer .social a .social-icon {
+        width: 40vw;
+        height: 40vw;
+        position: relative;
+        bottom: 2px;
+    }
+    footer .social a .social-icon.icon-instagram {
+        width: calc(40vw - 21%);
+        height: calc(40vw - 21%);
+        padding: 8px 10px;
+        border-radius: 20px;
+    }
+    .footer__logo .logo {
+        width: 100%;
+    }
+}
+@media (max-width: 255px) {
+    .header-nav__icons .item.mobile .item__data img {width: 24px;}
+    .header-nav__icons .item.mobile .item__data span {font-size: 10px;}
+    .header-nav__icons .item.mobile .item__data::after,
+    .header-nav__icons .item.mobile .item__data:hover::after,
+    .header-nav__icons .item.mobile .item__data:active  ::after {
+        width: 35px;
+        height: 35px;
+    }
+}

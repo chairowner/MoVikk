@@ -7,11 +7,29 @@ ErrorDocument 403 /404.php
 RewriteEngine On
 RewriteBase /
 
-# remove .php
+# убираем слэш в конце
+RewriteCond %{HTTP_HOST} (.*)
+RewriteCond %{REQUEST_URI} /$ [NC]
+RewriteRule ^(.*)(/)$ $1 [L,R=301]
+
+# убираем расширение .php
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^([^\.]+)$ $1.php [NC,L]
 
-# product page
+# КАРТОЧКА ТОВАРА
 RewriteRule ^product/([a-z0-9\-]+)-([0-9]+) /product?href=$1&id=$2 [NC,L]
-RewriteRule ^shop/([a-z0-9]+) /shop?c=$1 [NC,L]
+
+# КАТАЛОГ
+# категория, сортировка, страница
+RewriteRule ^shop/([a-z0-9\-]+)/([a-z]+)/([0-9]+) /shop?category=$1&sort=$2&page=$3 [NC,L]
+# категория, сортировка
+RewriteRule ^shop/([a-z0-9\-]+)/([a-z]+) /shop?category=$1&sort=$2 [NC,L]
+# категория, страница
+RewriteRule ^shop/([a-z0-9\-]+)/([0-9]+) /shop?category=$1&page=$2 [NC,L]
+# категория
+RewriteRule ^shop/([a-z0-9\-]+) /shop?category=$1 [NC,L]
+# страница
+RewriteRule ^shop/([0-9\-]+) /shop?category=all&page=$1 [NC,L]
+# сортировка
+RewriteRule ^shop/([a-z]+) /shop?category=all&sort=$1 [NC,L]

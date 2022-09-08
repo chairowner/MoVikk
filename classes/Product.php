@@ -20,7 +20,6 @@ class Product {
     public bool $preOrder;
     public string $keywords;
     public int $sold;
-    public DateTimeZone $addedTimezone;
     public DateTime $added;
     public bool $isDeleted;
 
@@ -74,8 +73,10 @@ class Product {
                 $this->preOrder = (int) ($product['preOrder']) === 1 ? true : false;
                 $this->keywords = trim($product['keywords']);
                 $this->sold = (int) ($product['sold']);
-                $this->addedTimezone = new DateTimeZone($product['addedTimezone']);
-                $this->added = new DateTime($product['added'], $this->addedTimezone);
+                $timezone = $conn->prepare("SELECT timezone FROM company");
+                $timezone->execute();
+                $timezone = $timezone->fetch(PDO::FETCH_ASSOC);
+                $this->added = new DateTime($product['added'], new DateTimeZone($timezone['timezone']));
                 $this->isDeleted = (int) ($product['isDeleted']) === 1 ? true : false;
                 $country = $conn->prepare("SELECT `name` FROM `countries` WHERE `id` = :id");
                 $country->execute(['id' => (int) $product['countryId']]);

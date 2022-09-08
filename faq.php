@@ -22,7 +22,7 @@
                         $faqs = $faqs->fetchAll(PDO::FETCH_ASSOC);
                         if(isset($faqs) && !empty($faqs)):?>
                             <?php foreach($faqs as $key => $faq):?>
-                                <div class="boxShadow question">
+                                <div class="shadowBox question">
                                     <div class="text"><?=$faq['question']?></div>
                                     <div class="answer"><span><?=$faq['answer']?></span></div>
                                 </div>

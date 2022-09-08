@@ -20,12 +20,13 @@ $nav_icons = [
             <img src="/assets/icons/logo.svg" alt="<?=$_COMPANY->name?>" class="logo">
         </a>
         <div class="header__social">
-            <span>Позвоните нам: <a href="tel:<?=$_COMPANY->phone?>"><?=$_COMPANY->phone_format?></a></span>
+            <span>Позвоните нам:</span>
+            <a href="tel:<?=$_COMPANY->phone?>"><?=$_COMPANY->phone_format?></a>
         </div>
     </div>
 </header>
 <nav class="header-nav">
-    <div class="container d-flex justify-content-between flex-nowrap">
+    <div class="container header-nav-main">
         <div class="header-nav__pages">
             <?php foreach($_PAGE->all as $key => $page):?>
                 <?php if($page['isMenuPage']):
@@ -57,6 +58,37 @@ $nav_icons = [
                     <img src="/assets/icons/user.svg" alt="Личный кабинет" title="Личный кабинет">
                 </a>
             </div>
+        </div>
+    </div>
+    <div class="container header-nav-addition">
+        <div class="header-nav__icons">
+            <?php
+            $headerAdd = [
+                '/' => [
+                    'title' => 'Главная',
+                    'icon' => 'home.svg',
+                ],
+                '/shop' => [
+                    'title' => 'Каталог',
+                    'icon' => 'shop.svg',
+                ],
+                '/cart' => [
+                    'title' => 'Корзина',
+                    'icon' => 'cart.svg',
+                ],
+                '/lk' => [
+                    'title' => 'Личный кабинет',
+                    'icon' => 'user.svg',
+                ],
+            ];
+            foreach($headerAdd as $href => $item):?>
+                <div class="item mobile">
+                    <a class="item__data" href="<?=$href?>">
+                        <img src="/assets/icons/<?=$item['icon']?>" alt="<?=$item['title']?>" title="<?=$item['title']?>">
+                        <?php if($href === '/cart'):?><span class="cart_number">10+</span><?php endif;?>
+                    </a>
+                </div>
+            <?php endforeach;?>
         </div>
     </div>
 </nav>

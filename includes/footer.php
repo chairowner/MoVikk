@@ -6,16 +6,19 @@
             </a>
             <div class="footer__data">
                 <div class="social">
-                <a target="_blank" href="<?=$_COMPANY->socials['vk']['href']?>" title="<?=$_COMPANY->socials['vk']['name']?>">
-                    <i class="fa-brands fa-vk color-vk" style="font-size: 20px;"></i>
-                    <span><?=$_COMPANY->socials['vk']['title']?></span>
-                </a>
-                <a target="_blank" href="<?=$_COMPANY->socials['instagram']['href']?>" title="<?=$_COMPANY->socials['instagram']['name']?>">
-                    <i class="fa-brands fa-instagram icon-instagram"></i>
-                    <span><?=$_COMPANY->socials['instagram']['title']?></span>
-                </a>
+                    <a target="_blank" href="<?=$_COMPANY->socials['vk']['href']?>" title="<?=$_COMPANY->socials['vk']['name']?>">
+                        <i class="social-icon fa-brands fa-vk color-vk"></i>
+                        <span><?=$_COMPANY->socials['vk']['title']?></span>
+                    </a>
+                    <a target="_blank" href="<?=$_COMPANY->socials['instagram']['href']?>" title="<?=$_COMPANY->socials['instagram']['name']?>">
+                        <i class="social-icon fa-brands fa-instagram icon-instagram"></i>
+                        <span><?=$_COMPANY->socials['instagram']['title']?></span>
+                    </a>
                 </div>
-                <span>Позвоните нам: <a href="tel:<?=$_COMPANY->phone?>"><?=$_COMPANY->phone_format?></a></span>
+                <div class="footer__callUs">
+                    <span>Позвоните нам:</span>
+                    <a href="tel:<?=$_COMPANY->phone?>"><?=$_COMPANY->phone_format?></a>
+                </div>
             </div>
         </div>
         <ul class="company_data">

@@ -27,7 +27,7 @@
                                     <?php endforeach;?>
                                 </div>
                             <?php else: $noAddImgs = true; endif;?>
-                            <div class="product__images__main boxShadow<?=$noAddImgs ? ' noAddImgs' : null?>">
+                            <div class="product__images__main shadowBox<?=$noAddImgs ? ' noAddImgs' : null?>">
                                 <a class="item" data-fancybox="images" data-src="/assets/images/products/<?=$_PRODUCT->images['main']?>">
                                     <?php if(isset($_PRODUCT->images['main'])):?>
                                         <img src="/assets/images/products/<?=$_PRODUCT->images['main']?>" alt="<?=$_PRODUCT->name?>">
@@ -37,7 +37,7 @@
                                 </a>
                             </div>
                         </div>
-                            <div class="product__shortInfo_desc boxShadow custom-scroll">
+                            <div class="product__shortInfo_desc shadowBox custom-scroll">
                                 <div class="shortInfo__desc__country item">
                                     <div class="d-flex flex-column">
                                         <strong class="headTitle">Страна</strong>
@@ -66,7 +66,7 @@
                                 <?php endif;?>
                             </div>
                             <div class="addCart_wrapper">
-                                <div class="addCart boxShadow">
+                                <div class="addCart shadowBox">
                                     <?php
                                     $noProduct = formatPrice($_PRODUCT->price);
                                     $noProduct = (int) $noProduct;
@@ -75,8 +75,7 @@
                                         <h2 style="margin: 0; color: var(--main-color);" class="w-100">К сожалению, на данный момент товар не продаётся :(</h2>
                                     <?php else:?>
                                         <div class="addCart__price">
-                                            <?php
-                                            // есть ли скидка
+                                            <?php // есть ли скидка
                                             if($_PRODUCT->sale > 0):?>
                                                 <strong class="addCart__price__main"><?=formatPrice(($_PRODUCT->price - ($_PRODUCT->price * $_PRODUCT->sale / 100)))?></strong>
                                                 <span class="addCart__price__old"><?=formatPrice($_PRODUCT->price)?></span>
@@ -95,7 +94,7 @@
                             </div>
                     </div>
                     <div class="product__row">
-                        <div class="product__description boxShadow">
+                        <div class="product__description shadowBox">
                             <h2 class="product__description__title">Описание</h2>
                             <p class="product__description__data"><?=$_PRODUCT->description?></p>
                         </div>

@@ -9,6 +9,9 @@
     --primary-hover-color: #5c9fa3;
     --primary-active-color: #538183;
 
+    --primary-color-light: #a1dbde;
+    --primary-hover-color-light: #c8e9eb;
+
     /* дополнительный */
     --addition-color: #1A6B70;
 }

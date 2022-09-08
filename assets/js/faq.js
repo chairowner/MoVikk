@@ -6,7 +6,6 @@ for (let i = 0; i < $('.question.open').length; i++) {
         height: (item.find('.answer span').height() * 3) + 'px',
         opacity: 1
     });
-    console.log(item.find('.answer span').css('height'));
 }
 
 $('.question').on('click', function(){

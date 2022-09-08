@@ -11,27 +11,55 @@
         <section>
             <div class="container">
                 <h2 class="text-uppercase">Популярные товары</h2>
-                <div class="product-cards">
+                <div class="product-cards w-100">
                     <?php
                     $popular_products = $conn->prepare("SELECT pim.image, p.name, p.description, p.href, p.id, p.price FROM products p INNER JOIN products_images pim ON p.id = pim.productId WHERE pim.isMain = 1 ORDER BY sold LIMIT 4");
                     $popular_products->execute();
                     $popular_products = $popular_products->fetchAll(PDO::FETCH_ASSOC);
                     
-                    foreach($popular_products as $product_key => $product):?>
-                        <div class="product-card">
+                    foreach($popular_products as $product_key => $product):
+                        $noImage = false;
+                        $product['image'] = $conn->prepare( "SELECT `image` FROM products_images WHERE id = :id AND isMain = 1 LIMIT 1");
+                        $product['image']->execute(['id' => (int) $product['id']]);
+                        $product['image'] = $product['image']->fetch(PDO::FETCH_ASSOC);
+                        if (isset($product['image']['image'])) $product['image'] = "/assets/images/products/".trim($product['image']['image']);
+                        else {
+                            $noImage = true;
+                            $product['image'] = '/assets/icons/camera.svg';
+                        }?>
+                        <div class="product-card stretch w-300px shadowBox">
                             <div class="product-card-image">
-                                <img src="/assets/images/products/<?=$product['image']?>" alt="<?=$product['name']?>">
+                                <div class="product-card-image_block">
+                                    <?php if($noImage):?>
+                                        <img src="<?=$product['image']?>" class="noPhoto" alt="<?=$product['name']?>">
+                                    <?php else:?>
+                                        <img src="<?=$product['image']?>" alt="<?=$product['name']?>">
+                                    <?php endif;?>
+                                </div>
                             </div>
                             <div class="product-card-body">
                                 <p class="product-card-title"><?=$product['name']?></p>
                                 <div class="product-card-text">
-                                    <p><?=trim(substr($product['description'], 0, 300))?></p>
+                                    <p><?=isset($product['description']) ? trim(substr($product['description'], 0, 300)) : '<i class="text-none">Описание отсутствует</i>'?></p>
                                 </div>
-                                <p class="product-card-price"><?=formatPrice(doubleval($product['price']))?></p>
-                                <a href="/product/<?="{$product['href']}-{$product['id']}"?>" class="button elems">
-                                    <span>Подробнее</span>
-                                    <i class="fa-solid fa-angle-right"></i>
-                                </a>
+                                <div class="product-card-buy">
+                                    <p class="product-card-price">
+                                        <?php
+                                        // есть ли скидка
+                                        $product['price'] = doubleval($product['price']);
+                                        if (!isset($product['sale'])) $product['sale'] = 0;
+                                        if($product['sale'] > 0):?>
+                                            <strong class="addCart__price__main"><?=formatPrice(($product['price'] - ($product['price'] * $product['sale'] / 100)))?></strong>
+                                            <span class="addCart__price__old"><?=formatPrice($product['price'])?></span>
+                                        <?php else:?>
+                                            <strong class="addCart__price__main"><?=formatPrice($product['price'])?></strong>
+                                        <?php endif;?>
+                                    </p>
+                                    <a href="/product/<?="{$product['href']}-{$product['id']}"?>" class="button elems">
+                                        <span>Подробнее</span>
+                                        <i class="fa-solid fa-angle-right"></i>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     <?php endforeach;?>
@@ -41,19 +69,26 @@
         <section>
             <div class="container">
                 <h2>Категории товаров</h2>
-                <a href="/shop" class="category all_categories" style="background-image:url(/assets/images/all_products.png);">
+                <a href="/shop" class="category all_categories">
                     <p>Все товары</p>
-                    <div class="category__black"></div>
+                    <img src="/assets/images/all_products.png" alt="Все товары">
                 </a>
                 <div class="main-categories">
                     <?php
                     $categories = $conn->prepare("SELECT * FROM categories");
                     $categories->execute();
                     $categories = $categories->fetchAll(PDO::FETCH_ASSOC);
-                    foreach($categories as $category_key => $category):?>
-                    <a href="/shop/<?=$category['href']?>" class="category" style="background-image:url(/assets/images/categories/category_<?=$category['id']?>.png);">
-                        <p><?=$category['name']?></p>
-                    </a>
+                    foreach($categories as $category_key => $category):
+                    $category['id'] = (int) $category['id'];
+                    $category['path'] = "assets/images/categories";
+                    $category['path'] = file_exists("{$category['path']}/category_{$category['id']}.png") ?
+                        "{$category['path']}/category_{$category['id']}.png" : null;?>
+                        <a href="/shop/<?=$category['href']?>" class="category">
+                            <?php if(isset($category['path'])):?>
+                                <img src="/<?=$category['path']?>" alt="<?=$category['name']?>">
+                            <?php endif;?>
+                            <p><?=$category['name']?></p>
+                        </a>
                     <?php endforeach;?>
                 </div>
             </div>
