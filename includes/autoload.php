@@ -11,5 +11,7 @@ require_once('classes/Company.php');
 require_once('classes/User.php');
 # подключение функции форматирования цены
 require_once('functions/formatPrice.php');
+# подключение функции форматирования SQL-запроса
+require_once('functions/formSql.php');
 # подключение функции вывода массива/объекта в формат JSON (develop)
 require_once('functions/dev-getJSON.php');

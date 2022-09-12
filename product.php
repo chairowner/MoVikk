@@ -37,61 +37,61 @@
                                 </a>
                             </div>
                         </div>
-                            <div class="product__shortInfo_desc shadowBox custom-scroll">
-                                <div class="shortInfo__desc__country item">
-                                    <div class="d-flex flex-column">
-                                        <strong class="headTitle">Страна</strong>
-                                        <span class="countryName"><?=$_PRODUCT->country?></span>
+                        <div class="product__shortInfo_desc shadowBox custom-scroll">
+                            <div class="shortInfo__desc__country item">
+                                <div class="d-flex flex-column">
+                                    <strong class="headTitle">Страна</strong>
+                                    <span class="countryName"><?=$_PRODUCT->country?></span>
+                                </div>
+                            </div>
+                            <?php if(!empty($_PRODUCT->techSpec)):?>
+                                <div class="shortInfo__desc__lists item">
+                                    <strong class="headTitle">Технические характеристики</strong>
+                                    <div class="shortInfo__desc__lists__list">
+                                        <?php foreach($_PRODUCT->techSpec as $key => $item):?>
+                                            <span class="item"><?=$item['name']?> - <?=$item['value']?></span>
+                                        <?php endforeach;?>
                                     </div>
                                 </div>
-                                <?php if(!empty($_PRODUCT->techSpec)):?>
-                                    <div class="shortInfo__desc__lists item">
-                                        <strong class="headTitle">Технические характеристики</strong>
-                                        <div class="shortInfo__desc__lists__list">
-                                            <?php foreach($_PRODUCT->techSpec as $key => $item):?>
-                                                <span class="item"><?=$item['name']?> - <?=$item['value']?></span>
-                                            <?php endforeach;?>
-                                        </div>
+                            <?php endif;?>
+                            <?php if(!empty($_PRODUCT->features)):?>
+                                <div class="shortInfo__desc__lists item">
+                                    <strong class="headTitle">Функции товара</strong>
+                                    <div class="shortInfo__desc__lists__list">
+                                        <?php foreach($_PRODUCT->features as $key => $feature):?>
+                                            <span class="item"><?=$feature?></span>
+                                        <?php endforeach;?>
                                     </div>
-                                <?php endif;?>
-                                <?php if(!empty($_PRODUCT->features)):?>
-                                    <div class="shortInfo__desc__lists item">
-                                        <strong class="headTitle">Функции товара</strong>
-                                        <div class="shortInfo__desc__lists__list">
-                                            <?php foreach($_PRODUCT->features as $key => $feature):?>
-                                                <span class="item"><?=$feature?></span>
-                                            <?php endforeach;?>
-                                        </div>
+                                </div>
+                            <?php endif;?>
+                        </div>
+                        <div class="addCart_wrapper">
+                            <div class="addCart shadowBox">
+                                <?php
+                                $noProduct = formatPrice($_PRODUCT->price);
+                                $noProduct = (int) $noProduct;
+                                $noProduct = $noProduct < 1 ? true : false;
+                                if ($noProduct):?>
+                                    <h2 style="margin: 0; color: var(--main-color);" class="w-100">К сожалению, на данный момент товар не продаётся :(</h2>
+                                <?php else:?>
+                                    <div class="addCart__price">
+                                        <?php // есть ли скидка
+                                        if($_PRODUCT->sale > 0):?>
+                                            <strong class="addCart__price__main"><?=formatPrice(($_PRODUCT->price - ($_PRODUCT->price * $_PRODUCT->sale / 100)))?></strong>
+                                            <span class="addCart__price__old"><?=formatPrice($_PRODUCT->price)?></span>
+                                        <?php else:?>
+                                            <strong class="addCart__price__main"><?=formatPrice($_PRODUCT->price)?></strong>
+                                        <?php endif;?>
+                                    </div>
+                                    <div class="addCart_buyCounter"><?=$_PRODUCT->sold > 0 ? "Купили ".numWord($_PRODUCT->sold, ['раз', 'раза', 'раз']) : 'Товар ещё не покупали'?></div>
+                                    <div class="addCart__button">
+                                        <button class="button w-100" id="js-addToCard">
+                                            <span>Добавить в корзину</span>
+                                        </button>
                                     </div>
                                 <?php endif;?>
                             </div>
-                            <div class="addCart_wrapper">
-                                <div class="addCart shadowBox">
-                                    <?php
-                                    $noProduct = formatPrice($_PRODUCT->price);
-                                    $noProduct = (int) $noProduct;
-                                    $noProduct = $noProduct < 1 ? true : false;
-                                    if ($noProduct):?>
-                                        <h2 style="margin: 0; color: var(--main-color);" class="w-100">К сожалению, на данный момент товар не продаётся :(</h2>
-                                    <?php else:?>
-                                        <div class="addCart__price">
-                                            <?php // есть ли скидка
-                                            if($_PRODUCT->sale > 0):?>
-                                                <strong class="addCart__price__main"><?=formatPrice(($_PRODUCT->price - ($_PRODUCT->price * $_PRODUCT->sale / 100)))?></strong>
-                                                <span class="addCart__price__old"><?=formatPrice($_PRODUCT->price)?></span>
-                                            <?php else:?>
-                                                <strong class="addCart__price__main"><?=formatPrice($_PRODUCT->price)?></strong>
-                                            <?php endif;?>
-                                        </div>
-                                        <div class="addCart_buyCounter"><?=$_PRODUCT->sold > 0 ? "Купили ".numWord($_PRODUCT->sold, ['раз', 'раза', 'раз']) : 'Товар ещё не покупали'?></div>
-                                        <div class="addCart__button">
-                                            <button class="button w-100" id="js-addToCard">
-                                                <span>Добавить в корзину</span>
-                                            </button>
-                                        </div>
-                                    <?php endif;?>
-                                </div>
-                            </div>
+                        </div>
                     </div>
                     <div class="product__row">
                         <div class="product__description shadowBox">

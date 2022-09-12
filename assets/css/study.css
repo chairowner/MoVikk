@@ -1,0 +1,80 @@
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+main {
+    min-height: 25vh;
+}
+.study {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.study .item {
+    min-height: 60px;
+    height: auto;
+    width: calc(25% - 20px);
+    padding: 10px;
+    background-color: white;
+    color: var(--primary-color);
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 200ms ease-in-out;
+}
+.study .item:hover {
+    transform: scale(.95);
+    transition: transform 400ms ease-in-out;
+}
+.study .item:active {
+    transform: scale(.90);
+}
+.instruction {
+    display: flex;
+    gap: 20px;
+}
+.instruction .item {
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+}
+.instruction-text {
+    flex-grow: 1;
+    white-space: pre-wrap;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.instruction-video {
+    padding: 5px !important;
+    width: 700px;
+    height: 500px;
+}
+
+@media (max-width: 1440px) {
+    .instruction-video {
+        width: 500px;
+    }
+}
+@media (max-width: 1024px) {
+    .instruction {flex-direction: column;}
+    .instruction .item {
+        width: 100% !important;
+    }
+    .study .item {
+        width: calc(33.3333333333% - 20px);
+    }
+}
+@media (max-width: 768px) {
+    .study .item {
+        width: calc(50% - 20px);
+    }
+}
+@media (max-width: 425px) {
+    .study .item {
+        width: 100%;
+    }
+}

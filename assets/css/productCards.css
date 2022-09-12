@@ -68,6 +68,11 @@
     word-break: break-word;
     width: 100%;
 }
+.product-card-price-main {font-weight: bold;}
+.product-card-price-old {
+    text-decoration: line-through #333333;
+    color: #777777;
+}
 .product-card-text {
     height: 100%;
 }
@@ -78,8 +83,4 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
-}
-
-@media (max-width: 1600px) {
-    
 }

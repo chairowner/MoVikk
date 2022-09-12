@@ -15,7 +15,7 @@ $categories = $conn->prepare("SELECT * FROM categories");
 $categories->execute();
 $categories = $categories->fetchAll(PDO::FETCH_ASSOC);
 $sql =
-"SELECT DISTINCT p.id, p.categoryId, p.href, p.name, p.description, p.height, p.width, p.length, p.features, p.techSpec, p.instructionId, p.countryId, p.quantity, p.price, (p.price - (p.price * p.sale / 100)) discounted, p.preOrder, p.keywords, p.sold, p.added, p.isDeleted";
+"SELECT DISTINCT p.id, p.categoryId, p.href, p.name, p.description, p.height, p.width, p.length, p.features, p.techSpec, p.countryId, p.quantity, p.price, (p.price - (p.price * p.sale / 100)) discounted, p.preOrder, p.keywords, p.sold, p.added, p.isDeleted";
 if ($categoryHref !== 'all') $sql .=", c.href cHref";
 $sql .= " FROM products p";
 if ($categoryHref !== 'all') $sql .=" INNER JOIN categories c ON p.categoryId = c.id";
@@ -125,10 +125,10 @@ $products = $products->fetchAll(PDO::FETCH_ASSOC);
                                     $product['price'] = doubleval($product['price']);
                                     $product['discounted'] = doubleval($product['discounted']);
                                     if($product['discounted'] === $product['price']):?>
-                                        <strong class="addCart__price__main"><?=formatPrice($product['price'])?></strong>
+                                        <strong class="product-card-price-main"><?=formatPrice($product['price'])?></strong>
                                     <?php else:?>
-                                        <strong class="addCart__price__main"><?=formatPrice($product['discounted'])?></strong>
-                                        <span class="addCart__price__old"><?=formatPrice($product['price'])?></span>
+                                        <strong class="product-card-price-main"><?=formatPrice($product['discounted'])?></strong>
+                                        <span class="product-card-price-old"><?=formatPrice($product['price'])?></span>
                                     <?php endif;?>
                                 </p>
                                 <a href="/product/<?="{$product['href']}-{$product['id']}"?>" class="button elems">

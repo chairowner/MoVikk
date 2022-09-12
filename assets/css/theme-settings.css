@@ -21,7 +21,8 @@ p.primary, a.primary {
 }
 
 .button {
-    width: 150px;
+    min-width: 150px;
+    width: fit-content;
     height: 45px;
     padding: 0 15px;
     border-radius: 6px;
@@ -51,4 +52,40 @@ p.primary, a.primary {
 .button img {
     pointer-events: none;
 }
-.button span, .button i, .button img {cursor: pointer!important;}
+.button > * {cursor: pointer!important;}
+
+.field {
+    width: 150px;
+    height: 45px;
+    padding: 0 15px;
+    border-radius: 6px;
+    transition: all .2s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    outline: none;
+    border: none;
+}
+.field, .field.primary {
+    border: 2px solid var(--primary-color);
+    color: var(--main-color);
+}
+    .field:hover, .field:focus {
+        border-color: var(--primary-hover-color);
+    }
+    .field:active {
+        border-color: var(--primary-active-color);
+    }
+
+.field.elems {display: flex; justify-content: space-between;}
+.field > * {cursor: vertical-text!important;}
+
+input::-webkit-input-placeholder       {opacity: 1; transition: opacity 200ms ease-in-out;}
+input::-moz-placeholder                {opacity: 1; transition: opacity 200ms ease-in-out;}
+input:-moz-placeholder                 {opacity: 1; transition: opacity 200ms ease-in-out;}
+input:-ms-input-placeholder            {opacity: 1; transition: opacity 200ms ease-in-out;}
+input:focus::-webkit-input-placeholder {opacity: 0; transition: opacity 200ms ease-in-out;}
+input:focus::-moz-placeholder          {opacity: 0; transition: opacity 200ms ease-in-out;}
+input:focus:-moz-placeholder           {opacity: 0; transition: opacity 200ms ease-in-out;}
+input:focus:-ms-input-placeholder      {opacity: 0; transition: opacity 200ms ease-in-out;}

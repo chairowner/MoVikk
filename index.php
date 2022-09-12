@@ -1,4 +1,9 @@
 <?php require_once('includes/autoload.php');?>
+<?php
+$popular_products = $conn->prepare("SELECT pim.image, p.name, p.description, p.href, p.id, p.price, (p.price - (p.price * p.sale / 100)) discounted FROM products p INNER JOIN products_images pim ON p.id = pim.productId WHERE pim.isMain = 1 ORDER BY p.sold LIMIT 4");
+$popular_products->execute();
+$popular_products = $popular_products->fetchAll(PDO::FETCH_ASSOC);
+?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -12,12 +17,7 @@
             <div class="container">
                 <h2 class="text-uppercase">Популярные товары</h2>
                 <div class="product-cards w-100">
-                    <?php
-                    $popular_products = $conn->prepare("SELECT pim.image, p.name, p.description, p.href, p.id, p.price FROM products p INNER JOIN products_images pim ON p.id = pim.productId WHERE pim.isMain = 1 ORDER BY sold LIMIT 4");
-                    $popular_products->execute();
-                    $popular_products = $popular_products->fetchAll(PDO::FETCH_ASSOC);
-                    
-                    foreach($popular_products as $product_key => $product):
+                    <?php foreach($popular_products as $product_key => $product):
                         $noImage = false;
                         $product['image'] = $conn->prepare( "SELECT `image` FROM products_images WHERE id = :id AND isMain = 1 LIMIT 1");
                         $product['image']->execute(['id' => (int) $product['id']]);
@@ -47,12 +47,12 @@
                                         <?php
                                         // есть ли скидка
                                         $product['price'] = doubleval($product['price']);
-                                        if (!isset($product['sale'])) $product['sale'] = 0;
-                                        if($product['sale'] > 0):?>
-                                            <strong class="addCart__price__main"><?=formatPrice(($product['price'] - ($product['price'] * $product['sale'] / 100)))?></strong>
-                                            <span class="addCart__price__old"><?=formatPrice($product['price'])?></span>
+                                        $product['discounted'] = doubleval($product['discounted']);
+                                        if($product['discounted'] === $product['price']):?>
+                                            <strong class="product-card-price-main"><?=formatPrice($product['price'])?></strong>
                                         <?php else:?>
-                                            <strong class="addCart__price__main"><?=formatPrice($product['price'])?></strong>
+                                            <strong class="product-card-price-main"><?=formatPrice($product['discounted'])?></strong>
+                                            <span class="product-card-price-old"><?=formatPrice($product['price'])?></span>
                                         <?php endif;?>
                                     </p>
                                     <a href="/product/<?="{$product['href']}-{$product['id']}"?>" class="button elems">
