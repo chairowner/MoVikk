@@ -1,28 +1,72 @@
+<?php
+require_once('includes/autoload.php');
+$PAGE = new Page($conn);
+$COMPANY = new Company($conn);
+$USER = new User($conn);
+$CART = new Cart($conn);
+
+if ($USER->isGuest()) {
+    $PAGE->redirect();
+}
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/assets/css/main.css">
+    <?=$PAGE->getHead($USER->isGuest(), $PAGE->title, $PAGE->description)?>
+    <link rel="stylesheet" href="/assets/common/css/lk.css">
+    <script defer src="/assets/common/js/lk.js"></script>
 </head>
 <body>
-    <div id="login-form-overlay">
-        <div id="login-form" class="shadowBox">
-            <form id="login-form-auth" class="item active">
-                <input class="field shadowBox w-100 phoneNumberField" type="tel" name="phone" placeholder="Номер телефона" pattern="[0-9]{3} [0-9]{3}-[0-9]{2}-[0-9]{2}" data-pattern="(999) 999-99-99" title="Номер телефона" required>
-                <input class="field shadowBox w-100" type="password" name="password" placeholder="Пароль" title="Пароль" required>
-                <input class="button shadowBox w-100" type="submit" value="Войти">
-            </form>
-            <form id="login-from-reg" class="item">
-                <input class="field shadowBox w-100 phoneNumberField" type="tel" name="phone" placeholder="Номер телефона" pattern="[0-9]{3} [0-9]{3}-[0-9]{2}-[0-9]{2}" data-pattern="(999) 999-99-99" title="Номер телефона" required>
-                <input class="field shadowBox w-100" type="password" name="password" placeholder="Пароль" title="Пароль" required>
-                <input class="field shadowBox w-100" type="password" name="passwordRepeat" placeholder="Повторите пароль" title="Повторите пароль" required>
-                <input class="button shadowBox" type="submit" value="Зарегистрироваться">
-            </form>
-        </div>
+    <?php include_once('includes/header.php')?>
+    <div class="page__title">
+        <h1 class="container"><?=$PAGE->title?></h1>
     </div>
-    <?php include_once('includes/scripts.php');?>
+    <main>
+        <section class="m-0">
+            <div class="container main">
+                <div class="section information shadowBox">
+                    <?php
+                    $fields = $conn->prepare("SELECT `surname`, `name`, `patronymic`, `email`, `phone` FROM `users` WHERE `id` = :id");
+                    $fields->execute(['id'=>$USER->getId()]);
+                    $fields = $fields->fetch(PDO::FETCH_ASSOC);?>
+                    <div id="userData">
+                        <div class="row">
+                            <div class="rowTitle">
+                                <h2>ФИО</h2>
+                                <img data-name="fullname" class="js-edit fill-secondary" src="/assets/icons/edit.svg" title="Редактирование" alt="Редактировать">
+                            </div>
+                            <div class="line">
+                                <div class="item" title="Фамилия, имя, отчество (если есть)">
+                                    <span data-value="fullname"><?=implode(' ', [$fields['surname'],$fields['name'],$fields['patronymic']])?></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="rowTitle">
+                                <h2>Контактная информация</h2>
+                            </div>
+                            <div class="line">
+                                <div class="item" title="E-mail">
+                                    <span class="title">
+                                        <span>E-mail</span>
+                                        <img data-name="email" class="js-edit fill-secondary" src="/assets/icons/edit.svg" title="Редактирование" alt="Редактировать">
+                                    </span>
+                                    <span data-value="email"><?=$fields['email']?></span>
+                                </div>
+                                <div class="item" title="Контактный номер">
+                                    <span class="title">
+                                        <span>Телефон</span>
+                                        <img data-name="phone" class="js-edit fill-secondary" src="/assets/icons/edit.svg" title="Редактирование" alt="Редактировать">
+                                    </span>
+                                    <span data-value="phone"><?=isset($fields['phone']) && !empty(trim($fields['phone'])) ? trim($fields['phone']) : '<i class="no-data">Не указан</i>'?></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <?php include_once('includes/footer.php')?>
 </body>
 </html>

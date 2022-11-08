@@ -1,6 +1,12 @@
-<?php require_once('includes/autoload.php');?>
-<?php require_once('functions/numWord.php');?>
 <?php
+require_once('functions/formSQL.php');
+require_once('functions/numWord.php');
+require_once('includes/autoload.php');
+$PAGE = new Page($conn);
+$COMPANY = new Company($conn);
+$USER = new User($conn);
+$CART = new Cart($conn);
+
 $sqlSelect = ['i.id iId','i.name iName','i.video iVideo','i.text iText','p.id pId','p.name pName'];
 $sqlFrom = ['instructions i'];
 $sqlJoins = ["LEFT JOIN products p ON i.id = p.instructionId"];
@@ -18,18 +24,21 @@ if (isset($_GET['id'])) {
         $instruction = formSQL($conn, [$sqlSelect, $sqlFrom, $sqlWhere, $sqlJoins], 'one');
     }
 }
+if (isset($instruction['iName'])) $instruction['iName'] = trim($instruction['iName']);
 $isOpen = isset($instruction) && is_array($instruction) ? true : false;
+$title = $isOpen ? $instruction['iName'] : null;
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?=$isOpen ? $_PAGE->getHead(trim($instruction['iName'])) : $_PAGE->getHead()?>
-    <link rel="stylesheet" href="/assets/css/study.css">
+    <?=$PAGE->getHead($USER->isGuest(), $title)?>
+    <link rel="stylesheet" href="/assets/common/css/study.css">
+    <script defer src="/assets/common/js/study.js"></script>
 </head>
 <body>
     <?php include_once('includes/header.php')?>
     <div class="page__title">
-        <h1 class="container"><?=$isOpen ? trim($instruction['iName']) : "Обучения по пользованию аппаратами"?></h1>
+        <h1 class="container"><?=$isOpen ? $instruction['iName'] : "Обучения по пользованию аппаратами"?></h1>
     </div>
     <div class="content-wrapper">
         <?php if($isOpen):?>
@@ -57,7 +66,7 @@ $isOpen = isset($instruction) && is_array($instruction) ? true : false;
                         if (count($instructions) > 0):?>
                             <div class="study">
                                 <?php foreach($instructions as $key => $item):?>
-                                    <a href="/study/<?=$item['iId']?>" class="item shadowBox"> <?php $instructionName = "Обучение #".(int)$item['iId'];
+                                    <a href="/study/<?=$item['iId']?>" class="item shadowBox"><?php $instructionName = "Обучение #".(int)$item['iId'];
                                         if (isset($item['pName'])) $instructionName = trim($item['pName']);
                                         else if (isset($item['iName'])) $instructionName = trim($item['iName']);
                                         echo($instructionName);?></a>
@@ -72,7 +81,5 @@ $isOpen = isset($instruction) && is_array($instruction) ? true : false;
         <?php if(!$isOpen):?></main><?php endif;?>
     </div>
     <?php include_once('includes/footer.php')?>
-    <?php include_once('includes/scripts.php')?>
-    <script src="/assets/js/study.js"></script>
 </body>
 </html>

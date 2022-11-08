@@ -1,14 +1,18 @@
-<?php require_once('includes/autoload.php');?>
 <?php
-$popular_products = $conn->prepare("SELECT pim.image, p.name, p.description, p.href, p.id, p.price, (p.price - (p.price * p.sale / 100)) discounted FROM products p INNER JOIN products_images pim ON p.id = pim.productId WHERE pim.isMain = 1 ORDER BY p.sold LIMIT 4");
-$popular_products->execute();
-$popular_products = $popular_products->fetchAll(PDO::FETCH_ASSOC);
+require_once('functions/formatPrice.php');
+require_once('includes/autoload.php');
+$PAGE = new Page($conn);
+$COMPANY = new Company($conn);
+$USER = new User($conn);
+$CART = new Cart($conn);
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?=$_PAGE->getHead($_COMPANY->name.' - '.mb_strtolower($_PAGE->description), $_PAGE->description)?>
-    <link rel="stylesheet" href="/assets/css/index.css">
+    <?=$PAGE->getHead($USER->isGuest(), $COMPANY->name.' - '.mb_strtolower($PAGE->description), $PAGE->description)?>
+    <link rel="stylesheet" href="/assets/common/css/productCards.css">
+    <link rel="stylesheet" href="/assets/common/css/index.css">
+    <script defer src="/assets/common/js/index.js"></script>
 </head>
 <body>
     <?php include_once('includes/header.php');?>
@@ -46,8 +50,8 @@ $popular_products = $popular_products->fetchAll(PDO::FETCH_ASSOC);
                                     <p class="product-card-price">
                                         <?php
                                         // есть ли скидка
-                                        $product['price'] = doubleval($product['price']);
-                                        $product['discounted'] = doubleval($product['discounted']);
+                                        $product['price'] = (double)$product['price'];
+                                        $product['discounted'] = (double)$product['discounted'];
                                         if($product['discounted'] === $product['price']):?>
                                             <strong class="product-card-price-main"><?=formatPrice($product['price'])?></strong>
                                         <?php else:?>
@@ -57,7 +61,7 @@ $popular_products = $popular_products->fetchAll(PDO::FETCH_ASSOC);
                                     </p>
                                     <a href="/product/<?="{$product['href']}-{$product['id']}"?>" class="button elems">
                                         <span>Подробнее</span>
-                                        <i class="fa-solid fa-angle-right"></i>
+                                        <img class="angle-right fill-white" src="/assets/icons/angle-right-solid.svg" alt=">">
                                     </a>
                                 </div>
                             </div>
@@ -139,7 +143,5 @@ $popular_products = $popular_products->fetchAll(PDO::FETCH_ASSOC);
         </section>
     </main>
     <?php include_once('includes/footer.php');?>
-    <?php include_once('includes/scripts.php');?>
-    <script src="/assets/js/index.js"></script>
 </body>
 </html>

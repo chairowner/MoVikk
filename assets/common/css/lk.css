@@ -1,0 +1,76 @@
+main {
+    min-height: 25vh;
+}
+.information {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    width: fit-content;
+}
+.main {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+#userData {
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+.row {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.row .rowTitle {
+    margin: 0 0 5px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.row .rowTitle h2 {
+    font-size: 20px;
+    margin: 0;
+}
+.row .line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+.row .line .item {
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    position: relative;
+}
+.row .line .item .title {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    color: var(--addition-color);
+    font-size: 14px;
+}
+.row .line .item .title .js-edit {
+    width: 18px;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+}
+.buttons .button {
+    flex-grow: 1;
+}

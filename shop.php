@@ -1,6 +1,12 @@
-<?php require_once('includes/autoload.php');?>
-<?php require_once('functions/numWord.php');?>
 <?php
+require_once('functions/formatPrice.php');
+require_once('functions/numWord.php');
+require_once('includes/autoload.php');
+$PAGE = new Page($conn);
+$COMPANY = new Company($conn);
+$USER = new User($conn);
+$CART = new Cart($conn);
+$viewCount = 30;
 $categoryHref = isset($_GET['category']) ? trim($_GET['category']) : 'all';
 $page = isset($_GET['page']) && (int) $_GET['page'] > 0 ? (int) $_GET['page'] : 1;
 $sortArr = [
@@ -15,13 +21,13 @@ $categories = $conn->prepare("SELECT * FROM categories");
 $categories->execute();
 $categories = $categories->fetchAll(PDO::FETCH_ASSOC);
 $sql =
-"SELECT DISTINCT p.id, p.categoryId, p.href, p.name, p.description, p.height, p.width, p.length, p.features, p.techSpec, p.countryId, p.quantity, p.price, (p.price - (p.price * p.sale / 100)) discounted, p.preOrder, p.keywords, p.sold, p.added, p.isDeleted";
+"SELECT DISTINCT p.id, p.categoryId, p.href, p.name, p.description, p.height, p.width, p.length, p.features, p.techSpec, p.countryId, p.count, p.price, (p.price - (p.price * p.sale / 100)) discounted, p.preOrder, p.keywords, p.sold, p.added, p.isDeleted";
 if ($categoryHref !== 'all') $sql .=", c.href cHref";
 $sql .= " FROM products p";
 if ($categoryHref !== 'all') $sql .=" INNER JOIN categories c ON p.categoryId = c.id";
 $sql .= " WHERE";
 if ($categoryHref !== 'all') $sql .= " c.href = :href AND";
-$sql .= " p.price >= 1 AND p.isDeleted = 0 AND ((p.quantity > 0) OR (p.quantity = 0 AND p.preOrder = 1))";
+$sql .= " p.price >= 1 AND p.isDeleted = 0 AND ((p.count > 0) OR (p.count = 0 AND p.preOrder = 1))";
 if (isset($sort)) {
     $sql .= " ORDER BY ";
     if ($sort === 'popular') {
@@ -34,7 +40,7 @@ if (isset($sort)) {
         $sql .= "discounted DESC ";
     }
 }
-$sql .= " LIMIT ".($page - 1).", 30";
+$sql .= " LIMIT ".(($page - 1) * $viewCount).", ".$viewCount;
 
 $products = $conn->prepare($sql);
 if ($categoryHref !== 'all') {
@@ -47,13 +53,15 @@ $products = $products->fetchAll(PDO::FETCH_ASSOC);
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?=$_PAGE->getHead()?>
-    <link rel="stylesheet" href="/assets/css/shop.css">
+    <?=$PAGE->getHead($USER->isGuest())?>
+    <link rel="stylesheet" href="/assets/common/css/productCards.css">
+    <link rel="stylesheet" href="/assets/common/css/shop.css">
+    <script defer src="/assets/common/js/shop.js"></script>
 </head>
 <body>
     <?php include_once('includes/header.php')?>
     <div class="page__title">
-        <h1 class="container"><?=$_PAGE->title?></h1>
+        <h1 class="container"><?=$PAGE->title?></h1>
     </div>
     <section class="common-block">
         <div class="container main">
@@ -93,11 +101,12 @@ $products = $products->fetchAll(PDO::FETCH_ASSOC);
                     if ($index === 31): break;
                     else:
                         $noImage = false;
-                        $product['image'] = $conn->prepare( "SELECT `image` FROM products_images WHERE id = :id AND isMain = 1 LIMIT 1");
-                        $product['image']->execute(['id' => (int) $product['id']]);
+                        $product['image'] = $conn->prepare("SELECT `image` FROM products_images WHERE productId = :productId AND isMain = 1 LIMIT 1");
+                        $product['image']->execute(['productId' => (int) $product['id']]);
                         $product['image'] = $product['image']->fetch(PDO::FETCH_ASSOC);
-                        if (isset($product['image']['image'])) $product['image'] = "/assets/images/products/".trim($product['image']['image']);
-                        else {
+                        if (isset($product['image']['image'])) {
+                            $product['image'] = "/assets/images/products/".trim($product['image']['image']);
+                        } else {
                             $noImage = true;
                             $product['image'] = '/assets/icons/camera.svg';
                         }
@@ -122,8 +131,8 @@ $products = $products->fetchAll(PDO::FETCH_ASSOC);
                                 <p class="product-card-price">
                                     <?php
                                     // есть ли скидка
-                                    $product['price'] = doubleval($product['price']);
-                                    $product['discounted'] = doubleval($product['discounted']);
+                                    $product['price'] = (double)$product['price'];
+                                    $product['discounted'] = (double)$product['discounted'];
                                     if($product['discounted'] === $product['price']):?>
                                         <strong class="product-card-price-main"><?=formatPrice($product['price'])?></strong>
                                     <?php else:?>
@@ -133,7 +142,7 @@ $products = $products->fetchAll(PDO::FETCH_ASSOC);
                                 </p>
                                 <a href="/product/<?="{$product['href']}-{$product['id']}"?>" class="button elems">
                                     <span>Подробнее</span>
-                                    <i class="fa-solid fa-angle-right"></i>
+                                    <img class="angle-right fill-white" src="/assets/icons/angle-right-solid.svg" alt=">">
                                 </a>
                             </div>
                         </div>
@@ -146,7 +155,9 @@ $products = $products->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </section>
     <?php include_once('includes/footer.php')?>
-    <?php include_once('includes/scripts.php')?>
-    <script src="/assets/js/shop.js"></script>
+    <script>
+        console.log(<?=json_encode($_GET,JSON_UNESCAPED_UNICODE)?>);
+        console.log(`<?=$sql?>`);
+    </script>
 </body>
 </html>

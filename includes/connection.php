@@ -3,13 +3,13 @@
 error_reporting(E_ALL);
 
 # адрес сервера (имя хоста или IP-адрес)
-define('DATABASE_HOST', "127.0.0.1");
+define('DATABASE_HOST', "localhost");
 # имя пользователя базы данных
-define('DATABASE_USER', "root");
+define('DATABASE_USER', "cv33474_movikk");
 # пароль базы  данных
-define('DATABASE_PASS', "root");
+define('DATABASE_PASS', "PyZbSN6N");
 # имя базы данных
-define('DATABASE_NAME', "movikk");
+define('DATABASE_NAME', "cv33474_movikk");
 
 try /* создание подключения */ {
 	$conn = new PDO(
