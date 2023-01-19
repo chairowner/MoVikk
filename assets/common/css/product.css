@@ -246,6 +246,9 @@
     .product__shortInfo_desc .item .item {word-wrap: break-word;}
 }
 @media (max-width: 600px) {
+    .mainInfo > div {
+        height: 100%;
+    }
     .product__images {flex-direction: column;}
     .product__images__main {
         width: 100%;

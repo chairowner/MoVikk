@@ -1,12 +1,12 @@
 <?php
 set_include_path('../../');
-require_once('functions/getCaptcha.php');
 require_once('includes/autoload.php');
-$PAGE = new Page($conn);
-$COMPANY = new Company($conn);
-$USER = new User($conn);
+require_once('functions/getCaptcha.php');
+$_PAGE = new Page($conn);
+$_COMPANY = new Company($conn);
+$_USER = new User($conn);
 
-if (!$USER->isGuest()) require_once('404.php');
+if (!$_USER->isGuest()) require_once('404.php');
 
 if (isset($_GET['hash'])) {
     $hash = trim($_GET['hash']);
@@ -21,6 +21,8 @@ if (isset($_GET['hash'])) {
             } else {
                 $confirmInfo = "E-mail уже подтверждён";
             }
+        } else {
+            $confirmInfo = "E-mail уже подтверждён";
         }
     }
 }
@@ -36,13 +38,12 @@ if (!isset($confirmInfo)):
         
     $recaptcha = getCaptcha($_POST['g-recaptcha-response'], reCAPTCHA_SECRET_KEY);
     
-    if ($recaptcha->success == true && $recaptcha->score > 0.5 || true) {
+    if (($recaptcha->success == true && $recaptcha->score > 0.5) || DEBUG_MODE) {
         if (isset($_POST['email']) && isset($_POST['password'])) {
             $email = trim($_POST['email']);
             $password = trim($_POST['password']);
-            $response = $USER->login($email, $password);
+            $response = $_USER->login($email, $password);
         } else {
-            $response['info'][] = json_encode($_POST);
             $response['info'][] = 'Заполните все поля';
         }
     } else {
@@ -54,11 +55,11 @@ else:?>
     <!DOCTYPE html>
     <html lang="ru">
     <head>
-        <?=$PAGE->getHead($USER->isGuest(), $confirmInfo)?>
+        <?=$_PAGE->getHead($_USER->isGuest(), $confirmInfo)?>
     </head>
     <body>
         <?php include_once('includes/header.php');?>
-        <main style="height: 27vh;">
+        <main style="height: 35vh;">
             <section class="h-100 w-100">
                 <div class="container h-100 w-100 d-flex justify-content-center align-items-center">
                     <h2 class="text-uppercase text-center m-0"><?=$confirmInfo?></h2>

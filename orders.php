@@ -1,19 +1,20 @@
 <?php
+set_include_path(".");
 require_once('includes/autoload.php');
-$PAGE = new Page($conn);
-$COMPANY = new Company($conn);
-$USER = new User($conn);
-$CART = new Cart($conn);
-$ORDERS = new Order($conn);
+$_PAGE = new Page($conn);
+$_COMPANY = new Company($conn);
+$_USER = new User($conn);
+$_CART = new Cart($conn);
+$_ORDER = new Order($conn);
 
-if ($USER->isGuest()) {
-    $PAGE->redirect();
+if ($_USER->isGuest()) {
+    $_PAGE->redirect();
 }
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?=$PAGE->getHead($PAGE->title, $PAGE->description)?>
+    <?=$_PAGE->getHead($_PAGE->title, $_PAGE->description)?>
     <link rel="stylesheet" href="/assets/common/css/orders.css">
     <script defer src="/assets/common/js/formatPrice.js"></script>
     <script defer src="/assets/libs/clipboard/js/clipboard.min.js"></script>
@@ -22,7 +23,7 @@ if ($USER->isGuest()) {
 <body>
     <?php include_once('includes/header.php')?>
     <div class="page__title">
-        <h1 class="container"><?=$PAGE->title?></h1>
+        <h1 class="container"><?=$_PAGE->title?></h1>
     </div>
     <main class="minScreenHeight loaderBlock-wrapper">
         <div class="container">

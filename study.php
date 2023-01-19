@@ -1,11 +1,13 @@
 <?php
+$thisUrl = "https://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+set_include_path(".");
 require_once('functions/formSQL.php');
 require_once('functions/numWord.php');
 require_once('includes/autoload.php');
-$PAGE = new Page($conn);
-$COMPANY = new Company($conn);
-$USER = new User($conn);
-$CART = new Cart($conn);
+$_PAGE = new Page($conn);
+$_COMPANY = new Company($conn);
+$_USER = new User($conn);
+$_CART = new Cart($conn);
 
 $sqlSelect = ['i.id iId','i.name iName','i.video iVideo','i.text iText','p.id pId','p.name pName'];
 $sqlFrom = ['instructions i'];
@@ -27,18 +29,20 @@ if (isset($_GET['id'])) {
 if (isset($instruction['iName'])) $instruction['iName'] = trim($instruction['iName']);
 $isOpen = isset($instruction) && is_array($instruction) ? true : false;
 $title = $isOpen ? $instruction['iName'] : null;
+$main_header = "Обучения по пользованию аппаратами";
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?=$PAGE->getHead($USER->isGuest(), $title)?>
+    <?=$_PAGE->getHead($_USER->isGuest(), $title)?>
     <link rel="stylesheet" href="/assets/common/css/study.css">
+    <script defer src="/assets/common/js/copyToBuffer.js"></script>
     <script defer src="/assets/common/js/study.js"></script>
 </head>
 <body>
     <?php include_once('includes/header.php')?>
     <div class="page__title">
-        <h1 class="container"><?=$isOpen ? $instruction['iName'] : "Обучения по пользованию аппаратами"?></h1>
+        <h1 class="container d-flex align-items-center gap-10"><?=$isOpen ? "{$instruction['iName']} <img class=\"copy-href\" data-href=\"$thisUrl\" src=\"/assets/icons/copy-link.svg\" title=\"Скопировать ссылку\">" : $main_header?></h1>
     </div>
     <div class="content-wrapper">
         <?php if($isOpen):?>
@@ -50,7 +54,6 @@ $title = $isOpen ? $instruction['iName'] : null;
                             <?php if(isset($instruction['iVideo'])):$instruction['iVideo'] = trim($instruction['iVideo']);?><video controls class="item instruction-video">
                                 <source src="/assets/videos/instructions/<?=$instruction['iVideo']?>" type="video/mp4">
                                 <p>К сожалению, ваш браузер не поддерживает данный формат видео.</p>
-                                <p>Свяжитесь с нами и мы предоставим вам доступ к инструкции.</p>
                             </video><?php endif;?>
                         </div>
                     </div>
@@ -62,9 +65,9 @@ $title = $isOpen ? $instruction['iName'] : null;
                 <div class="container">
                     <div>
                         <?php
-                        if ($isOpen) echo('<h2>Обучения по пользованию аппаратами</h2>');
+                        if ($isOpen) echo("<h2>$main_header</h2>");
                         if (count($instructions) > 0):?>
-                            <div class="study">
+                            <div class="item-list">
                                 <?php foreach($instructions as $key => $item):?>
                                     <a href="/study/<?=$item['iId']?>" class="item shadowBox"><?php $instructionName = "Обучение #".(int)$item['iId'];
                                         if (isset($item['pName'])) $instructionName = trim($item['pName']);

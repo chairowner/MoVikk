@@ -1,15 +1,17 @@
 <?php
+set_include_path(".");
+require_once('includes/autoload.php');
 require_once('functions/formatPrice.php');
 require_once('functions/numWord.php');
-require_once('includes/autoload.php');
-$PAGE = new Page($conn);
-$COMPANY = new Company($conn);
-$USER = new User($conn);
-$CART = new Cart($conn);
-$PRODUCT = new Product($conn);
+$_PAGE = new Page($conn);
+$_COMPANY = new Company($conn);
+$_USER = new User($conn);
+$_CART = new Cart($conn);
+$_PRODUCT = new Product($conn);
 $product['id'] = isset($_GET['id']) ? (int) $_GET['id']: 0;
 $product['href'] = isset($_GET['href']) ? trim($_GET['href']) : null;
-$product = $PRODUCT->getProduct($product['id'],$product['href']);
+$product = $_PRODUCT->getProduct($product['id'],$product['href']);
+// exit(json_encode($product,JSON_UNESCAPED_UNICODE));
 if ($product['notFound']) {
     $product['name'] = "Товар не найден";
     $product['description'] = "К сожалению, не удалось найти искомый товар";
@@ -18,7 +20,7 @@ if ($product['notFound']) {
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?=$PAGE->getHead($USER->isGuest(), $product['name'], $product['description'])?>
+    <?=$_PAGE->getHead($_USER->isGuest(), $product['name'], $product['description'])?>
     <link rel="stylesheet" href="/assets/common/css/product.css">
     <script defer src="/assets/common/js/showLoad.js"></script>
     <script defer src="/assets/common/js/product.js"></script>
@@ -72,38 +74,42 @@ if ($product['notFound']) {
                                                 <strong class="addCart__price__main"><?=formatPrice($product['price'])?></strong>
                                             <?php endif;?>
                                         </div>
-                                        <div class="addCart_buyCounter"><?=$product['sold'] > 0 ? "Купили ".numWord($product['sold'], ['раз', 'раза', 'раз']) : 'Товар ещё не покупали'?></div>
+                                        <div class="addCart_buyCounter"><?=$product['sold'] > 0 ? "Товар приобрели ".numWord($product['sold'], ['раз', 'раза', 'раз']) : 'Товар ещё не покупали'?></div>
                                         <div class="addCart__button"><img class="w-100 text-center" style="height: 50px;" src='/assets/icons/spinner.svg' alt="Загрузка..."></div>
                                     <?php endif;?>
                                 </div>
-                                <div class="product__shortInfo_desc shadowBox custom-scroll">
-                                    <div class="shortInfo__desc__country item">
-                                        <div class="d-flex flex-column">
-                                            <strong class="headTitle">Страна</strong>
-                                            <span class="countryName"><?=$product['country']?></span>
-                                        </div>
+                                <?php if(!empty($product['country']) || !empty($product['techSpec']) || !empty($product['features'])):?>
+                                    <div class="product__shortInfo_desc shadowBox custom-scroll">
+                                        <?php if (!empty($product['country'])):?>
+                                            <div class="shortInfo__desc__country item">
+                                                <div class="d-flex flex-column">
+                                                    <strong class="headTitle">Страна</strong>
+                                                    <span class="countryName"><?=$product['country']?></span>
+                                                </div>
+                                            </div>
+                                        <?php endif;?>
+                                        <?php if(!empty($product['techSpec'])):?>
+                                            <div class="shortInfo__desc__lists item">
+                                                <strong class="headTitle">Технические характеристики</strong>
+                                                <div class="shortInfo__desc__lists__list">
+                                                    <?php foreach($product['techSpec'] as $key => $item):?>
+                                                        <span class="item"><?=$item['name']?> - <?=$item['value']?></span>
+                                                    <?php endforeach;?>
+                                                </div>
+                                            </div>
+                                        <?php endif;?>
+                                        <?php if(!empty($product['features'])):?>
+                                            <div class="shortInfo__desc__lists item">
+                                                <strong class="headTitle">Функции товара</strong>
+                                                <div class="shortInfo__desc__lists__list">
+                                                    <?php foreach($product['features'] as $key => $feature):?>
+                                                        <span class="item"><?=$feature?></span>
+                                                    <?php endforeach;?>
+                                                </div>
+                                            </div>
+                                        <?php endif;?>
                                     </div>
-                                    <?php if(!empty($product['techSpec'])):?>
-                                        <div class="shortInfo__desc__lists item">
-                                            <strong class="headTitle">Технические характеристики</strong>
-                                            <div class="shortInfo__desc__lists__list">
-                                                <?php foreach($product['techSpec'] as $key => $item):?>
-                                                    <span class="item"><?=$item['name']?> - <?=$item['value']?></span>
-                                                <?php endforeach;?>
-                                            </div>
-                                        </div>
-                                    <?php endif;?>
-                                    <?php if(!empty($product['features'])):?>
-                                        <div class="shortInfo__desc__lists item">
-                                            <strong class="headTitle">Функции товара</strong>
-                                            <div class="shortInfo__desc__lists__list">
-                                                <?php foreach($product['features'] as $key => $feature):?>
-                                                    <span class="item"><?=$feature?></span>
-                                                <?php endforeach;?>
-                                            </div>
-                                        </div>
-                                    <?php endif;?>
-                                </div>
+                                <?php endif;?>
                             </div>
                         </div>
                         <div class="product__row">

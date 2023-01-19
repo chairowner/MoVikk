@@ -110,50 +110,65 @@ p.success:active, a.success:active, span.success:active {
     border: none;
 }
 .button, .button.primary {
+    color: white;
     background-color: var(--primary-color);
 }
     .button.primary:hover,
     .button:hover {
+        color: white;
         background-color: var(--primary-hover-color);
     }
     .button.primary:active,
     .button:active {
+        color: white;
         background-color: var(--primary-active-color);
     }
 .button.addition {
+    color: white;
     background-color: var(--addition-color);
 }
     .button.addition:hover {
+        color: white;
         background-color: var(--addition-hover-color);
     }
     .button.addition:active {
+        color: white;
         background-color: var(--addition-active-color);
     }
 .button.secondary {
+    color: white;
     background-color: var(--secondary-color);
 }
     .button.secondary:hover {
+        color: white;
         background-color: var(--secondary-hover-color);
     }
     .button.secondary:active {
+        color: white;
         background-color: var(--secondary-active-color);
     }
 .button.error {
+    color: white;
     background-color: var(--error-color);
 }
     .button.error:hover {
+        color: white;
         background-color: var(--error-hover-color);
     }
     .button.error:active {
+        color: white;
         background-color: var(--error-active-color);
     }
 .button.success {
+    color: white;
     background-color: var(--success-color);
 }
     .button.success:hover {
+        color: white;
         background-color: var(--success-hover-color);
     }
     .button.success:active {
+        color: white;
         background-color: var(--success-active-color);
     }
 
@@ -212,6 +227,12 @@ p.success:active, a.success:active, span.success:active {
 
 .field.elems {display: flex; justify-content: space-between;}
 .field > * {cursor: text!important;}
+
+textarea.field {
+    padding: 13px 15px;
+    height: 100px;
+	resize: none;
+}
 
 .alert {
     width: 100%;

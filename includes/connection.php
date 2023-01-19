@@ -18,6 +18,7 @@ try /* создание подключения */ {
 	);
 } catch (PDOException $e) /* обработка ошибки */ {
 	// die($e->getMessage());
-	Header('Location: /503');
+	// Header('Location: /503');
+	require_once("/503");
 	exit;
 }

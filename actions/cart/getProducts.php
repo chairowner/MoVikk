@@ -1,9 +1,9 @@
 <?php
 set_include_path('../../');
 require_once('includes/autoload.php');
-$USER = new User($conn);
-$CART = new Cart($conn);
+$_USER = new User($conn);
+$_CART = new Cart($conn);
 
-if ($USER->isGuest()) $PAGE->redirect();
+if ($_USER->isGuest()) $_PAGE->redirect();
 
-exit(json_encode($CART->getProducts($USER->getId()), JSON_UNESCAPED_UNICODE)); // return
+exit(json_encode($_CART->getProducts($_USER->getId()), JSON_UNESCAPED_UNICODE)); // return

@@ -1,25 +1,26 @@
 <?php
+set_include_path(".");
 require_once('includes/autoload.php');
-$PAGE = new Page($conn);
-$COMPANY = new Company($conn);
-$USER = new User($conn);
-$CART = new Cart($conn);
+$_PAGE = new Page($conn);
+$_COMPANY = new Company($conn);
+$_USER = new User($conn);
+$_CART = new Cart($conn);
 
-if ($USER->isGuest()) {
-    $PAGE->redirect();
+if ($_USER->isGuest()) {
+    $_PAGE->redirect();
 }
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?=$PAGE->getHead($USER->isGuest(), $PAGE->title, $PAGE->description)?>
+    <?=$_PAGE->getHead($_USER->isGuest(), $_PAGE->title, $_PAGE->description)?>
     <link rel="stylesheet" href="/assets/common/css/lk.css">
     <script defer src="/assets/common/js/lk.js"></script>
 </head>
 <body>
     <?php include_once('includes/header.php')?>
     <div class="page__title">
-        <h1 class="container"><?=$PAGE->title?></h1>
+        <h1 class="container"><?=$_PAGE->title?></h1>
     </div>
     <main>
         <section class="m-0">
@@ -27,7 +28,7 @@ if ($USER->isGuest()) {
                 <div class="section information shadowBox">
                     <?php
                     $fields = $conn->prepare("SELECT `surname`, `name`, `patronymic`, `email`, `phone` FROM `users` WHERE `id` = :id");
-                    $fields->execute(['id'=>$USER->getId()]);
+                    $fields->execute(['id'=>$_USER->getId()]);
                     $fields = $fields->fetch(PDO::FETCH_ASSOC);?>
                     <div id="userData">
                         <div class="row">

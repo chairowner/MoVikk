@@ -9,6 +9,7 @@ class Page {
     public string $current;
     public string $title;
     public string $description;
+    public string $keywords;
     private string $mainTable = 'pages';
 
     public function __construct(PDO $conn = null) {
@@ -117,9 +118,11 @@ class Page {
     
     /**
      * @param string $url ссылка для редиректа
+     * @param bool $outdoor редирект во вне
      */
-    function redirect(string $url = "") {
-        Header("Location: /{$url}");
+    function redirect(string $url = "", bool $outdoor = false) {
+        if ($outdoor) Header("Location: {$url}");
+        else Header("Location: /{$url}");
         exit;
     }
 }

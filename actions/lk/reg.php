@@ -1,9 +1,9 @@
 <?php
 set_include_path('../../');
-require_once('functions/getCaptcha.php');
 require_once('includes/autoload.php');
-$COMPANY = new Company($conn);
-$USER = new User($conn);
+require_once('functions/getCaptcha.php');
+$_COMPANY = new Company($conn);
+$_USER = new User($conn);
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -12,7 +12,7 @@ require_once 'classes/PHPMailer/Exception.php';
 require_once 'classes/PHPMailer/PHPMailer.php';
 require_once 'classes/PHPMailer/SMTP.php';
 
-if (!$USER->isGuest() && !$USER->isAdmin()) {
+if (!$_USER->isGuest() && !$_USER->isAdmin()) {
     require_once('404.php');
 }
 
@@ -29,7 +29,7 @@ if (!isset($_POST['g-recaptcha-response']) || empty($_POST['g-recaptcha-response
     
 $recaptcha = getCaptcha($_POST['g-recaptcha-response'], reCAPTCHA_SECRET_KEY);
 
-if ($recaptcha->success == true && $recaptcha->score > 0.5 || true) {
+if (($recaptcha->success == true && $recaptcha->score > 0.5 || true) || DEBUG_MODE) {
     if (!isset($_POST['terms'])) {
         $response['info'][] = "Для регистрации необходимо согласиться с правилами";
         $next = false;
@@ -74,9 +74,11 @@ if ($recaptcha->success == true && $recaptcha->score > 0.5 || true) {
         $surname = trim($_POST['surname']);
         $patronymic = isset($_POST['patronymic']) && trim($_POST['patronymic']) !== "" ? trim($_POST['patronymic']) : null;
         
-        $reg = $USER->registration($email,$password,$passwordRepeat,$name,$surname,$patronymic);
+        $reg = $_USER->registration($email,$password,$passwordRepeat,$name,$surname,$patronymic);
 
         if (!$reg['status']) exit(json_encode($reg, JSON_UNESCAPED_UNICODE));
+        
+        $hash = $reg['hash'];
         
         # ссылка на сайт
         $siteUrl = !empty($_SERVER['HTTPS']) ? 'https' : 'http';
@@ -84,7 +86,7 @@ if ($recaptcha->success == true && $recaptcha->score > 0.5 || true) {
         # ссылка подтверждения
         $verifyUrl = "{$siteUrl}/confirmEmail/{$hash}";
 
-        $companyName = $COMPANY->name;
+        $companyName = $_COMPANY->name;
 
         $userName = $name;
         if (isset($patronymic)) $userName .= $patronymic;
@@ -92,7 +94,7 @@ if ($recaptcha->success == true && $recaptcha->score > 0.5 || true) {
         $mailSubject = "Регистрация в интернет-магазине MoVikk";
         $mailBody =
         "<div style=\"min-height:200px;\">".
-            "<p style=\"margin:0 0 40px 0;\">Для завершения регистрации в интернет-магазине <a href=\"{$siteUrl}\"><strong>{$COMPANY->name}</strong></a> подтвердите свою почту:</p>".
+            "<p style=\"margin:0 0 40px 0;\">Для завершения регистрации в интернет-магазине <a href=\"{$siteUrl}\"><strong>{$_COMPANY->name}</strong></a> подтвердите свою почту:</p>".
             "<div style=\"margin:0 0 40px 0;\"><a href=\"{$verifyUrl}\" style=\"padding:15px 20px;font-weight:bold;color:#ffffff;background-color:#333333;border-radius:8px;\">Подтвердить E-mail</a></div>".
             "<span style=\"font-size:12px;\">Если кнопка не работает, перейдите по этой ссылке: <a href=\"{$verifyUrl}\">{$verifyUrl}</a></span>";
         "</div>";

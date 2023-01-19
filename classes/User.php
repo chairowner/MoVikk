@@ -116,26 +116,27 @@ class User {
      * Реализация входа в систему
      * @param string $email E-мail адрес, привязанный к аккаунту
      * @param string $password пароль от аккаунта
-     * @return array ['status' - bool,'reload' - bool, 'info' - array]
+     * @return array ['status' - bool,'redirect' - string, 'info' - array]
      */
     public function login(string $email, string $password) {
         $response = [
             'status' => false,
-            'reload' => false,
+            'redirect' => null,
             'info' => [],
         ];
         if (!$this->isGuest()) return $response;
-        $user = $this->conn->prepare("SELECT `id`, `password` FROM `{$this->mainTable}` WHERE `email` = :email");
+        $user = $this->conn->prepare("SELECT `id`, `password`, `isAdmin` FROM `{$this->mainTable}` WHERE `email` = :email");
         $user->execute(['email' => $email]);
         $user = $user->fetch(PDO::FETCH_ASSOC);
         if (isset($user) && !empty($user)) {
             $user['password'] = trim($user['password']);
+            $user['isAdmin'] = (bool) $user['isAdmin'];
             if (password_verify($password, $user['password'])) {
                 session_start();
                 $_SESSION['user']['id'] = (int) $user['id'];
                 session_write_close();
                 $response['status'] = true;
-                $response['reload'] = true;
+                $response['redirect'] = $user['isAdmin'] ? '/admin' : '/';
                 $response['info'][] = 'Вы успешно авторизовались!';
             } else {
                 $response['info'][] = 'Неверная почта или пароль';
@@ -195,6 +196,7 @@ class User {
                     $query = $this->conn->prepare($sql);
                     if ($query->execute($queryData)) {
                         $response['status'] = true;
+                        $response['hash'] = $hash;
                         $response['info'][] = 'Аккаунт успешно зарегистрирован!';
                     } else {
                         $response['info'][] = 'При регистрации возникла ошибка. Перезагрузите страницу и повторите попытку.';

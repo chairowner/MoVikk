@@ -1,15 +1,16 @@
 <?php
-require_once('functions/formatPrice.php');
+set_include_path(".");
 require_once('includes/autoload.php');
-$PAGE = new Page($conn);
-$COMPANY = new Company($conn);
-$USER = new User($conn);
-$CART = new Cart($conn);
+require_once('functions/formatPrice.php');
+$_PAGE = new Page($conn);
+$_COMPANY = new Company($conn);
+$_USER = new User($conn);
+$_CART = new Cart($conn);
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?=$PAGE->getHead($USER->isGuest(), $COMPANY->name.' - '.mb_strtolower($PAGE->description), $PAGE->description)?>
+    <?=$_PAGE->getHead($_USER->isGuest(), $_COMPANY->name.' - '.mb_strtolower($_PAGE->description), $_PAGE->description)?>
     <link rel="stylesheet" href="/assets/common/css/productCards.css">
     <link rel="stylesheet" href="/assets/common/css/index.css">
     <script defer src="/assets/common/js/index.js"></script>
@@ -17,59 +18,6 @@ $CART = new Cart($conn);
 <body>
     <?php include_once('includes/header.php');?>
     <main>
-        <section>
-            <div class="container">
-                <h2 class="text-uppercase">Популярные товары</h2>
-                <div class="product-cards w-100">
-                    <?php foreach($popular_products as $product_key => $product):
-                        $noImage = false;
-                        $product['image'] = $conn->prepare( "SELECT `image` FROM products_images WHERE id = :id AND isMain = 1 LIMIT 1");
-                        $product['image']->execute(['id' => (int) $product['id']]);
-                        $product['image'] = $product['image']->fetch(PDO::FETCH_ASSOC);
-                        if (isset($product['image']['image'])) $product['image'] = "/assets/images/products/".trim($product['image']['image']);
-                        else {
-                            $noImage = true;
-                            $product['image'] = '/assets/icons/camera.svg';
-                        }?>
-                        <div class="product-card stretch w-300px shadowBox">
-                            <div class="product-card-image">
-                                <div class="product-card-image_block">
-                                    <?php if($noImage):?>
-                                        <img src="<?=$product['image']?>" class="noPhoto" alt="<?=$product['name']?>">
-                                    <?php else:?>
-                                        <img src="<?=$product['image']?>" alt="<?=$product['name']?>">
-                                    <?php endif;?>
-                                </div>
-                            </div>
-                            <div class="product-card-body">
-                                <p class="product-card-title"><?=$product['name']?></p>
-                                <div class="product-card-text">
-                                    <p><?=isset($product['description']) ? trim(substr($product['description'], 0, 300)) : '<i class="text-none">Описание отсутствует</i>'?></p>
-                                </div>
-                                <div class="product-card-buy">
-                                    <p class="product-card-price">
-                                        <?php
-                                        // есть ли скидка
-                                        $product['price'] = (double)$product['price'];
-                                        $product['discounted'] = (double)$product['discounted'];
-                                        if($product['discounted'] === $product['price']):?>
-                                            <strong class="product-card-price-main"><?=formatPrice($product['price'])?></strong>
-                                        <?php else:?>
-                                            <strong class="product-card-price-main"><?=formatPrice($product['discounted'])?></strong>
-                                            <span class="product-card-price-old"><?=formatPrice($product['price'])?></span>
-                                        <?php endif;?>
-                                    </p>
-                                    <a href="/product/<?="{$product['href']}-{$product['id']}"?>" class="button elems">
-                                        <span>Подробнее</span>
-                                        <img class="angle-right fill-white" src="/assets/icons/angle-right-solid.svg" alt=">">
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach;?>
-                </div>
-            </div>
-        </section>
         <section>
             <div class="container">
                 <h2>Категории товаров</h2>

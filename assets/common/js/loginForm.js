@@ -1,20 +1,32 @@
-const msgBox = $('#login-msgBox'),reCAPTCHA_SITE_KEY = '6LcQsRAiAAAAALV4CnipHkz_FlVwo3MnZro7655c';
+const
+msgBox = $('#login-msgBox'),
+reCAPTCHA_SITE_KEY = '6LdyVx8jAAAAAFpzmmmkEB4Hr_pAanZrZ-YxMz3L',
+loginOverlay = $('#login-form-overlay');
+
+try {
+    grecaptcha.ready(function() {
+        grecaptcha.execute(reCAPTCHA_SITE_KEY, {action: 'login'}).then(function(token) {
+            $('input[name="g-recaptcha-response"].g-recaptcha-response').val(token);
+        });
+    });
+} catch (error) {
+    console.error('ERROR',error);
+}
+
 $('a.item__data[href="/lk"]').on('click',function(e){
     e.preventDefault();
-    const overlay = $('#login-form-overlay'), timeout = 0.3;
-    if (overlay.hasClass('active')) {
-        overlayAct('close', overlay);
+    if (loginOverlay.hasClass('active')) {
+        overlayAct('close', loginOverlay);
     } else {
-        overlayAct('open', overlay);
+        overlayAct('open', loginOverlay);
     }
 });
 $('#close-login-form').on('click',function(){
     const
-    overlay = $('#login-form-overlay'),
     forms = $('#login-form'),
     timeout = 0.3;
-    if (overlay.hasClass('active')) {
-        overlayAct('close', overlay);
+    if (loginOverlay.hasClass('active')) {
+        overlayAct('close', loginOverlay);
     }
 });
 $('#login-form form.item').on('submit',function(e){
@@ -31,46 +43,37 @@ $('#login-form form.item').on('submit',function(e){
         url += "reg";
         errMsg = `При авторизации произошла системная ошибка, но вы всё ещё можете связаться с нами через VK, Viber или WhatsApp!`;
     }
-    function sendForm() {
-        if (typeof token != "undefined")
-        form.find('input[name="g-recaptcha-response"].g-recaptcha-response').val(token);;
-        $.ajax({
-            url: url,
-            type: 'POST',
-            cache: false,
-            dataType: 'JSON',
-            data: form.serialize(),
-            success: function(data) {
-                let type;
-                if (data.status) {
-                    type = 'success';
-                    if (typeof data.reload != "undefined" && data.reload) {
-                        location.href = "/";
-                    } else {
-                        overlayAct('close', overlay);
-                    }
+    
+    $.ajax({
+        url: url,
+        type: 'POST',
+        cache: false,
+        dataType: 'JSON',
+        data: form.serialize(),
+        success: function(data) {
+            console.log(data);
+            let type;
+            if (data.status) {
+                type = 'success';
+                if (typeof data.redirect != "undefined") {
+                    location.href = data.redirect;
                 } else {
-                    type = 'error';
-                    setTimeout(() => {main.css('display','flex');}, 200);
-                    main.removeClass('close');
+                    overlayAct('close', loginOverlay);
                 }
-                new Message(msgBox, data.info.join(";\n"), type, 7);
-            },
-            error: function(err) {
-                console.log(`ERROR`);
-                console.log(err);
+            } else {
+                type = 'error';
+                setTimeout(() => {main.css('display','flex');}, 200);
                 main.removeClass('close');
-                new Message(msgBox, errMsg, 'error', 5);
             }
-        });
-    }
-    if (typeof grecaptcha != "undefined") {
-        grecaptcha.ready(function() {
-            grecaptcha.execute(reCAPTCHA_SITE_KEY, {action: 'login'}).then(function(token) {
-                sendForm();
-            });
-        });
-    } else sendForm();
+            new Message(msgBox, data.info.join(";\n"), type, 7);
+        },
+        error: function(err) {
+            console.log(`ERROR`);
+            console.log(err);
+            main.removeClass('close');
+            new Message(msgBox, errMsg, 'error', 5);
+        }
+    });
 });
 $('#toggle-login-forms').on('click',function(){
     const

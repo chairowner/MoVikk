@@ -16,7 +16,7 @@ RewriteBase /
 # Order Allow,Deny
 # Allow from 81.4.254.45
 
-# убираем слэш в конце
+# # убираем слэш в конце
 RewriteCond %{HTTP_HOST} (.*)
 RewriteCond %{REQUEST_URI} /$ [NC]
 RewriteRule ^(.*)(/)$ $1 [L,R=301]
@@ -47,7 +47,12 @@ RewriteRule ^shop/([a-z]+) /shop?category=all&sort=$1 [NC,L]
 RewriteRule ^study/([0-9]+) /study?id=$1 [NC,L]
 
 # ЛИЧНЫЙ КАБИНЕТ
-RewriteRule ^confirmEmail/([a-z0-9]+) /actions/lk/auth?hash=$1 [NC,L]
+RewriteRule ^confirmEmail/([a-z0-9]+) /actions/lk/login?hash=$1 [NC,L]
 
 # ЗАКАЗЫ
 RewriteRule ^lk/orders /orders [NC,L]
+
+# АДМИНИСТРАТИВНАЯ ПАНЕЛЬ
+# RewriteCond %{HTTP_HOST} (.*)
+# RewriteCond %{REQUEST_URI} /$ [NC]
+RewriteRule ^admin$ admin/index [L,R=301]

@@ -4,13 +4,15 @@
  * @param string $name название компании
  * @param string $phone номер телефона
  * @param array $info информация о компании
- * @param array $social ссылки на соц. сети
+ * @param array $socials ссылки на соц. сети
+ * @param string $mainTable таблица
  */
 class Company {
     public string $name;
     public string $phone;
+    public string $phone_format;
     public array $info;
-    public array $social;
+    public array $socials;
     private string $mainTable = "company";
 
     /**
@@ -18,7 +20,7 @@ class Company {
      */
     function __construct(PDO $conn = null) {
         if (isset($conn)) {
-            $company = $conn->prepare("SELECT * FROM `company`");
+            $company = $conn->prepare("SELECT * FROM `{$this->mainTable}`");
             $company->execute();
             $company = $company->fetch(PDO::FETCH_ASSOC);
             if (isset($company) && !empty($company)) {

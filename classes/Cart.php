@@ -29,7 +29,7 @@ class Cart {
      */
     public function getProducts(int $userId, int $limit = 0) {
         $response = [];
-        // try {
+        try {
             $sql = "SELECT `p`.`name`, `p`.`price` `oldPrice`, `p`.`sale`, `p`.`href`, `p`.`count` `availableCount`, `c`.`productId`, `c`.`count` `countInCart`  FROM `{$this->mainTable}` `c` INNER JOIN `{$this->addTable}` `p` ON `p`.`id` = `c`.`productId` WHERE `userId` = :userId";
             $sqlExecute = ['userId' => $userId];
             if ($limit > 0) {
@@ -60,9 +60,9 @@ class Cart {
                 if ($response[$i]['oldPrice'] == $response[$i]['currentPrice']) $response[$i]['oldPrice'] = null;
                 $response[$i]['image'] = $this->getMainImage($cart[$i]['productId']);
             }
-        // } catch (PDOException $e) {
-        //     $response = [$e->getMessage()];
-        // }
+        } catch (PDOException $e) {
+            $response = [$e->getMessage()];
+        }
         return $response;
     }
 
@@ -94,6 +94,7 @@ class Cart {
             if ((bool) $image['isMain'] && !$setMain) {
                 $img['name'] = $image['image'];
                 $setMain = true;
+                break;
             } else {
                 $img['additional'][] = $image['image'];
             }
@@ -188,7 +189,19 @@ class Cart {
                     if ($cartExecute['count'] <= $product['count']) {
                         $cart = $this->conn->prepare($cart);
                         if ($cart->execute($cartExecute)) {
-                            $response = ['status' => true,'count'=>$newCount,'info' => null];//'Товар добавлен в корзину'];
+                            $query = "SELECT `price`, `sale` FROM `{$this->addTable}` WHERE `id` = :id";
+                            $query = $this->conn->prepare($query);
+                            $query->execute(['id' => $productId]);
+                            $query = $query->fetch(PDO::FETCH_ASSOC);
+                            $query['price'] = (float)$query['price'];
+                            $query['sale'] = (int)$query['sale'];
+                            $response = [
+                                'status' => true,
+                                'count' => $newCount,
+                                'oldPrice' => $query['price'],
+                                'currentPrice' => ($query['price'] - ($query['price'] * $query['sale'] / 100)),
+                                'info' => null
+                            ];//'Товар добавлен в корзину'];
                         } else {
                             $response = ['status' => false,'info' => "При добавлении товара возникла внутренняя ошибка\nДля заказа можно позвонить нам или написать в ВК, WhatsApp или Viber c:"];
                         }
@@ -200,7 +213,11 @@ class Cart {
                 $response['info'] = 'Товар не найден: ';
             }
         } catch (PDOException $e) {
-            $response = ['status' => false,'info' => "При добавлении товара возникла внутренняя ошибка\nДля заказа можно позвонить нам или написать в ВК, WhatsApp или Viber c:",'error'=>$e->getMessage()];
+            $response = [
+                'status' => false,
+                'info' => "При добавлении товара возникла внутренняя ошибка\nДля заказа можно позвонить нам или написать в ВК, WhatsApp или Viber c:",
+                // 'error'=>$e->getMessage()
+            ];
         }
         return $response;
     }
@@ -214,13 +231,13 @@ class Cart {
      */
     public function remove(int $userId, int $productId, int $count = 1) {
         $response = ['status' => false,'info' => 'Не удалось убрать товар'];
-        $responseInfo = null;
         try {
             $cart = $this->conn->prepare("SELECT * FROM `{$this->mainTable}` WHERE `userId` = :userId AND `productId` = :productId");
             $cart->execute(['userId' => $userId,'productId' => $productId]);
             $cart = $cart->fetch(PDO::FETCH_ASSOC);
             if (isset($cart) && !empty($cart)) /* продукт есть в корзине */ {
                 $newCount = (int) $cart['count'] - $count;
+                if ($count <= 0) $newCount = 0;
                 $entryId = (int) $cart['id'];
 
                 $cartExecute = ['entryId' => $entryId, 'count' => $newCount];
@@ -233,7 +250,19 @@ class Cart {
                 } 
                 $cart = $this->conn->prepare($cart);
                 if ($cart->execute($cartExecute)) {
-                    $response = ['status' => true,'count'=>$newCount,'info' => null];
+                    $query = "SELECT `price`, `sale` FROM `{$this->addTable}` WHERE `id` = :id";
+                    $query = $this->conn->prepare($query);
+                    $query->execute(['id' => $productId]);
+                    $query = $query->fetch(PDO::FETCH_ASSOC);
+                    $query['price'] = (float)$query['price'];
+                    $query['sale'] = (int)$query['sale'];
+                    $response = [
+                        'status' => true,
+                        'count' => $newCount,
+                        'oldPrice' => $query['price'],
+                        'currentPrice' => ($query['price'] - ($query['price'] * $query['sale'] / 100)),
+                        'info' => null
+                    ];
                 } else {
                     $response = ['status' => false,'info' => "При удалении товара из корзины возникла внутренняя ошибка\nДля заказа можно позвонить нам или написать в ВК, WhatsApp или Viber c:"];
                 }
@@ -244,7 +273,37 @@ class Cart {
             $response = [
                 'status' => false,
                 'info' => "При удалении товара из корзины возникла внутренняя ошибка\nДля заказа можно позвонить нам или написать в ВК, WhatsApp или Viber c:",
-                'error'=>$e->getMessage()
+                // 'error'=>$e->getMessage()
+            ];
+        }
+        return $response;
+    }
+    
+    /**
+     * Удалить все товары из корзину
+     * @param int $userId id пользователя
+     * @return string 
+     */
+    private function removeAll(int $userId) {
+        $response = ['status' => false,'info' => 'Не удалось убрать товар'];
+        try {
+            $cart = $this->conn->prepare("DELETE FROM `{$this->mainTable}` WHERE `userId` = :userId");
+            if ($cart->execute(['userId' => $userId])) /* продукт есть в корзине */ {
+                $newCount = 0;
+                $cart = $this->conn->prepare($cart);
+                $response = [
+                    'status' => true,
+                    'count' => $newCount,
+                    'info' => null
+                ];
+            } else /* продукта нет в корзине */ {
+                $response = ['status' => false,'info' => "Корзина пуста"];
+            }
+        } catch (PDOException $e) {
+            $response = [
+                'status' => false,
+                'info' => "При удалении товаров из корзины возникла внутренняя ошибка",
+                // 'error'=>$e->getMessage()
             ];
         }
         return $response;
@@ -262,15 +321,24 @@ class Cart {
         }
     }
 
-    public function calculateFullCost(int $userId) {
+    public function getCartData(int $userId) {
         try {
-            $cart = $this->conn->prepare("SELECT p.price oldPrice, (p.price - (p.price * p.sale / 100)) currentPrice, (p.price - (p.price - (p.price * p.sale / 100))) salePrice FROM carts c INNER JOIN products p ON p.id = c.productId WHERE c.userId = :userId");
+            $cart = $this->conn->prepare("SELECT p.price oldPrice, (p.price - (p.price * p.sale / 100)) currentPrice, (p.price - (p.price - (p.price * p.sale / 100))) salePrice, c.count countInCart FROM carts c INNER JOIN products p ON p.id = c.productId WHERE c.userId = :userId");
             $cart->execute(['userId' => $userId]);
-            $cart = $cart->fetch(PDO::FETCH_ASSOC);
-            if (!isset($cart) || empty($cart)) return ['status'=>true,'oldPrice'=>0,'currentPrice'=>0,'salePrice'=>0];
-            return ['status'=>true,'oldPrice'=>(float)$cart['oldPrice'],'currentPrice'=>(float)$cart['currentPrice'],'salePrice'=>(float)$cart['salePrice']];
-        } catch (\Throwable $th) {
-            return ['status'=>false,'oldPrice'=>0,'currentPrice'=>0,'salePrice'=>0];
+            $cart = $cart->fetchAll(PDO::FETCH_ASSOC);
+            $response = ['status'=>true,'products' => []];
+            if ($cart < 1) return $response;
+            for ($i=0; $i < count($cart); $i++) { 
+                $response['products'][] = [
+                    'oldPrice' => (float) $cart[$i]['oldPrice'],
+                    'currentPrice' => (float) $cart[$i]['currentPrice'],
+                    'salePrice' => (float) $cart[$i]['salePrice'],
+                    'countInCart' => (int) $cart[$i]['countInCart']
+                ];
+            }
+            return $response;
+        } catch (Exception $ex) {
+            return ['status'=>false,'products' => [], 'info'=>"Не удалось получить данные вашей корзины"];
         }
     }
 }

@@ -117,6 +117,18 @@ main {
     font-weight: bold;
     border-radius: 50%;
 }
+.onePrice.show {display: block;}
+.onePrice {
+    display: none;
+    font-size: 10px;
+    color: gray;
+}
+.onePrice::after {
+    content: " / шт.";
+}
+.js-delete {
+    cursor: pointer;
+}
 @media (max-width: 940px) {
     .js-cardAction {font-size: 18px;}
     .js-cardAction.plus, .js-cardAction.minus {width:35px;height:35px;}
