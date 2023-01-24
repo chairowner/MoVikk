@@ -11,7 +11,7 @@ $_PRODUCTS;
 $_USER = new User($conn);
 
 if (!$_USER->isAdmin()) {
-    $_PAGE->redirect();
+    $_PAGE->Redirect();
 }
 
 $data = $categories = [];
@@ -21,13 +21,13 @@ $editCategory = explode('/',$_SERVER['PHP_SELF']);
 $editCategory = basename($editCategory[count($editCategory) - 1], '.php');
 
 if (isset($editId)) {
-    $categories = $_CATEGORIES->get("all");
+    $categories = $_CATEGORIES->Get("all");
     $_PRODUCTS = new Product($conn);
     $data = $_PRODUCTS->getProduct($editId,"",true);
-    if (!isset($data)||$data['notFound']) $_PAGE->redirect("admin/$editCategory");
+    if (!isset($data)||$data['notFound']) $_PAGE->Redirect("admin/$editCategory");
 } else {
     if ($action !== "create") {
-        $categories = $_CATEGORIES->get("all");
+        $categories = $_CATEGORIES->Get("all");
         $prepare = "SELECT `c`.`name` `categoryName`,`p`.`name`,`p`.`id`,`p`.`description`,`p`.`count`,`p`.`price`,`p`.`sale`,`p`.`isDeleted` FROM `products` `p` INNER JOIN `categories` `c` ON `c`.`id` = `p`.`categoryId`";
         $data = $conn->prepare($prepare);
         $data->execute();
@@ -43,12 +43,13 @@ function getArray(PDO $conn, string $table) {
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?= $_PAGE->getHead($_USER->isGuest(), $_PAGE->title . " - " . $_PAGE->description, $_PAGE->description) ?>
+    <?= $_PAGE->GetHead($_USER->isGuest(), $_PAGE->title . " - " . $_PAGE->description, $_PAGE->description) ?>
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/<?= $editCategory ?>.css">
     <script defer src="/assets/common/js/showLoad.js"></script>
     <script defer src="/assets/common/js/formatPrice.js"></script>
     <script defer src="assets/js/actions.js"></script>
+    <script defer src="assets/js/product/product.js"></script>
     <script>console.log(<?=json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>)</script>
 </head>
 
@@ -114,6 +115,14 @@ function getArray(PDO $conn, string $table) {
                                     <textarea name="description" class="field" maxlength="255"><?=isset($data['description'])?trim($data['description']):null?></textarea>
                                 </label>
                                 <label class="item">
+                                    <span>Цена<span class="error">*</span></span>
+                                    <input type="number" min="1" step="0.01" name="price" require class="field" value="<?=isset($data['price'])?(float)$data['price']:null?>">
+                                </label>
+                                <label class="item">
+                                    <span>Количество</span>
+                                    <input type="number" placeholder="0" min="0" step="1" name="count" class="field" value="<?=isset($data['count'])?(int)$data['count']:null?>">
+                                </label>
+                                <label class="item">
                                     <span>Преймущества (разделять знаком ";")</span>
                                     <input type="text" name="features" class="field" value="<?php
                                         if(isset($data['features'])){
@@ -156,42 +165,48 @@ function getArray(PDO $conn, string $table) {
                                     <input type="number" placeholder="0" min="0" step="0.01" name="length" class="field" value="<?=isset($data['length'])?(float)$data['length']:null?>">
                                 </label>
                                 <label class="item">
-                                    <span>Цена<span class="error">*</span></span>
-                                    <input type="number" min="1" step="0.01" name="price" require class="field" value="<?=isset($data['price'])?(float)$data['price']:null?>">
-                                </label>
-                                <label class="item">
                                     <span>Скидка</span>
                                     <input type="number" placeholder="0" min="0" step="1" name="sale" class="field" value="<?=isset($data['sale'])?(int)$data['sale']:null?>">
                                 </label>
                                 <label class="item">
-                                    <span>Количество</span>
-                                    <input type="number" placeholder="0" min="0" step="1" name="count" class="field" value="<?=isset($data['count'])?(int)$data['count']:null?>">
+                                    <span>Изображения</span>
+                                    <input type="file" name="files[]" multiple accept="image/*,image/jpeg">
                                 </label>
-                                <label class="item">
-                                    <?php if($action === 'edit'):?>
-                                        <input type="hidden" name="id" value="<?=$editId?>">
+                                <?php if($action === 'edit'):?>
+                                    <input type="hidden" name="id" value="<?=$editId?>">
+                                    <div class="item">
                                         <div id="productImages">
                                             <?php if(isset($data['images'])):?>
-                                                <?php if(isset($data['images']['main'])&&$data['images']['main']!==""):?>
+                                                <?php if(isset($data['images']['main'])&&(isset($data['images']['main']['src'])&&$data['images']['main']['src']!=="")):?>
                                                     <div class="productImage">
-                                                        <span class="productImage_close error">X</span>
-                                                        <img src="<?=$data['images']['main']?>" alt="<?=isset($data['name'])?trim($data['name']):null?>">
+                                                        <div class="productImage-action">
+                                                            <span class="item success" title="Установленно как основное изображение">✔</span>
+                                                            <span class="item error productImage_close" data-imageId="<?=$image['id']?>" title="Удалить">✖</span>
+                                                        </div>
+                                                        <img src="<?=$data['images']['main']['src']?>" alt="<?=isset($data['name'])?trim($data['name']):null?>">
                                                     </div>
                                                 <?php endif;?>
-                                                <?php foreach($data['images']['additional'] as $key => $image): $image = trim($image);?>
-                                                    <?php if(isset($image)&&$image!==""?$image:null):?>
+                                                <?php foreach($data['images']['additional'] as $key => $image): $image['src'] = trim($image['src']);?>
+                                                    <?php if($image['src']!==""):?>
                                                         <div class="productImage">
-                                                            <span class="productImage_close error">X</span>
-                                                            <img src="<?=$image?>" alt="<?=isset($data['name'])?trim($data['name']):null?>">
+                                                            <div class="productImage-action">
+                                                                <?php if(file_exists(get_include_path().'assets/icons/home.svg')):?>
+                                                                    <span class="item success productImage_setMain" data-imageId="<?=$image['id']?>">
+                                                                        <img src="/assets/icons/home.svg" alt="Установить" width="20" title="Сделать основным изображением">
+                                                                    </span>
+                                                                <?php else:?>
+                                                                    <span class="productImage_setMain" data-imageId="<?=$data['images']['additional']['id']?>">Установить</span>
+                                                                <?php endif;?>
+                                                                <span class="item error productImage_close" data-imageId="<?=$image['id']?>" title="Удалить">✖</span>
+                                                            </div>
+                                                            <img src="<?=$image['src']?>" alt="<?=isset($data['name'])?trim($data['name']):null?>">
                                                         </div>
                                                     <?php endif;?>
                                                 <?php endforeach;?>
                                             <?php endif;?>
                                         </div>
-                                    <?php endif;?>
-                                    <span>Изображения</span>
-                                    <input type="file" name="files[]" multiple accept="image/*,image/jpeg">
-                                </label>
+                                    </div>
+                                <?php endif;?>
 
                                 <input type="hidden" name="action" value="<?=$action?>">
 

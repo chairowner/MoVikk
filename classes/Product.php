@@ -41,7 +41,7 @@ class Product {
      */
     function add(array $execute) {
         try {
-            $response =[
+            $response = [
                 'status' => false,
                 'info' => []
             ];
@@ -121,10 +121,11 @@ class Product {
      */
     function edit(array $execute) {
         try {
-            $response =[
+            $response = [
                 'status' => false,
                 'info' => []
             ];
+            
             if (!isset($execute['name']) || !isset($execute['href'])) {
                 $response['info'][] = 'Не указаны имя или ссылка на категорию';
                 return $response;
@@ -138,11 +139,18 @@ class Product {
                 $images_count = count($images['error']);
             }
 
-            $sql =
-            "INSERT INTO `{$this->mainTable}`
-            (`categoryId`, `countryId`, `instructionId`, `href`, `name`, `description`, `height`, `width`, `length`, `features`, `techSpec`, `count`, `price`, `sale`)
-            VALUES
-            (:categoryId, :countryId, :instructionId, :href, :name, :description, :height, :width, :length, :features, :techSpec, :count, :price, :sale)";
+            $sql = "UPDATE `{$this->mainTable}` SET `categoryId` = :categoryId, `countryId` = :countryId, `instructionId` = :instructionId, `href` = :href, `name` = :name, `description` = :description, `height` = :height, `width` = :width, `length` = :length, `features` = :features, `techSpec` = :techSpec, `count` = :count, `price` = :price, `sale` = :sale WHERE `id` = :id";
+            // $sql = "UPDATE `{$this->mainTable}` SET ";
+            // $i = 0;
+            // foreach ($execute as $column => $value) {
+            //     if ($i > 0) $sql .= ", ";
+            //     $sql .= "`$column` = :$column";
+            //     $i++;
+            // }
+            // $sql .= " WHERE `id` = :id";
+            // unset($column, $value, $i);
+
+            return($sql);
             $query = $this->conn->prepare($sql);
             if ($query->execute($execute)) {
                 $response['id'] = (int)$this->conn->lastInsertId();
@@ -200,7 +208,7 @@ class Product {
      * @return array
      */
     function remove(int $id) {
-        $response =[
+        $response = [
             'status' => false,
             'info' => []
         ];
@@ -242,6 +250,10 @@ class Product {
         }
     }
 
+    /**
+     * Функция возвращает массив с товарами
+     * @deprecated
+     */
     public function getPopular() {
         try {
             $popular_products = $this->conn->prepare("SELECT pim.image, p.name, p.description, p.href, p.id, p.price, (p.price - (p.price * p.sale / 100)) discounted FROM products p INNER JOIN products_images pim ON p.id = pim.productId WHERE pim.isMain = 1 ORDER BY p.sold LIMIT 4");
@@ -290,7 +302,7 @@ class Product {
             $response['sale'] = (float)$product['sale'];
             $response['preOrder'] = (int) ($product['preOrder']) === 1 ? true : false;
             $response['sold'] = (int) ($product['sold']);
-            $response['keywords'] = trim($product['keywords']);
+            $response['keywords'] = isset($product['keywords']) ? trim($product['keywords']) : null;
             $response['added'] = new DateTime($product['added']);
             $response['isDeleted'] = (int) ($product['isDeleted']) === 1 ? true : false;
             $country = $this->conn->prepare("SELECT `name` FROM `{$this->countryTable}` WHERE `id` = :id");
@@ -339,13 +351,16 @@ class Product {
     private function getImages(int $productId, bool $isAdmin = false) {
         $img = ['path' => "/{$this->imagesPath}"];
         $icon = ['path' => '/assets/icons','name' => 'camera.svg'];
-        $response = ['main'=>"",'additional'=>[],'notFound' => true];
+        $response = ['main'=>['id'=>null,'src'=>""],'additional'=>[],'notFound' => true];
         $images = $this->conn->prepare("SELECT * FROM `{$this->addTable}` WHERE `productId` = :productId");
         $images->execute(['productId' => $productId]);
         $images = $images->fetchAll(PDO::FETCH_ASSOC);
         
         if (count($images) < 1) {
-            if (!$isAdmin) $response['main'] = "{$icon['path']}/{$icon['name']}";
+            if (!$isAdmin) $response['main'] = [
+                'id' => null,
+                'src' => "{$icon['path']}/{$icon['name']}"
+            ];
             return $response;
         }
         $response['notFound'] = false;
@@ -354,10 +369,16 @@ class Product {
         foreach ($images as $key => $image) {
             /* отбор главного изображение */
             if ((bool) $image['isMain'] && !$setMain) {
-                $response['main'] = "{$img['path']}/{$image['image']}";
+                $response['main'] = [
+                    'id' => (int)$image['id'],
+                    'src' => "{$img['path']}/{$image['image']}"
+                ];
                 $setMain = true;
             } else {
-                $response['additional'][] = "{$img['path']}/{$image['image']}";
+                $response['additional'][] = [
+                    'id' => (int)$image['id'],
+                    'src' => "{$img['path']}/{$image['image']}"
+                ];
             }
         }
 
@@ -368,11 +389,131 @@ class Product {
                 if (isset($response['additional']) && !empty($response['additional'])) $response['additional'] = array_values($response['additional']);
                 else $response['additional'] = [];
             } else {
-                $response['main'] = "{$icon['path']}/{$icon['name']}";
+                $response['main'] = [
+                    'id' => null,
+                    'src' => "{$icon['path']}/{$icon['name']}"
+                ];
                 $response['additional'] = [];
             }
         }
 
         return $response;
+    }
+    
+    /**
+     * Функция устанавливает основное изображение для товара
+     * @param int $productId ID товара
+     * @param int $imageId ID изображения
+     * @return array
+     */
+    function setMainImage(int $productId, int $imageId) {
+        try {
+            $response = [
+                'status' => false,
+                'info' => []
+            ];
+            if ($productId < 1) {
+                $response['info'][] = "Указанный ID товара($productId) некорректен";
+            }
+            if ($imageId < 1) {
+                $response['info'][] = "Указанный ID изображения($imageId) некорректен";
+            }
+            if (!empty($response['info'])) return $response;
+            $execute = [
+                'productId' => $productId,
+                'imageId' => $imageId
+            ];
+
+            // проверка на наличие нужного изображения
+            $sql = "SELECT `isMain` FROM `{$this->addTable}` WHERE `productId` = :productId AND `id` = :imageId";
+            $query = $this->conn->prepare($sql);
+            if ($query->execute($execute)) {
+                $query = $query->fetch(PDO::FETCH_ASSOC);
+                if (isset($query) && !empty($query)) {
+                    // установка "галочки" "основное изображение"
+                    $sql =
+                    "UPDATE `{$this->addTable}` SET `isMain` = 0 WHERE `productId` = :productId AND `isMain` = 1;".
+                    "UPDATE `{$this->addTable}` SET `isMain` = 1 WHERE `productId` = :productId AND `id` = :imageId AND `isMain` != 1;";
+                    $query = $this->conn->prepare($sql);
+                    if ($query->execute($execute)) {
+                        $response['status'] = true;
+                        $response['info'][] = "Основное изображение заменено";
+                    } else {
+                        $response['info'][] = "Не удалось сменить основное изображение";
+                    }
+                } else {
+                    $response['info'][] = "Изображение($imageId) не надено";
+                }
+            } else {
+                $response['info'][] = "Изображение($imageId) не надено: системная ошибка";
+            }
+            unset($query, $sql);
+            
+            return $response;
+        } catch (PDOException $e) {
+            $response = ['status' => false, 'info' => ["Ошибка смены изображения товара"]];
+            if (DEBUG_MODE) {
+                $response['info'][] = $e->getMessage();
+            }
+            return $response;
+        }
+    }
+    
+    /**
+     * Функция удаляет изображение
+     * @param int $imageId ID изображения
+     * @return array
+     */
+    function deleteImage(int $imageId) {
+        try {
+            $response = [
+                'status' => false,
+                'info' => []
+            ];
+            
+            if ($imageId < 1) {
+                $response['info'][] = "Указанный ID изображения($imageId) некорректен";
+            }
+
+            if (!empty($response['info'])) return $response;
+
+            $execute = ['imageId' => $imageId];
+
+            // проверка на наличие нужного изображения
+            $sql = "SELECT `image` FROM `{$this->addTable}` WHERE `id` = :imageId";
+            $query = $this->conn->prepare($sql);
+            if ($query->execute($execute)) {
+                $query = $query->fetch(PDO::FETCH_ASSOC);
+                if (isset($query) && !empty($query)) {
+                    $imagePath = "assets/images/products/".trim($query['image']);
+                    if (file_exists($imagePath)) {
+                        if (!unlink($imagePath)) {
+                            $response['info'][] = "Ошибка: не удалось удалить файл изображения";
+                        }
+                    }
+                    $sql = "DELETE FROM `{$this->addTable}` WHERE `id` = :imageId";
+                    $query = $this->conn->prepare($sql);
+                    if ($query->execute($execute)) {
+                        $response['status'] = true;
+                        $response['info'][] = "Изображение удалено";
+                    } else {
+                        $response['info'][] = "Не удалось удалить изображение из БД";
+                    }
+                } else {
+                    $response['info'][] = "Изображение($imageId) не надено";
+                }
+            } else {
+                $response['info'][] = "Изображение($imageId) не надено: системная ошибка";
+            }
+            unset($query, $sql);
+            
+            return $response;
+        } catch (PDOException $e) {
+            $response = ['status' => false, 'info' => ["При удалении изображения возникла ошибка"]];
+            if (DEBUG_MODE) {
+                $response['info'][] = $e->getMessage();
+            }
+            return $response;
+        }
     }
 }

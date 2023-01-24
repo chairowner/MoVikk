@@ -10,7 +10,7 @@ $_CART = new Cart($conn);
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?=$_PAGE->getHead($_USER->isGuest(), $_COMPANY->name.' - '.mb_strtolower($_PAGE->description), $_PAGE->description)?>
+    <?=$_PAGE->GetHead($_USER->isGuest(), $_COMPANY->name.' - '.mb_strtolower($_PAGE->description), $_PAGE->description)?>
     <link rel="stylesheet" href="/assets/common/css/productCards.css">
     <link rel="stylesheet" href="/assets/common/css/index.css">
     <script defer src="/assets/common/js/index.js"></script>

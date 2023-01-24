@@ -5,7 +5,7 @@ require_once('functions/translitUrl.php');
 $_USER = new User($conn);
 $_PRODUCT = new Product($conn);
 
-if (!$_USER->isAdmin()) $_PAGE->redirect();
+if (!$_USER->isAdmin()) $_PAGE->Redirect();
 
 $response = [
     'status' => true,
@@ -13,7 +13,7 @@ $response = [
 ];
 $separator = ';';
 
-if (!isset($_POST['action']) || $_POST['action'] !== "add") {
+if (!isset($_POST['action']) || $_POST['action'] !== "edit") {
     $response['status'] = false;
     $response['info'][] = 'Ошибка запроса';
     exit(json_encode($response, JSON_UNESCAPED_UNICODE));

@@ -6,7 +6,9 @@ $_PAGE = new Page($conn);
 $_COMPANY = new Company($conn);
 $_USER = new User($conn);
 
-if (!$_USER->isGuest()) require_once('404.php');
+if (!$_USER->isGuest()) {
+    $_PAGE->Redirect('404.php');
+}
 
 if (isset($_GET['hash'])) {
     $hash = trim($_GET['hash']);
@@ -55,7 +57,7 @@ else:?>
     <!DOCTYPE html>
     <html lang="ru">
     <head>
-        <?=$_PAGE->getHead($_USER->isGuest(), $confirmInfo)?>
+        <?=$_PAGE->GetHead($_USER->isGuest(), $confirmInfo)?>
     </head>
     <body>
         <?php include_once('includes/header.php');?>

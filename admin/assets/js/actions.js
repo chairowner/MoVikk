@@ -23,7 +23,7 @@ function act(action, params) {
             let messageType;
             if (data.status) {
                 messageType = "success";
-                // location.href = "/admin/"+category;
+                location.href = "/admin/"+category;
             } else {
                 messageType = "error";
             }

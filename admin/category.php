@@ -10,7 +10,7 @@ $_CATEGORIES = new Categories($conn);
 $_USER = new User($conn);
 
 if (!$_USER->isAdmin()) {
-    $_PAGE->redirect();
+    $_PAGE->Redirect();
 }
 
 // редактируемая категория
@@ -18,16 +18,16 @@ $editCategory = explode('/',$_SERVER['PHP_SELF']);
 $editCategory = basename($editCategory[count($editCategory) - 1], '.php');
 
 if (isset($editId)) {
-    $data = $_CATEGORIES->get($editId);
-    if (!isset($data['items'][0])) $_PAGE->redirect("admin/$editCategory");
+    $data = $_CATEGORIES->Get($editId);
+    if (!isset($data['items'][0])) $_PAGE->Redirect("admin/$editCategory");
 } else {
-    $data = $_CATEGORIES->get("all");
+    $data = $_CATEGORIES->Get("all");
 }
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?=$_PAGE->getHead($_USER->isGuest(), $_PAGE->title." - ".$_PAGE->description, $_PAGE->description)?>
+    <?=$_PAGE->GetHead($_USER->isGuest(), $_PAGE->title." - ".$_PAGE->description, $_PAGE->description)?>
     <link rel="stylesheet" href="assets/css/main.css">
     <script defer src="/assets/common/js/showLoad.js"></script>
     <script defer src="/assets/common/js/formatPrice.js"></script>
@@ -50,7 +50,7 @@ if (isset($editId)) {
 
                         <form method="POST" action="/admin/actions/<?=$editCategory?>/add" id="formData">
                             <label class="item">
-                                <span>Название:</span>
+                                <span>Название<span class="error">*</span></span>
                                 <input type="text" name="name" require class="field" maxlength="255">
                             </label>
                             <input type="hidden" name="action" value="add">
@@ -67,7 +67,7 @@ if (isset($editId)) {
                             <?php $item = $data['items'][0];?>
                             <form method="POST" action="/admin/actions/<?=$editCategory?>/edit" id="formData">
                                 <label class="item">
-                                    <span>Название:</span>
+                                    <span>Название<span class="error">*</span></span>
                                     <input type="text" name="name" require class="field" maxlength="255" value="<?=$item['name']?>">
                                 </label>
                                 <input type="hidden" name="id" value="<?=$item['id']?>">
@@ -82,11 +82,13 @@ if (isset($editId)) {
                         
                             <div id="items">
                                 <a class="button shadowBox" href="/admin/<?=$editCategory?>?action=add">Добавить категорию</a>
-                                <?php foreach($data['items'] as $key => $item):?>
-                                    <a class="item shadowBox" href="/admin/<?=$editCategory?>?action=edit&id=<?=$item['id']?>">
-                                        <span class="title"><?=$item['name']?></span>
-                                    </a>
-                                <?php endforeach;?>
+                                <?php if (isset($data['items']) && !empty($data['items'])):?>
+                                    <?php foreach($data['items'] as $key => $item):?>
+                                        <a class="item shadowBox" href="/admin/<?=$editCategory?>?action=edit&id=<?=$item['id']?>">
+                                            <span class="title"><?=$item['name']?></span>
+                                        </a>
+                                    <?php endforeach;?>
+                                <?php endif;;?>
                             </div>
 
                         <?php endif;?>

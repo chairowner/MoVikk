@@ -8,13 +8,15 @@ $_COMPANY = new Company($conn);
 $_USER = new User($conn);
 
 if (!$_USER->isAdmin()) {
-    $_PAGE->redirect();
+    $_PAGE->Redirect();
 }
 
 $items = [
     'category' => ['text' => 'Категории', 'title' => 'Список категорий'],
     'product' => ['text' => 'Товары', 'title' => 'Список товаров'],
     'instruction' => ['text' => 'Инструкции', 'title' => 'Список инструкций'],
+    'country' => ['text' => 'Страны-изготовители', 'title' => 'Список стран-изготовителей'],
+    'delivery' => ['text' => 'Доставки', 'title' => 'Список доставок'],
     'faq' => ['text' => 'FAQ', 'title' => 'Часто задаваемые вопросы и ответы на них'],
     'user' => ['text' => 'Пользователи', 'title' => 'Список пользователей'],
 ];
@@ -22,7 +24,7 @@ $items = [
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?=$_PAGE->getHead($_USER->isGuest(), $_PAGE->title, $_PAGE->description)?>
+    <?=$_PAGE->GetHead($_USER->isGuest(), $_PAGE->title, $_PAGE->description)?>
     <link rel="stylesheet" href="assets/css/main.css">
     <script defer src="/assets/common/js/showLoad.js"></script>
     <script defer src="/assets/common/js/formatPrice.js"></script>

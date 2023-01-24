@@ -40,7 +40,7 @@ $categories->execute();
 $categories = $categories->fetchAll(PDO::FETCH_ASSOC);
 $sql =
 "SELECT DISTINCT p.id, p.categoryId, p.href, p.name, p.description, p.height, p.width, p.length, p.features, p.techSpec, p.countryId, p.count, p.price, (p.price - (p.price * p.sale / 100)) discounted, p.preOrder, p.keywords, p.sold, p.added, p.isDeleted";
-$all_products_count = "SELECT COUNT(id)";
+$all_products_count = "SELECT COUNT(p.id) `counter`";
 
 if ($categoryHref !== 'all') {
     $sql .= ", c.href cHref";
@@ -80,25 +80,40 @@ if (isset($sort)) {
 $sql .= " LIMIT ".(($currentPageNumber - 1) * $viewCount).", ".$viewCount;
 
 $all_products_count = $conn->prepare($all_products_count);
-$all_products_count->execute();
-$all_products_count = $all_products_count->fetch(PDO::FETCH_ASSOC);
-$all_products_count = (int)$all_products_count['COUNT(id)'];
-
 $products = $conn->prepare($sql);
+
 if ($categoryHref !== 'all') {
     $products->execute(['href' => $categoryHref]);
+    $all_products_count->execute(['href' => $categoryHref]);
 } else {
     $products->execute();
+    $all_products_count->execute();
 }
+
 $products = $products->fetchAll(PDO::FETCH_ASSOC);
+$all_products_count = $all_products_count->fetch(PDO::FETCH_ASSOC);
+
+$all_products_count = (int)$all_products_count['counter'];
+
 if (count($products) < 1 && $currentPageNumber !== 1) {
-    // $_PAGE->redirect(str_replace('/#', '', $pattern), true);
+    $_PAGE->Redirect(str_replace('/#', '', $pattern), true);
 }
+$pagination = new Pagination($currentPageNumber, $all_products_count, $pattern, $viewCount, false);
+$pagination->SetBeforeCurrent(2);
+$pagination->SetAfterCurrent(2);
+$pagination->SetButtonTitle(Pagination::PREVIOUS_BUTTON, 'Назад');
+$pagination->SetButtonTitle(Pagination::NEXT_BUTTON, 'Далее');
+$pagination->SetMainStyle("margin-top:40px;");
+$pagesData = [
+    'currentPageNumber' => $currentPageNumber,
+    'next' => $pagination->GetNextPage(),
+    'prev' => $pagination->GetPreviousPage()
+];
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?=$_PAGE->getHead($_USER->isGuest())?>
+    <?=$_PAGE->GetHead($_USER->isGuest(), null, null, null, $pagesData)?>
     <link rel="stylesheet" href="/assets/common/css/productCards.css">
     <link rel="stylesheet" href="/classes/php-pagination/css/main.css">
     <link rel="stylesheet" href="/assets/common/css/shop.css">
@@ -196,16 +211,7 @@ if (count($products) < 1 && $currentPageNumber !== 1) {
             </main>
         </div>
     </section>
-    <div class="container"><?php
-        $all_products_count = 211;
-        $pagination = new Pagination($currentPageNumber, $all_products_count, $pattern, $viewCount, false);
-        $pagination->SetBeforeCurrent(2);
-        $pagination->SetAfterCurrent(2);
-        $pagination->SetButtonTitle(Pagination::PREVIOUS_BUTTON, 'Назад');
-        $pagination->SetButtonTitle(Pagination::NEXT_BUTTON, 'Далее');
-        $pagination->SetMainStyle("margin-top:40px;");
-        echo($pagination->Render());
-    ?></div>
+    <div class="container"><?=$pagination->Render()?></div>
     <?php include_once('includes/footer.php')?>
 </body>
 </html>

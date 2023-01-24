@@ -20,7 +20,7 @@ if ($product['notFound']) {
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?=$_PAGE->getHead($_USER->isGuest(), $product['name'], $product['description'])?>
+    <?=$_PAGE->GetHead($_USER->isGuest(), $product['name'], $product['description'])?>
     <link rel="stylesheet" href="/assets/common/css/product.css">
     <script defer src="/assets/common/js/showLoad.js"></script>
     <script defer src="/assets/common/js/product.js"></script>

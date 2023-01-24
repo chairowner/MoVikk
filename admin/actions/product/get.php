@@ -5,11 +5,11 @@ require_once('functions/translitUrl.php');
 $_USER = new User($conn);
 $_CATEGORIES = new Categories($conn);
 
-if (!$_USER->isAdmin()) $_PAGE->redirect();
+if (!$_USER->isAdmin()) $_PAGE->Redirect();
 
 $id = 0;
 if (isset($_GET['id'])) {
     if (trim($_GET['id']) === 'all') $id = 'all';
     else $id = (int) $_GET['id'];
 }
-exit(json_encode($_CATEGORIES->get($id), JSON_UNESCAPED_UNICODE)); // return
+exit(json_encode($_CATEGORIES->Get($id), JSON_UNESCAPED_UNICODE)); // return

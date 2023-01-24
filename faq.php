@@ -10,7 +10,7 @@ $_CART = new Cart($conn);
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?=$_PAGE->getHead($_USER->isGuest())?>
+    <?=$_PAGE->GetHead($_USER->isGuest())?>
     <link rel="stylesheet" href="/assets/common/css/faq.css">
     <script defer src="/assets/common/js/faq.js"></script>
 </head>

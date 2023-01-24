@@ -9,7 +9,7 @@ $_CART = new Cart($conn);
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?=$_PAGE->getHead($_USER->isGuest(), $_PAGE->title, $_PAGE->description)?>
+    <?=$_PAGE->GetHead($_USER->isGuest(), $_PAGE->title, $_PAGE->description)?>
     <link rel="stylesheet" href="/assets/common/css/terms.css">
     <script defer src="/assets/common/js/terms.js"></script>
 </head>

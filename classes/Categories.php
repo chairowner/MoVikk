@@ -26,7 +26,7 @@ class Categories {
      * @param int|string $id id категории / all - все
      * @return array
      */
-    function get($id) {
+    function Get(int|string $id) {
         try {
             $prepare = "SELECT * FROM `{$this->mainTable}`";
             $execute = [];
@@ -40,7 +40,7 @@ class Categories {
             
             $response['items'] = $items;
             $response['status'] = true;
-            $response['info'] = ["Категория добавлена"];
+            $response['info'] = ["Категория выбрана"];
             
             return $response;
         } catch (Exception $e) {
@@ -59,9 +59,9 @@ class Categories {
      * @param string $href ссылка на категорию
      * @return array
      */
-    function add(string $name = null, string $href = null) {
+    function Add(string $name = null, string $href = null) {
         try {
-            $response =[
+            $response = [
                 'status' => false,
                 'info' => []
             ];
@@ -96,9 +96,9 @@ class Categories {
      * @param string $href ссылка на категорию
      * @return array
      */
-    function edit(int $id, string $name, string $href) {
+    function Edit(int $id, string $name, string $href) {
         try {
-            $response =[
+            $response = [
                 'status' => false,
                 'info' => []
             ];
@@ -109,7 +109,7 @@ class Categories {
             $query = $this->conn->prepare("UPDATE `{$this->mainTable}` SET `name` = :name, `href` = :href WHERE `id` = :id");
             $execute = ['id' => $id,'name' => $name, 'href' => $href];
             if ($query->execute($execute)) {
-                $response['id'] = $this->conn->lastInsertId();
+                $response['id'] = $id;
                 $response['status'] = true;
                 $response['info'][] = 'Изменения сохранены';
             } else {
@@ -131,9 +131,9 @@ class Categories {
      * @param int $id id категории
      * @return array
      */
-    function remove(int $id) {
+    function Remove(int $id) {
         try {
-            $response =[
+            $response = [
                 'status' => false,
                 'info' => []
             ];
@@ -142,14 +142,20 @@ class Categories {
             if ($query->execute($execute)) {
                 $response['status'] = true;
                 $response['info'][] = 'Категория удалена';
-                $response['info'][] = "DELETE FROM `{$this->mainTable}` WHERE `id` = $id";
+                if (DEBUG_MODE) {
+                    $response['info'][] = "DELETE FROM `{$this->mainTable}` WHERE `id` = $id";
+                }
             } else {
                 $response['info'][] = 'Не удалось удалить категорию';
             }
             
             return $response;
         } catch (PDOException $e) {
-            return ['status' => false, 'info' => [$e->getMessage()]];
+            $response = ['status' => false, 'info' => ["Системная ошибка: не удалось удалить категорию"]];
+            if (DEBUG_MODE) {
+                $response['info'][] = $e->getMessage();
+            }
+            return $response;
         }
     }
 }

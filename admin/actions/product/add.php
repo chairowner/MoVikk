@@ -5,7 +5,7 @@ require_once('functions/translitUrl.php');
 $_USER = new User($conn);
 $_PRODUCT = new Product($conn);
 
-if (!$_USER->isAdmin()) $_PAGE->redirect();
+if (!$_USER->isAdmin()) $_PAGE->Redirect();
 
 $response = [
     'status' => true,

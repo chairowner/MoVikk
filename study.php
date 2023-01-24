@@ -34,7 +34,7 @@ $main_header = "Обучения по пользованию аппаратам�
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?=$_PAGE->getHead($_USER->isGuest(), $title)?>
+    <?=$_PAGE->GetHead($_USER->isGuest(), $title)?>
     <link rel="stylesheet" href="/assets/common/css/study.css">
     <script defer src="/assets/common/js/copyToBuffer.js"></script>
     <script defer src="/assets/common/js/study.js"></script>

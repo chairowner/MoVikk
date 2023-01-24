@@ -7,7 +7,7 @@ define('DATABASE_HOST', "localhost");
 # имя пользователя базы данных
 define('DATABASE_USER', "cv33474_movikk");
 # пароль базы  данных
-define('DATABASE_PASS', "PyZbSN6N");
+define('DATABASE_PASS', "#L!Aqu1f511BqmZN%n6xOYW");
 # имя базы данных
 define('DATABASE_NAME', "cv33474_movikk");
 

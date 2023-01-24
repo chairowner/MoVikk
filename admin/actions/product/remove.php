@@ -4,7 +4,7 @@ require_once('includes/autoload.php');
 $_USER = new User($conn);
 $_PRODUCT = new Product($conn);
 
-if (!$_USER->isAdmin()) $_PAGE->redirect();
+if (!$_USER->isAdmin()) $_PAGE->Redirect();
 
 $id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
 

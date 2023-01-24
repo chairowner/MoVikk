@@ -7,13 +7,13 @@ $_USER = new User($conn);
 $_CART = new Cart($conn);
 
 if ($_USER->isGuest()) {
-    $_PAGE->redirect();
+    $_PAGE->Redirect();
 }
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?=$_PAGE->getHead($_USER->isGuest(), $_PAGE->title, $_PAGE->description)?>
+    <?=$_PAGE->GetHead($_USER->isGuest(), $_PAGE->title, $_PAGE->description)?>
     <link rel="stylesheet" href="/assets/common/css/cart.css">
     <script defer src="/assets/common/js/showLoad.js"></script>
     <script defer src="/assets/common/js/formatPrice.js"></script>

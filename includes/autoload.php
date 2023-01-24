@@ -14,10 +14,6 @@ include_once('includes/connection.php');
 # Авто-подгрузка классов
 spl_autoload_register('classAutoloader');
 function classAutoloader($className) {
-    $folder = 'null';
-    $pos = strpos($className,'__');
-    if ($pos === 0) $folder = substr($className, strpos($className,'__', 2));
-    if ($pos === 0) exit("folder: $folder; className: $className"); 
     $path = get_include_path() == '.' ? './' : get_include_path();
     $path .= 'classes/';
     $extension = '.php';
