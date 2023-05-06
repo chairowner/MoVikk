@@ -1,5 +1,6 @@
 .product-cards {
     width: 82%;
+    height: fit-content;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;

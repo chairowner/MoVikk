@@ -15,6 +15,7 @@ $response = [
 $id = null;
 $name = null;
 $href = null;
+$images = [];
 
 if (isset($_POST['id'])) {
     $id = (int) $_POST['id'];
@@ -36,6 +37,21 @@ if (isset($_POST['name'])) {
     $response['info'][] = 'Введите название';
 }
 
-if ($response['status']) $response = $_CATEGORIES->Edit($id, $name, $href);
+if (isset($_FILES) && !empty($_FILES)) {
+    $images = $_FILES['files'];
+    if (count($images['error']) > 0) {
+        if ($images['error'][0] !== 0 || !in_array($images['type'][0], $_CATEGORIES->fileTypes)) {
+            unset($images['error'][0]);
+            unset($images['name'][0]);
+            unset($images['size'][0]);
+            unset($images['tmp_name'][0]);
+            unset($images['type'][0]);
+        }
+    }
+} else {
+    $images = [];
+}
+
+if ($response['status']) $response = $_CATEGORIES->Edit($id, $name, $href, $images);
 
 exit(json_encode($response, JSON_UNESCAPED_UNICODE)); // return

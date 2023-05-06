@@ -17,7 +17,6 @@ if ($_USER->isGuest()) {
     <?=$_PAGE->GetHead($_PAGE->title, $_PAGE->description)?>
     <link rel="stylesheet" href="/assets/common/css/orders.css">
     <script defer src="/assets/common/js/formatPrice.js"></script>
-    <script defer src="/assets/libs/clipboard/js/clipboard.min.js"></script>
     <script defer src="/assets/common/js/orders.js"></script>
 </head>
 <body>

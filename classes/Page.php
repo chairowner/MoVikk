@@ -13,13 +13,13 @@ class Page {
     private string $mainTable = 'pages';
 
     public function __construct(PDO $conn = null) {
-        $this->current = basename($_SERVER['PHP_SELF'], '.php');
+        $this->current = substr(str_replace('.php','',$_SERVER['PHP_SELF']), 1);
         if (isset($conn)) {
             $pages = $conn->prepare("SELECT * FROM `{$this->mainTable}`");
             $pages->execute();
             $pages = $pages->fetchAll(PDO::FETCH_ASSOC);
             $this->all = $pages;
-
+            
             $page = $conn->prepare("SELECT * FROM `{$this->mainTable}` WHERE `fileName` = :page");
             $page->execute(['page' => $this->current]);
             $page = $page->fetch(PDO::FETCH_ASSOC);
@@ -73,14 +73,13 @@ class Page {
             '<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">'.
             '<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">'.
             // css
-            '<link rel="stylesheet" href="/assets/libs/fancybox/css/fancybox.min.css">'.
             '<link rel="stylesheet" href="/assets/common/css/theme-settings.css">'.
             '<link rel="stylesheet" href="/assets/common/css/login-form.css">'.
             '<link rel="stylesheet" href="/assets/common/css/loaders.css">'.
             '<link rel="stylesheet" href="/assets/common/css/main.css">'.
             // js
-            '<script defer src="/assets/libs/fancybox/js/fancybox.min.js"></script>'.
             '<script defer src="/assets/libs/jquery/js/jquery.min.js"></script>'.
+            '<script defer src="/assets/libs/clipboard/js/clipboard.min.js"></script>'.
             '<script defer src="/assets/common/js/Message.js"></script>'.
             '<script defer src="/assets/common/js/main.js"></script>'.
             '<script defer src="/assets/common/js/overlayAct.js"></script>';
@@ -154,9 +153,9 @@ class Page {
      */
     function Redirect(string $url = "", bool $outdoor = false) {
         if ($outdoor) {
-            header("Location: {$url}");
+            header("Location: $url");
         }else {
-            header("Location: /{$url}");
+            header("Location: /$url");
         }
         exit;
     }

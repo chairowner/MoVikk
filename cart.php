@@ -30,7 +30,7 @@ if ($_USER->isGuest()) {
                 <div id="orderMaking__wrapper">
                     <div class="shadowBox" id="orderMaking">
                         <div class="item" id="orderMaking__button">
-                            <input type="button" class="button w-100 fw-bold" style="height:56px;" value="Перейти к оформлению">
+                            <a href="/order/create" class="button w-100 fw-bold" style="height:56px;">Перейти к оформлению</a>
                             <p id="orderMaking__button__text">Доставка оплачивается отдельно при получении товаров</p>
                         </div>
                         <div class="item" id="moreInfo__wrapper">

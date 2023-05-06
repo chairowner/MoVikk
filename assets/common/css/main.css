@@ -470,7 +470,7 @@ a .social-icon{
     min-height: 25vh;
 }
 
-.js-copy {cursor: pointer;}
+.cursor-pointer, .js-copy {cursor: pointer;}
 
 .mini-loader {max-width: calc(100% - 10px);max-height: calc(100% - 10px);}
 .showLoad-center {
@@ -489,16 +489,22 @@ a .social-icon{
     min-height: 60px;
     height: auto;
     width: calc(25% - 20px);
-    padding: 10px;
+    padding: 10px 15px;
     background-color: white;
     color: var(--primary-color);
     font-weight: bold;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     border-radius: 8px;
     overflow: hidden;
     transition: transform 200ms ease-in-out;
+}
+.item-list > .item,
+.item-list > .item > *,
+.item-list > .item > * > * {
+    cursor: pointer;
+    overflow-wrap: anywhere;
 }
 .item-list .item:hover {
     transform: scale(.95);
@@ -543,6 +549,9 @@ a .social-icon{
 .m-0 {margin: 0!important;}
 .mx-0 {margin-left: 0!important;margin-right: 0!important;}
 .my-0 {margin-top: 0!important;margin-bottom: 0!important;}
+.my-5 {margin-top: 5px!important;margin-bottom: 5px!important;}
+.my-10 {margin-top: 10px!important;margin-bottom: 10px!important;}
+.my-15 {margin-top: 15px!important;margin-bottom: 15px!important;}
 .ms-0 {margin-left: 0!important;}
 .me-0 {margin-right: 0!important;}
 .mt-0 {margin-top: 0!important;}

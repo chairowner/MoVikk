@@ -284,27 +284,27 @@ class Cart {
      * @param int $userId id пользователя
      * @return string 
      */
-    private function removeAll(int $userId) {
-        $response = ['status' => false,'info' => 'Не удалось убрать товар'];
+    public function RemoveAll(int $userId) {
+        $response = ['status' => false,'info' => ['Не удалось убрать товары']];
         try {
             $cart = $this->conn->prepare("DELETE FROM `{$this->mainTable}` WHERE `userId` = :userId");
             if ($cart->execute(['userId' => $userId])) /* продукт есть в корзине */ {
-                $newCount = 0;
-                $cart = $this->conn->prepare($cart);
                 $response = [
                     'status' => true,
-                    'count' => $newCount,
-                    'info' => null
+                    'count' => 0,
+                    'info' => ['Товары удалены из корзины']
                 ];
             } else /* продукта нет в корзине */ {
-                $response = ['status' => false,'info' => "Корзина пуста"];
+                $response = ['status' => false,'info' => ["Корзина пуста"]];
             }
         } catch (PDOException $e) {
             $response = [
                 'status' => false,
-                'info' => "При удалении товаров из корзины возникла внутренняя ошибка",
-                // 'error'=>$e->getMessage()
+                'info' => ["При удалении товаров из корзины возникла внутренняя ошибка"],
             ];
+            if (DEBUG_MODE) {
+                $response['info'][] = $e->getMessage();
+            }
         }
         return $response;
     }

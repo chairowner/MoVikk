@@ -1,0 +1,50 @@
+.block {
+    padding: 20px 25px 25px 25px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 18px;
+}
+.field {
+    font-size: 18px;
+    width: fit-content;
+}
+#order-list {
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+#order-list > #order-number {
+    overflow-wrap: anywhere;
+    color: #929292;
+    font-size: 14px;
+}
+#order-list > .item {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+#order-list > .item .title {
+    font-weight: bold;
+}
+.comment {
+    max-width: 700px;
+    width: 100%;
+    height: fit-content;
+    padding: 10px 15px;
+    font-size: 18px;
+    background-color: #f3f3f3;
+    border-radius: 8px;
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-line;
+}
+textarea.comment {
+    resize: none;
+    height: auto;
+}

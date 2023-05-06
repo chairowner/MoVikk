@@ -44,7 +44,7 @@ if (!isset($confirmInfo)):
         if (isset($_POST['email']) && isset($_POST['password'])) {
             $email = trim($_POST['email']);
             $password = trim($_POST['password']);
-            $response = $_USER->login($email, $password);
+            $response = $_USER->Login($email, $password);
         } else {
             $response['info'][] = 'Заполните все поля';
         }

@@ -15,11 +15,8 @@
 #productImages > .productImage > img {
     width: 100%;
     height: 100%;
-}
-#productImages > .productImage > img {
-    width: 100%;
-    height: 100%;
     pointer-events: none;
+    object-fit: contain;
 }
 #productImages > .productImage > .productImage-action {
     display: flex;
@@ -34,6 +31,7 @@
     font-size: 18px;
     border-radius: 50%;
     background-color: white;
+    box-shadow: #22222263 0 0 4px;
     cursor: pointer;
     display: flex;
     justify-content: center;

@@ -1,8 +1,9 @@
 console.info(
     "%c" +
-    `Если вас просят сюда что-то вставить, не делайте этого!\nУ Вас хотят украсть ваши ДЕНЬГИ и аккаунт!`,
+    `Если вас просят сюда что-то вставить, не делайте этого!\nУ Вас хотят украсть ваши ДЕНЬГИ или аккаунт!`,
     `color: #f73737; -webkit-text-stroke: 2px black; font-size: 50px; font-weight: bold;`
 );
+const mainMessageBox = $('#mainMessageBox');
 const mainCartCounter = $('.cart_number');
 const lkLink ='.header-nav__icons .item .item__data[href="/lk"]';
 const lk = $(lkLink);
@@ -57,3 +58,22 @@ function updateCartCount() {
     });
 }
 updateCartCount();
+
+$(document).ready(function() {
+    let clipboard = new ClipboardJS('.js-copy',{
+        text: function(trigger) {
+            return trigger.text;
+        }
+    });
+    clipboard.on('success', function(e) {
+        let message = e.trigger.getAttribute('data-copy-success');
+        if (message == null) message = "Скопировано";
+        new Message(mainMessageBox, message, 'success');
+        e.clearSelection();
+    });
+    clipboard.on('error', function(e) {
+        let message = e.trigger.getAttribute('data-copy-error');
+        if (message == null) message = "Не удалось скопировать";
+        new Message(mainMessageBox, message, 'error');
+    });
+});

@@ -12,13 +12,14 @@ if (!$_USER->isAdmin()) {
 }
 
 $items = [
+    'user' => ['text' => 'Пользователи', 'title' => 'Список пользователей'],
+    'order' => ['text' => 'Заказы', 'title' => 'Список заказов'],
     'category' => ['text' => 'Категории', 'title' => 'Список категорий'],
     'product' => ['text' => 'Товары', 'title' => 'Список товаров'],
     'instruction' => ['text' => 'Инструкции', 'title' => 'Список инструкций'],
     'country' => ['text' => 'Страны-изготовители', 'title' => 'Список стран-изготовителей'],
     'delivery' => ['text' => 'Доставки', 'title' => 'Список доставок'],
     'faq' => ['text' => 'FAQ', 'title' => 'Часто задаваемые вопросы и ответы на них'],
-    'user' => ['text' => 'Пользователи', 'title' => 'Список пользователей'],
 ];
 ?>
 <!DOCTYPE html>
@@ -26,8 +27,6 @@ $items = [
 <head>
     <?=$_PAGE->GetHead($_USER->isGuest(), $_PAGE->title, $_PAGE->description)?>
     <link rel="stylesheet" href="assets/css/main.css">
-    <script defer src="/assets/common/js/showLoad.js"></script>
-    <script defer src="/assets/common/js/formatPrice.js"></script>
 </head>
 <body>
     <div class="page__title">

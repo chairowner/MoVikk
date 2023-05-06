@@ -30,11 +30,23 @@ $_CART = new Cart($conn);
                     $categories = $conn->prepare("SELECT * FROM categories");
                     $categories->execute();
                     $categories = $categories->fetchAll(PDO::FETCH_ASSOC);
+
+                    $category_path = "assets";
+                    if (!is_dir($category_path)) mkdir($category_path);
+                    $category_path .= "/images";
+                    if (!is_dir($category_path)) mkdir($category_path);
+                    $category_path .= "/categories";
+                    if (!is_dir($category_path)) mkdir($category_path);
+
                     foreach($categories as $category_key => $category):
-                    $category['id'] = (int) $category['id'];
-                    $category['path'] = "assets/images/categories";
-                    $category['path'] = file_exists("{$category['path']}/category_{$category['id']}.png") ?
-                        "{$category['path']}/category_{$category['id']}.png" : null;?>
+                        $category['id'] = (int) $category['id'];
+                        $category['image'] =
+                            isset($category['image']) && trim($category['image']) !== "" ?
+                                trim($category['image']) : null;
+                        
+                        $category['path'] =
+                            file_exists("$category_path/{$category['image']}") ?
+                                "$category_path/{$category['image']}" : null;?>
                         <a href="/shop/<?=$category['href']?>" class="category">
                             <?php if(isset($category['path'])):?>
                                 <img src="/<?=$category['path']?>" alt="<?=$category['name']?>">

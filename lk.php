@@ -27,8 +27,8 @@ if ($_USER->isGuest()) {
             <div class="container main">
                 <div class="section information shadowBox">
                     <?php
-                    $fields = $conn->prepare("SELECT `surname`, `name`, `patronymic`, `email`, `phone` FROM `users` WHERE `id` = :id");
-                    $fields->execute(['id'=>$_USER->getId()]);
+                    $fields = $conn->prepare("SELECT `surname`, `name`, `patronymic`, `email` FROM `users` WHERE `id` = :id");
+                    $fields->execute(['id'=>$_USER->GetId()]);
                     $fields = $fields->fetch(PDO::FETCH_ASSOC);?>
                     <div id="userData">
                         <div class="row">
@@ -53,13 +53,6 @@ if ($_USER->isGuest()) {
                                         <img data-name="email" class="js-edit fill-secondary" src="/assets/icons/edit.svg" title="Редактирование" alt="Редактировать">
                                     </span>
                                     <span data-value="email"><?=$fields['email']?></span>
-                                </div>
-                                <div class="item" title="Контактный номер">
-                                    <span class="title">
-                                        <span>Телефон</span>
-                                        <img data-name="phone" class="js-edit fill-secondary" src="/assets/icons/edit.svg" title="Редактирование" alt="Редактировать">
-                                    </span>
-                                    <span data-value="phone"><?=isset($fields['phone']) && !empty(trim($fields['phone'])) ? trim($fields['phone']) : '<i class="no-data">Не указан</i>'?></span>
                                 </div>
                             </div>
                         </div>

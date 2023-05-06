@@ -20,6 +20,14 @@ class Country {
     }
     
     /**
+     * get table
+     * @return string
+     */
+    public function GetTable() {
+        return $this->mainTable;
+    }
+    
+    /**
      * Функция возвращает данные о стране-изготовителя
      * @param int|string $id id страны-изготовителя / all - все
      * @return array

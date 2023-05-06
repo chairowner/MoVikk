@@ -11,7 +11,6 @@ $_PRODUCT = new Product($conn);
 $product['id'] = isset($_GET['id']) ? (int) $_GET['id']: 0;
 $product['href'] = isset($_GET['href']) ? trim($_GET['href']) : null;
 $product = $_PRODUCT->getProduct($product['id'],$product['href']);
-// exit(json_encode($product,JSON_UNESCAPED_UNICODE));
 if ($product['notFound']) {
     $product['name'] = "Товар не найден";
     $product['description'] = "К сожалению, не удалось найти искомый товар";
@@ -22,6 +21,9 @@ if ($product['notFound']) {
 <head>
     <?=$_PAGE->GetHead($_USER->isGuest(), $product['name'], $product['description'])?>
     <link rel="stylesheet" href="/assets/common/css/product.css">
+    <link rel="stylesheet" href="/assets/libs/magnific-popup/magnific-popup.css">
+    <script defer src="/assets/libs/magnific-popup/jquery.magnific-popup.min.js"></script>
+    <!-- <script defer src="/assets/libs/color-thief.min.js"></script> -->
     <script defer src="/assets/common/js/showLoad.js"></script>
     <script defer src="/assets/common/js/product.js"></script>
 </head>
@@ -41,20 +43,26 @@ if ($product['notFound']) {
                     <div class="product" data-product-id="<?=$product['id']?>">
                         <div class="product__row mainInfo">
                             <div class="product__images">
-                                <?php $noAddImgs = false; if(isset($product['images']['additional'])):?>
+                                <?php
+                                $noAddImgs = true;
+                                if (isset($product['images']['additional']) && !empty($product['images']['additional'])) {
+                                    $noAddImgs = false;
+                                }
+                                ?>
+                                <div id="js-mainImageRole-box" class="product__images__main shadowBox<?=$noAddImgs ? ' noAddImgs' : null?>">
+                                    <a class="item js-gallery" href="<?=$product['images']['main']['src']?>" title="<?=$product['name']?>">
+                                        <img id="js-mainImageRole" data-founded="<?=$product['images']['notFound']?"false":"true"?>" style="object-fit: contain;" src="<?=$product['images']['main']['src']?>" alt="<?=$product['name']?>">
+                                    </a>
+                                </div>
+                                <?php if(!$noAddImgs):?>
                                     <div class="product__images__additional custom-scroll">
                                         <?php foreach($product['images']['additional'] as $key => $image):?>
-                                            <a class="item" data-fancybox="images" data-src="<?=$image?>">
-                                                <img src="<?=$image?>" alt="<?=$product['name']?>">
+                                            <a class="item js-gallery" href="<?=$image['src']?>" title="<?=$product['name']?>">
+                                                <img src="<?=$image['src']?>" alt="<?=$product['name']?>">
                                             </a>
                                         <?php endforeach;?>
                                     </div>
-                                <?php else: $noAddImgs = true; endif;?>
-                                <div class="product__images__main shadowBox<?=$noAddImgs ? ' noAddImgs' : null?>">
-                                    <a class="item" data-fancybox="images" data-src="<?=$product['images']['main']?>">
-                                        <img src="<?=$product['images']['main']?>" alt="<?=$product['name']?>">
-                                    </a>
-                                </div>
+                                <?php endif;?>
                             </div>
                             <div class="addCart_wrapper">
                                 <div class="addCart shadowBox">
@@ -74,8 +82,15 @@ if ($product['notFound']) {
                                                 <strong class="addCart__price__main"><?=formatPrice($product['price'])?></strong>
                                             <?php endif;?>
                                         </div>
-                                        <div class="addCart_buyCounter"><?=$product['sold'] > 0 ? "Товар приобрели ".numWord($product['sold'], ['раз', 'раза', 'раз']) : 'Товар ещё не покупали'?></div>
-                                        <div class="addCart__button"><img class="w-100 text-center" style="height: 50px;" src='/assets/icons/spinner.svg' alt="Загрузка..."></div>
+                                        <div class="d-flex flex-column">
+                                            <h4 class="addCart_buyCounter"><?=$product['count'] > 0 ? "В наличии {$product['count']} ед." : 'Товара нет в наличии'?></h4>
+                                            <span class="addCart_buyCounter"><?=$product['sold'] > 0 ? "Товар приобрели ".numWord($product['sold'], ['раз', 'раза', 'раз']) : 'Товар ещё не покупали'?></span>
+                                        </div>
+                                        <?php if($_USER->isGuest()):?>
+                                            <a href="/lk" class="button w-100 item__data">Войти в систему</a>
+                                        <?php elseif($product['count'] > 0):?>
+                                            <div class="addCart__button"><img class="w-100 text-center" style="height: 50px;" src='/assets/icons/spinner.svg' alt="Загрузка..."></div>
+                                        <?php endif;?>
                                     <?php endif;?>
                                 </div>
                                 <?php if(!empty($product['country']) || !empty($product['techSpec']) || !empty($product['features'])):?>

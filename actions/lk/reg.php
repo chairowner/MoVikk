@@ -4,6 +4,7 @@ require_once('includes/autoload.php');
 require_once('functions/getCaptcha.php');
 $_COMPANY = new Company($conn);
 $_USER = new User($conn);
+$_EMAIL = new Email($conn);
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -74,7 +75,7 @@ if (($recaptcha->success == true && $recaptcha->score > 0.5 || true) || DEBUG_MO
         $surname = trim($_POST['surname']);
         $patronymic = isset($_POST['patronymic']) && trim($_POST['patronymic']) !== "" ? trim($_POST['patronymic']) : null;
         
-        $reg = $_USER->registration($email,$password,$passwordRepeat,$name,$surname,$patronymic);
+        $reg = $_USER->Registration($email,$password,$passwordRepeat,$name,$surname,$patronymic);
 
         if (!$reg['status']) exit(json_encode($reg, JSON_UNESCAPED_UNICODE));
         
@@ -98,11 +99,14 @@ if (($recaptcha->success == true && $recaptcha->score > 0.5 || true) || DEBUG_MO
             "<div style=\"margin:0 0 40px 0;\"><a href=\"{$verifyUrl}\" style=\"padding:15px 20px;font-weight:bold;color:#ffffff;background-color:#333333;border-radius:8px;\">Подтвердить E-mail</a></div>".
             "<span style=\"font-size:12px;\">Если кнопка не работает, перейдите по этой ссылке: <a href=\"{$verifyUrl}\">{$verifyUrl}</a></span>";
         "</div>";
-        $mailFrom = "no-reply@movikk.ru";
-        $mailPass = "wa57x3Zm";
-        $cipher = "ssl";
-        $host = "smtp.timeweb.ru";
-        $port = 465;
+        
+        $smtpSettings = $_EMAIL->Get();
+
+        $mailFrom = trim($smtpSettings['email']);
+        $mailPass = $smtpSettings['password'];
+        $cipher = $smtpSettings['cipher'];
+        $host = $smtpSettings['host'];
+        $port = (int) $smtpSettings['port'];
 
         $mailTo = $email;
 

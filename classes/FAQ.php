@@ -20,6 +20,14 @@ class FAQ {
     }
     
     /**
+     * get table
+     * @return string
+     */
+    public function GetTable() {
+        return $this->mainTable;
+    }
+    
+    /**
      * Функция возвращает данные
      * @param int|string $id id / all - все
      * @return array

@@ -1,6 +1,7 @@
 <?php
 set_include_path('../../../');
 require_once('includes/autoload.php');
+$_PAGE = new Page($conn);
 $_USER = new User($conn);
 $_PRODUCT = new Product($conn);
 
@@ -40,7 +41,7 @@ if ($response['status']) {
         'status' => true,
         'info' => []
     ];
-    $response = $_PRODUCT->setMainImage($productId, $imageId);
+    $response = $_PRODUCT->SetMainImage($productId, $imageId);
 }
 
 exit(json_encode($response, JSON_UNESCAPED_UNICODE)); // return

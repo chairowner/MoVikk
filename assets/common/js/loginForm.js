@@ -1,5 +1,5 @@
 const
-msgBox = $('#login-msgBox'),
+loginMsgBox = $('#login-msgBox'),
 reCAPTCHA_SITE_KEY = '6LdyVx8jAAAAAFpzmmmkEB4Hr_pAanZrZ-YxMz3L',
 loginOverlay = $('#login-form-overlay');
 
@@ -16,6 +16,7 @@ try {
 $('a.item__data[href="/lk"]').on('click',function(e){
     e.preventDefault();
     if (loginOverlay.hasClass('active')) {
+        $('.item__data[href="/lk"].hover').removeClass('hover');
         overlayAct('close', loginOverlay);
     } else {
         overlayAct('open', loginOverlay);
@@ -26,6 +27,7 @@ $('#close-login-form').on('click',function(){
     forms = $('#login-form'),
     timeout = 0.3;
     if (loginOverlay.hasClass('active')) {
+        $('.item__data[href="/lk"].hover').removeClass('hover');
         overlayAct('close', loginOverlay);
     }
 });
@@ -51,13 +53,13 @@ $('#login-form form.item').on('submit',function(e){
         dataType: 'JSON',
         data: form.serialize(),
         success: function(data) {
-            console.log(data);
             let type;
             if (data.status) {
                 type = 'success';
                 if (typeof data.redirect != "undefined") {
                     location.href = data.redirect;
                 } else {
+                    $('.item__data[href="/lk"].hover').removeClass('hover');
                     overlayAct('close', loginOverlay);
                 }
             } else {
@@ -65,13 +67,13 @@ $('#login-form form.item').on('submit',function(e){
                 setTimeout(() => {main.css('display','flex');}, 200);
                 main.removeClass('close');
             }
-            new Message(msgBox, data.info.join(";\n"), type, 7);
+            new Message(loginMsgBox, data.info.join(";\n"), type, 7);
         },
         error: function(err) {
             console.log(`ERROR`);
             console.log(err);
             main.removeClass('close');
-            new Message(msgBox, errMsg, 'error', 5);
+            new Message(loginMsgBox, errMsg, 'error', 5);
         }
     });
 });

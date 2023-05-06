@@ -1,6 +1,5 @@
 const errMsg = `При выводе товар из корзины произошла системная ошибка.\nНо вы всё так же можете сделать у нас заказ, связавшись с нами во ВКонтакте, WhatsApp, Viber или позвонив по телефону!`;
 const container = $('#products');
-const messageBox = $('#mainMessageBox');
 const productCounterClass ='js-productCounter', productCounter ='.'+productCounterClass;
 const actionBtnClass ='js-cardAction', actionBtn ='.'+actionBtnClass;
 const actionAdd = 'add', actionRemove = 'remove';
@@ -40,7 +39,7 @@ function updateCartData() {
                 removeLoad(fullData,oldInner);
                 fullData.css('height', 'auto');
             }
-            if (data.info != null) new Message(messageBox, data.info, msgStatus, 5);
+            if (data.info != null) new Message(mainMessageBox, data.info, msgStatus, 5);
         },
         error: function(err){
             console.log('ERROR');
@@ -49,7 +48,7 @@ function updateCartData() {
             if (action == 'add') msg += `При добавлении товара в корзину`;
             else if (action == 'remove') msg += `При удалении товара из корзину`;
             msg += ` произошла ошибка\nПожалуйста, обновите страницу и повторите действие`;
-            new Message(messageBox, msg, 'error', 5);
+            new Message(mainMessageBox, msg, 'error', 5);
             removeLoad(btns,oldInner);
             fullData.css('height', 'auto');
         }
@@ -110,7 +109,7 @@ $(document).on('click',actionBtn,function(){
                     location.reload();
                 }
             }
-            if (data.info != null) new Message(messageBox, data.info, msgStatus, 5);
+            if (data.info != null) new Message(mainMessageBox, data.info, msgStatus, 5);
             removeLoad(btns, oldInner);
         },
         error: function(err){
@@ -120,7 +119,7 @@ $(document).on('click',actionBtn,function(){
             if (action == 'add') msg += `При добавлении товара в корзину`;
             else if (action == 'remove') msg += `При удалении товара из корзину`;
             msg += ` произошла ошибка\nПожалуйста, обновите страницу и повторите действие`;
-            new Message(messageBox, msg, 'error', 5);
+            new Message(mainMessageBox, msg, 'error', 5);
             removeLoad(btns, oldInner);
         }
     });
@@ -140,14 +139,14 @@ function loadProducts(products = []) {
             if (product.oldPrice != null) $price.append($('<span>',{class:'price-old',text:formatPrice((product.oldPrice*product.countInCart))}));
             container.append(
                 $('<div>', {class:'shadowBox product', 'product-id':product.productId})
-                .append($('<div>',{class:'item title',html:$('<a>',{href:product.href,text:product.name})}))
+                .append($('<div>',{class:'item title',html:$('<a>',{target:'_blank',href:product.href,text:product.name})}))
                 .append(
                     $('<div>',{class:'item data gap-40'})
                     .append($('<div>',{class:'image',style:"flex-grow: 1;"})
-                        .append($('<a>',{href:product.href}).append($('<img>',{src:product.image,alt:product.name,title:product.name})))
+                        .append($('<a>',{target:'_blank',href:product.href}).append($('<img>',{src:product.image,alt:product.name,title:product.name})))
                     )
                     .append($('<div>',{class:'h-100 d-flex flex-column justify-content-between',style:"flex-grow: 1;"})
-                        .append($('<a>',{href:product.href,text:product.name}))
+                        .append($('<a>',{target:'_blank',href:product.href,text:product.name}))
                         .append($('<span>',{class:deleteBtnClass+" addition "+actionBtnClass,text:"Удалить",'data-action':actionRemove,'data-action-count':0}))
                     )
                     .append($('<div>',{class:'data-main d-flex flex-wrap gap-50'})
@@ -182,7 +181,7 @@ function uploadCart() {
             console.log('ERROR');
             console.log(err);
             loadProducts();
-            new Message(messageBox, `При выводе товаров из корзины произошла системная ошибка.\nНо вы всё так же можете сделать у нас заказ, связавшись с нами во ВКонтакте, WhatsApp, Viber или позвонив по телефону!`, 'error', 5);
+            new Message(mainMessageBox, `При выводе товаров из корзины произошла системная ошибка.\nНо вы всё так же можете сделать у нас заказ, связавшись с нами во ВКонтакте, WhatsApp, Viber или позвонив по телефону!`, 'error', 5);
         }
     });
 }

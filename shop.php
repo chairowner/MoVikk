@@ -10,7 +10,7 @@ $_CART = new Cart($conn);
 
 require_once('classes/php-pagination/Pagination.php');
 
-$viewCount = 29;
+$viewCount = 32;
 $_GET['category'] = $categoryHref = isset($_GET['category']) ? trim($_GET['category']) : 'all';
 if (isset($_GET['page'])) {
     $_GET['page'] = (int) $_GET['page'];

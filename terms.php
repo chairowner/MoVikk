@@ -9,21 +9,24 @@ $_CART = new Cart($conn);
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <?=$_PAGE->GetHead($_USER->isGuest(), $_PAGE->title, $_PAGE->description)?>
+    <?=$_PAGE->GetHead($_USER->isGuest())?>
     <link rel="stylesheet" href="/assets/common/css/terms.css">
     <script defer src="/assets/common/js/terms.js"></script>
 </head>
 <body>
-    <?php include_once('includes/header.php');?>
-    <main>
-        <section>
+    <?php include_once('includes/header.php')?>
+    <div class="page__title">
+        <h1 class="container"><?=$_PAGE->title?></h1>
+    </div>
+    <main style="min-height:35vh;">
+        <section class="m-0">
             <div class="container">
-                <h2 class="text-uppercase">Популярные товары</h2>
-                <div class="w-100">
+                <div>
+                    
                 </div>
             </div>
         </section>
     </main>
-    <?php include_once('includes/footer.php');?>
+    <?php include_once('includes/footer.php')?>
 </body>
 </html>

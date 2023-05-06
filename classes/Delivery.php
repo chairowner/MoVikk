@@ -20,6 +20,14 @@ class Delivery {
     }
     
     /**
+     * get table
+     * @return string
+     */
+    public function GetTable() {
+        return $this->mainTable;
+    }
+    
+    /**
      * Функция возвращает данные о доставке
      * @param int|string $id id доставки / all - все
      * @return array

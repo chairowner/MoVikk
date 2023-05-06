@@ -93,6 +93,30 @@ p.success:active, a.success:active, span.success:active {
     color: var(--success-active-color);
 }
 
+.search {
+    height: 48px;
+    width: 600px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.search::before {
+    position: absolute;
+    content: url(/assets/icons/search.svg);
+    width: 28px;
+    height: 28px;
+    left: 15px;
+    top: 12px;
+}
+.search > input {
+    padding: 5px 15px 5px 50px;
+    width: 100%;
+    height: 100%;
+    border-radius: 36px;
+    outline: none;
+    border: none;
+}
+
 .button {
     min-width: 150px;
     width: fit-content;
@@ -180,7 +204,7 @@ p.success:active, a.success:active, span.success:active {
 .button > * {cursor: pointer!important;}
 
 .field {
-    width: 150px;
+    min-width: 150px;
     height: 45px;
     padding: 0 15px;
     border-radius: 6px;
@@ -226,13 +250,15 @@ p.success:active, a.success:active, span.success:active {
     }
 
 .field.elems {display: flex; justify-content: space-between;}
-.field > * {cursor: text!important;}
+.field > * {cursor: text;}
 
 textarea.field {
     padding: 13px 15px;
     height: 100px;
 	resize: none;
 }
+
+select.field, select.field > * {cursor: pointer;}
 
 .alert {
     width: 100%;

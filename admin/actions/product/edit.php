@@ -2,6 +2,7 @@
 set_include_path('../../../');
 require_once('includes/autoload.php');
 require_once('functions/translitUrl.php');
+$_PAGE = new Page($conn);
 $_USER = new User($conn);
 $_PRODUCT = new Product($conn);
 
@@ -53,6 +54,24 @@ if (isset($_POST['instructionId'])) {
             (int) $_POST['instructionId'] : null;
 } else {
     $_POST['instructionId'] = null;
+}
+
+if (isset($_POST['payment_object_id'])) {
+    $_POST['payment_object_id'] =
+        trim($_POST['payment_object_id']) !== "" ?
+            (int) $_POST['payment_object_id'] : null;
+    if (isset($_POST['payment_object_id']) && !empty($_POST['payment_object_id'])) {
+        if ($_POST['payment_object_id'] < 1) {
+            $response['info'][] = "Указан неверный признака предмета расчёта";
+            $response['status'] = false;
+        }
+    } else {
+        $response['info'][] = "Укажите признака предмета расчёта";
+        $response['status'] = false;
+    }
+} else {
+    $response['info'][] = "Укажите признака предмета расчёта";
+    $response['status'] = false;
 }
 
 if (isset($_POST['name'])) {
@@ -218,6 +237,6 @@ if (isset($_FILES) && !empty($_FILES)) {
     $_POST['files'] = [];
 }
 
-if ($response['status']) $response = $_PRODUCT->edit($_POST);
+if ($response['status']) $response = $_PRODUCT->Edit($_POST);
 
 exit(json_encode($response, JSON_UNESCAPED_UNICODE)); // return

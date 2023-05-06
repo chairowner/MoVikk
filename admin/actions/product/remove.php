@@ -1,6 +1,7 @@
 <?php
 set_include_path('../../../');
 require_once('includes/autoload.php');
+$_PAGE = new Page($conn);
 $_USER = new User($conn);
 $_PRODUCT = new Product($conn);
 

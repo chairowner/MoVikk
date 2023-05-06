@@ -11,6 +11,7 @@
                     <input class="field shadowBox w-100" type="password" name="password" placeholder="Пароль" title="Пароль" required>
                     <div class="h-100 d-flex align-items-center"><div class="passView close" title="Показать пароль"><span class="passView-eyelid"></span></div></div>
                 </div>
+                <p class="text-center"><a href="/recoverPassword" class="primary cursor-pointer">Восстановить пароль</a></p>
                 <input class="button shadowBox w-100" type="submit" value="Войти">
                 <input type="hidden" class="g-recaptcha-response" name="g-recaptcha-response">
             </form>
@@ -129,7 +130,7 @@
                 <div class="item mobile">
                     <a class="item__data" href="<?=$href?>">
                         <img src="/assets/icons/<?=$item['icon']?>" alt="<?=$item['title']?>" title="<?=$item['title']?>">
-                        <?php if($href === '/cart'):?><span class="cart_number"><?=$_CART->getCount($_USER->getId())?></span><?php endif;?>
+                        <?php if($href === '/cart'):?><span class="cart_number"><?=$_CART->getCount($_USER->GetId())?></span><?php endif;?>
                     </a>
                     <?php if($href === '/lk' &&!$_USER->isGuest()):?>
                         <div class="lk-menu shadowBox">

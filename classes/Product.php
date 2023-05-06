@@ -35,6 +35,14 @@ class Product {
     }
     
     /**
+     * get table
+     * @return string
+     */
+    public function GetTable() {
+        return $this->mainTable;
+    }
+    
+    /**
      * Функция добавляет товар
      * @param array $execute параметры товара
      * @return array
@@ -60,9 +68,9 @@ class Product {
 
             $sql =
             "INSERT INTO `{$this->mainTable}`
-            (`categoryId`, `countryId`, `instructionId`, `href`, `name`, `description`, `height`, `width`, `length`, `features`, `techSpec`, `count`, `price`, `sale`)
+            (`categoryId`, `countryId`, `instructionId`, `payment_object_id`, `href`, `name`, `description`, `height`, `width`, `length`, `features`, `techSpec`, `count`, `price`, `sale`)
             VALUES
-            (:categoryId, :countryId, :instructionId, :href, :name, :description, :height, :width, :length, :features, :techSpec, :count, :price, :sale)";
+            (:categoryId, :countryId, :instructionId, :payment_object_id, :href, :name, :description, :height, :width, :length, :features, :techSpec, :count, :price, :sale)";
             $query = $this->conn->prepare($sql);
             if ($query->execute($execute)) {
                 $response['id'] = (int)$this->conn->lastInsertId();
@@ -119,7 +127,7 @@ class Product {
      * @param array $execute параметры товара
      * @return array
      */
-    function edit(array $execute) {
+    function Edit(array $execute) {
         try {
             $response = [
                 'status' => false,
@@ -139,21 +147,14 @@ class Product {
                 $images_count = count($images['error']);
             }
 
-            $sql = "UPDATE `{$this->mainTable}` SET `categoryId` = :categoryId, `countryId` = :countryId, `instructionId` = :instructionId, `href` = :href, `name` = :name, `description` = :description, `height` = :height, `width` = :width, `length` = :length, `features` = :features, `techSpec` = :techSpec, `count` = :count, `price` = :price, `sale` = :sale WHERE `id` = :id";
-            // $sql = "UPDATE `{$this->mainTable}` SET ";
-            // $i = 0;
-            // foreach ($execute as $column => $value) {
-            //     if ($i > 0) $sql .= ", ";
-            //     $sql .= "`$column` = :$column";
-            //     $i++;
-            // }
-            // $sql .= " WHERE `id` = :id";
-            // unset($column, $value, $i);
+            $sql = "UPDATE `{$this->mainTable}` SET `categoryId` = :categoryId, `countryId` = :countryId, `instructionId` = :instructionId, `payment_object_id` = :payment_object_id, `href` = :href, `name` = :name, `description` = :description, `height` = :height, `width` = :width, `length` = :length, `features` = :features, `techSpec` = :techSpec, `count` = :count, `price` = :price, `sale` = :sale WHERE `id` = :id";
 
-            return($sql);
+            if (DEBUG_MODE) {
+                $response['sql'] = "UPDATE `{$this->mainTable}` SET `categoryId` = '{$execute['categoryId']}', `countryId` = '{$execute['countryId']}', `instructionId` = '{$execute['instructionId']}', `payment_object_id` = '{$execute['payment_object_id']}', `href` = '{$execute['href']}', `name` = '{$execute['name']}', `description` = '{$execute['description']}', `height` = '{$execute['height']}', `width` = '{$execute['width']}', `length` = '{$execute['length']}', `features` = '{$execute['features']}', `techSpec` = '{$execute['techSpec']}', `count` = '{$execute['count']}', `price` = '{$execute['price']}', `sale` = '{$execute['sale']}' WHERE `id` = '{$execute['id']}'";
+            } 
+
             $query = $this->conn->prepare($sql);
             if ($query->execute($execute)) {
-                $response['id'] = (int)$this->conn->lastInsertId();
                 $response['status'] = true;
                 $response['info'][] = 'Изменения сохранены!';
                 if ($images_count > 0) {
@@ -167,24 +168,43 @@ class Product {
                     }
                     if ($next) {
                         $query = "";
-                        $values = $execute = [];
-                        $query = "INSERT INTO `{$this->addTable}` (`productId`,`image`,`isMain`) VALUES ";
-                        for ($i = 0; $i < $images_count; $i++) {
-                            $isMain = $i === 0 ? 1 : 0;
-                            $extension = pathinfo($images['name'][$i])['extension'];
-                            $images['name'][$i] = md5($images['name'][$i].time()).".$extension";
-                            if (move_uploaded_file($images['tmp_name'][$i], get_include_path()."{$this->imagesPath}/{$images['name'][$i]}")) {
-                                // $values[] = "('{$response['id']}','{$images[$i]['name']}','{$isMain}')";
-                                $values[] = "(:image{$i}Id,:image{$i}Name,:image{$i}isMain)";
-                                $execute["image{$i}Id"] = $response['id'];
-                                $execute["image{$i}Name"] = $images['name'][$i];
-                                $execute["image{$i}isMain"] = $isMain;
-                            }
-                        }
-                        if (count($execute) > 0) {
-                            $query .= implode(",", $values);
+                        $productId = (int) $execute['id'];
+                        if ($productId > 0) {
+                            $values = $execute = [];
+                            $query = "SELECT `isMain` FROM `products_images` WHERE `productId` = :productId AND `isMain` = 1";
                             $query = $this->conn->prepare($query);
-                            $query->execute($execute);
+                            $query->execute(["productId" => $productId]);
+                            $query = $query->fetchAll(PDO::FETCH_ASSOC);
+                            
+                            $productHasMainImage = count($query) > 0;
+                            unset($query);
+
+                            $query = "INSERT INTO `{$this->addTable}` (`productId`,`image`,`isMain`) VALUES ";
+                            for ($i = 0; $i < $images_count; $i++) {
+                                if (!$productHasMainImage) {
+                                    $productHasMainImage = true;
+                                    $isMain = 1;
+                                } else {
+                                    $isMain = 0;
+                                }
+                                $extension = pathinfo($images['name'][$i])['extension'];
+                                $images['name'][$i] = md5($images['name'][$i].time()).".$extension";
+                                if (move_uploaded_file($images['tmp_name'][$i], get_include_path()."{$this->imagesPath}/{$images['name'][$i]}")) {
+                                    $values[] = "(:product{$i}Id,:image{$i}Name,:image{$i}isMain)";
+                                    $execute["product{$i}Id"] = $productId;
+                                    $execute["image{$i}Name"] = $images['name'][$i];
+                                    $execute["image{$i}isMain"] = $isMain;
+                                }
+                            }
+                            if (count($execute) > 0) {
+                                $query .= implode(",", $values);
+                                $response['qq'] = [
+                                    'query' => $query,
+                                    'execute' => $execute
+                                ];
+                                $query = $this->conn->prepare($query);
+                                $query->execute($execute);
+                            }
                         }
                     }
                 }
@@ -274,7 +294,7 @@ class Product {
         $href = trim($href);
         try {
             $response = ['id'=>$id,'notFound'=>true];
-            $prepare = "SELECT `categoryId`,`countryId`,`instructionId`,`name`, `href`,`description`,`height`,`width`,`length`,`features`,`techSpec`,`count`,`price`,`sale`,`preOrder`,`keywords`,`sold`,`added`,`isDeleted` FROM `{$this->mainTable}` WHERE `id` = :id";
+            $prepare = "SELECT `p`.`categoryId`,`p`.`countryId`,`p`.`instructionId`,`p`.`payment_object_id`,`po`.`code` `payment_object_code`,`p`.`name`,`p`.`href`,`p`.`description`,`p`.`height`,`p`.`width`,`p`.`length`,`p`.`features`,`p`.`techSpec`,`p`.`count`,`p`.`price`,`p`.`sale`,`p`.`preOrder`,`p`.`keywords`,`p`.`sold`,`p`.`added`,`p`.`isDeleted` FROM `{$this->mainTable}` `p` INNER JOIN `payment_objects` `po` ON `po`.`id` = `p`.`payment_object_id` WHERE `p`.`id` = :id";
             $execute = ['id' => $id];
             if (!$isAdmin) {
                 $prepare .= " AND `href` = :href";
@@ -292,6 +312,10 @@ class Product {
             $response['categoryId'] = (int) ($product['categoryId']);
             $response['instructionId'] = isset($product['instructionId']) ?
                 (int) ($product['instructionId']) : null;
+            $response['payment_object'] = [
+                'id' => (int) ($product['payment_object_id']),
+                'code' => trim($product['payment_object_code'])
+            ];
             $response['href'] = trim($product['href']);
             $response['name'] = trim($product['name']);
             $response['description'] = isset($product['description']) ?
@@ -339,6 +363,9 @@ class Product {
 
             return $response;
         } catch (PDOException $e) {
+            if (DEBUG_MODE) {
+                return $e->getMessage();
+            }
             return null;
         }
     }
@@ -406,7 +433,7 @@ class Product {
      * @param int $imageId ID изображения
      * @return array
      */
-    function setMainImage(int $productId, int $imageId) {
+    function SetMainImage(int $productId, int $imageId) {
         try {
             $response = [
                 'status' => false,
@@ -464,7 +491,7 @@ class Product {
      * @param int $imageId ID изображения
      * @return array
      */
-    function deleteImage(int $imageId) {
+    function DeleteImage(int $imageId) {
         try {
             $response = [
                 'status' => false,

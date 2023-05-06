@@ -2,6 +2,7 @@
 set_include_path('../../../');
 require_once('includes/autoload.php');
 require_once('functions/translitUrl.php');
+$_PAGE = new Page($conn);
 $_USER = new User($conn);
 $_CATEGORIES = new Categories($conn);
 
