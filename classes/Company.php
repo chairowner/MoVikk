@@ -28,11 +28,11 @@ class Company {
                 $this->phone = trim($company['phone']);
                 $this->phone_format = sprintf(
                     "%s (%s) %s-%s-%s",
-                    (int) ((substr($this->phone, 1, 1)) + 1),
-                    substr($this->phone, 2, 3),
-                    substr($this->phone, 5, 3),
-                    substr($this->phone, 8, 2),
-                    substr($this->phone, 10)
+                    (int) ((mb_substr($this->phone, 1, 1)) + 1),
+                    mb_substr($this->phone, 2, 3),
+                    mb_substr($this->phone, 5, 3),
+                    mb_substr($this->phone, 8, 2),
+                    mb_substr($this->phone, 10)
                 );
                 $this->info = [
                     'ИНН' => trim($company['inn']),
@@ -55,5 +55,9 @@ class Company {
                 }
             }
         }
+    }
+
+    public function GetTable():string {
+        return $this->mainTable;
     }
 }

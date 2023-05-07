@@ -5,7 +5,7 @@ set_include_path("../");
 require_once('includes/autoload.php');
 require_once('classes/php-pagination/Pagination.php');
 $_PAGE = new Page($conn);
-$_PAGE->description = "Дополнительные поля";
+$_PAGE->description = "Страницы";
 $_PAGE->title = "Административная панель";
 $_COMPANY = new Company($conn);
 $_USER = new User($conn);
@@ -19,12 +19,12 @@ $editCategory = explode('/',$_SERVER['PHP_SELF']);
 $editCategory = basename($editCategory[count($editCategory) - 1], '.php');
 
 if (isset($editId)) {
-    $data = $conn->prepare("SELECT `id`, `title`, `value` FROM `additional_fields` WHERE `id` = :id");
+    $data = $conn->prepare("SELECT * FROM `{$_PAGE->GetTable()}` WHERE `id` = :id");
     $data->execute(['id' => $editId]);
     $data = $data->fetch();
     if (!isset($data)) $_PAGE->Redirect(ADMIN_URL."/$editCategory");
 } else {
-    $data = $conn->prepare("SELECT `id`, `title` FROM `additional_fields`");
+    $data = $conn->prepare("SELECT `id`, `title`, `fileName` FROM `{$_PAGE->GetTable()}`");
     $data->execute();
     $data = $data->fetchAll();
 }
@@ -56,15 +56,16 @@ if (isset($editId)) {
                             $item = $data;
                             $item['id'] = (int)$item['id'];
                             $item['title'] = trim($item['title']);
-                            $item['value'] = isset($item['value']) && trim($item['value']) !== "" ? trim($item['value']) : null;?>
+                            $item['description'] = isset($item['description']) && trim($item['description']) !== "" ? trim($item['description']) : null;?>
 
                         <form method="POST" action="actions/<?=$editCategory?>/edit" id="formData">
                             <label class="item">
-                                <h2><?=$item['title']?></h2>
+                                <span>Заголовок страницы</span>
+                                <input name="title" class="field" value="<?=isset($item['title'])?$item['title']:null?>">
                             </label>
                             <label class="item">
-                                <span>Текст</span>
-                                <textarea name="value" class="field"><?=isset($item['value'])?$item['value']:null?></textarea>
+                                <span>Описание страницы <i>(для поисковиков)</i></span>
+                                <textarea name="description" class="field"><?=isset($item['description'])?$item['description']:null?></textarea>
                             </label>
                             <input type="hidden" name="id" value="<?=$item['id']?>">
                             <div class="item flex-row flex-wrap justify-content-between gap-20">
@@ -86,6 +87,7 @@ if (isset($editId)) {
                                     <a class="item shadowBox" href="<?=$editCategory?>?action=edit&id=<?=$item['id']?>">
                                         <div class="item-content d-flex flex-column">
                                             <span class="d-flex flex-row flex-wrap gap-5 fw-bold"><?=$item['title']?></span>
+                                            <i>/<?=$item['fileName']?></i>
                                         </div>
                                     </a>
 

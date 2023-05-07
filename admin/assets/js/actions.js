@@ -15,6 +15,9 @@ function act(action, params, redirectToCategory = true) {
         type = "GET";
     }
     const url = "actions/"+category+"/"+action;
+
+    disableForm(form, null, true);
+
     $.ajax({
         url: url,
         cache: false,
@@ -24,23 +27,27 @@ function act(action, params, redirectToCategory = true) {
         dataType: 'JSON',
         data: params,
         success: function(data) {
-            console.log(url + "\n", data);
+            // console.log(url + "\n", data);
             let messageType;
             if (data.status) {
                 messageType = "success";
-                if (redirectToCategory) {
-                    location.href = category;
-                } else {
-                    location.reload();
-                }
+                setTimeout(() => {
+                    if (redirectToCategory) {
+                        location.href = category;
+                    } else {
+                        location.reload();
+                    }
+                }, 1000);
             } else {
                 messageType = "error";
+                disableForm(form, null, false);
             }
             new Message(mainMessageBox, data.info.join("\n"), messageType, 5);
         },
         error: function(error){
             console.error('ERROR', error);
             new Message(mainMessageBox, `Произошла ошибка\nПожалуйста, обновите страницу и повторите действие`, 'error', 5);
+            disableForm(form, null, false);
         }
     });
 }

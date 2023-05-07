@@ -46,7 +46,7 @@ if (isset($_GET['page'])) {
 $execute = [];
 if (isset($editId)) {
     $data = $_INSTRUCTIONS->Get($editId);
-    if (!isset($data['items'][0])) $_PAGE->Redirect("$adminUrl/$editCategory");
+    if (!isset($data['items'][0])) $_PAGE->Redirect(ADMIN_URL."/$editCategory");
 } else {
     if (isset($_GET['search']) && trim($_GET['search']) !== "") {
         $search = trim($_GET['search']);
@@ -60,8 +60,8 @@ if (isset($editId)) {
     $data = $data->fetchAll(PDO::FETCH_ASSOC); 
 }
 
-if (isset($editId) && count($data) < 1) $_PAGE->Redirect("$adminUrl/$editCategory");
-elseif (($currentPageNumber !== 1) && count($data) < 1) $_PAGE->Redirect("$adminUrl/$editCategory");
+if (isset($editId) && count($data) < 1) $_PAGE->Redirect(ADMIN_URL."/$editCategory");
+elseif (($currentPageNumber !== 1) && count($data) < 1) $_PAGE->Redirect(ADMIN_URL."/$editCategory");
 
 if (isset($editId)) {
     $pattern .= "$editCategory?action=edit&id=#";
@@ -99,6 +99,7 @@ if (isset($editId)) {
     <?=$_PAGE->GetHead($_USER->isGuest(), "{$_PAGE->title} - {$_PAGE->description}", $_PAGE->description)?>
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="/classes/php-pagination/css/main.css">
+    <script defer src="/assets/common/js/disableForm.js"></script>
     <script defer src="/assets/common/js/showLoad.js"></script>
     <script defer src="/assets/common/js/formatPrice.js"></script>
     <script defer src="assets/js/actions.js"></script>
@@ -107,7 +108,7 @@ if (isset($editId)) {
     <div class="page__title">
         <div class="container">
             <a href="/"><img src="/assets/icons/logo.svg" class="logo" alt="<?=$_COMPANY->name?>"></a>
-            <h1 class="container"><a href="/<?=$adminUrl?>"><?=$_PAGE->title?></a> - <a href="<?=$editCategory?>"><?=$_PAGE->description?></a></h1>
+            <h1 class="container"><a href="/<?=ADMIN_URL?>"><?=$_PAGE->title?></a> - <a href="<?=$editCategory?>"><?=$_PAGE->description?></a></h1>
         </div>
     </div>
     <main style="min-height: 35vh;">
@@ -125,7 +126,7 @@ if (isset($editId)) {
                             </label>
                             <label class="item">
                                 <span>Текст</span>
-                                <textarea name="text" class="field" maxlength="255"></textarea>
+                                <textarea name="text" class="field"></textarea>
                             </label>
                             <label class="item">
                                 <span>Видео</span>
@@ -150,7 +151,7 @@ if (isset($editId)) {
                                 </label>
                                 <label class="item">
                                     <span>Текст</span>
-                                    <textarea name="text" class="field" maxlength="255"><?=$item['text']?></textarea>
+                                    <textarea name="text" class="field"><?=$item['text']?></textarea>
                                 </label>
                                 <?php if(isset($item['video']) && !empty($item['video'])):?>
                                     <label class="item">

@@ -119,7 +119,7 @@ if (isset($_GET['hash'])) /* проверка ссылки на восстано
             
                 $mailSubject = "Смена пароля | $companyName";
                 $mailBody = file_get_contents("assets/templates/email/movikk_recover_password_template.html", true);
-                $mailBody = insertIntoTemplate(['company_name' => $companyName,'site_link' => $site_link, 'recovery_link' => $recovery_link, 'year' => date("Y"), 'vk_link' => $_COMPANY->socials['vk']['href'], 'instagram_link' => $_COMPANY->socials['instagram']['href']], $mailBody);
+                $mailBody = insertIntoTemplate(['company_name' => $companyName,'site_link' => $site_link, 'recovery_link' => $recovery_link, 'year' => date("Y"), 'vk_link' => $_COMPANY->socials['vk']['href'], 'telegram_link' => $_COMPANY->socials['telegram']['href']], $mailBody);
         
                 $smtpSettings = $_EMAIL->Get();
             

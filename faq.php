@@ -45,9 +45,9 @@ $_USER = new User($conn);
                             <img class="social-icon" src="/assets/icons/social-vk.svg" alt="ВКонтакте">
                             <?=$_COMPANY->socials['vk']['title']?>
                         </a>
-                        <a class="d-flex justify-content-center align-items-center flex-wrap" style="gap:10px;" target="_blank" href="<?=$_COMPANY->socials['instagram']['href']?>">
-                            <img class="social-icon" src="/assets/icons/social-instagram.svg" alt="Инстаграм">
-                            <?=$_COMPANY->socials['instagram']['title']?>
+                        <a class="d-flex justify-content-center align-items-center flex-wrap" style="gap:10px;" target="_blank" href="<?=$_COMPANY->socials['telegram']['href']?>">
+                            <img class="social-icon" src="/assets/icons/social-telegram.svg" alt="Инстаграм">
+                            <?=$_COMPANY->socials['telegram']['title']?>
                         </a>
                     </div>
                 </div>

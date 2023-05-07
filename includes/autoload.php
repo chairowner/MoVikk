@@ -1,12 +1,14 @@
 <?php
 # Версия приложения
-define('APP_VERSION', '1.0.0');
+define('APP_VERSION', '1.1.0');
 # Режим разрабоки
 define('DEBUG_MODE', true);
 # Публичный reCAPTCHA ключ
 define('reCAPTCHA_SITE_KEY', '6LdyVx8jAAAAAFpzmmmkEB4Hr_pAanZrZ-YxMz3L');
 # Секретный reCAPTCHA ключ
 define('reCAPTCHA_SECRET_KEY', '6LdyVx8jAAAAAGHxDeQzwk69BZTK-PKAFaIki01p');
+# Название папки для админ-панели
+define('ADMIN_URL', 'admin');
 
 # перенос глобальной переменной $_SESSION в локальную $session
 include_once('includes/session.php');

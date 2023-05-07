@@ -154,7 +154,7 @@ class User {
                 $_SESSION['user']['id'] = $user['id'];
                 session_write_close();
                 $response['status'] = true;
-                $response['redirect'] = $user['isAdmin'] ? '/admin' : '/';
+                $response['redirect'] = $user['isAdmin'] ? '/'.ADMIN_URL : '/';
                 $response['info'][] = 'Вы успешно авторизовались!';
                 // обнуляем хэш для восстановления пароля
                 $query = $this->conn->prepare("UPDATE `{$this->mainTable}` SET `recoveryHash` = :recoveryHash, `recoveryHashDate` = :recoveryHashDate WHERE `id` = :userId");

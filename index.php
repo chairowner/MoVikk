@@ -36,16 +36,19 @@ $_USER = new User($conn);
                     if (!is_dir($category_path)) mkdir($category_path);
                     $category_path .= "/categories";
                     if (!is_dir($category_path)) mkdir($category_path);
-
+                    
                     foreach($categories as $category_key => $category):
                         $category['id'] = (int) $category['id'];
                         $category['image'] =
                             isset($category['image']) && trim($category['image']) !== "" ?
                                 trim($category['image']) : null;
-                        
-                        $category['path'] =
-                            file_exists("$category_path/{$category['image']}") ?
-                                "$category_path/{$category['image']}" : null;?>
+                        if (isset($category['image'])) {
+                            $category['path'] =
+                                file_exists("$category_path/{$category['image']}") ?
+                                    "$category_path/{$category['image']}" : null;
+                        } else {
+                            $category['path'] = null;
+                        }?>
                         <a href="/shop/<?=$category['href']?>" class="category">
                             <?php if(isset($category['path'])):?>
                                 <img src="/<?=$category['path']?>" alt="<?=$category['name']?>">

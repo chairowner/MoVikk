@@ -9,6 +9,7 @@ footer {margin-top: 140px;}
 }
 .category {
     position: relative;
+    min-width: 320px;
     height: 320px;
     border-radius: 8px;
     overflow: hidden;
@@ -108,10 +109,28 @@ h1,h2,h3 {
     margin-left: 0;
 }
 
+@media (max-width: 768px) {
+    .category {
+        min-height: 200px;
+        min-width: 200px;
+        height: auto;
+    }
+    .video-block {
+        height: 500px;
+    }
+}
 @media (max-width: 500px) {
+    .category {
+        min-width: auto;
+        width: 100%;
+        height: auto;
+    }
     .feature {
         padding: 0;
         width: 100%;
+    }
+    .video-block {
+        height: 320px;
     }
 }
 @media (max-width: 425px) {

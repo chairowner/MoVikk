@@ -38,64 +38,64 @@
     --success-active-color: #156624;
 }
 
-p.primary, a.primary, span.primary {
+p.primary, a.primary, span.primary, strong.primary, em.primary, i.primary, b.primary, u.primary {
     color: var(--primary-color);
 }
-p.primary:hover, a.primary:hover, span.primary:hover {
+p.primary:hover, a.primary:hover, span.primary:hover, strong.primary:hover, em.primary:hover, i.primary:hover, b.primary:hover, u.primary:hover {
     color: var(--primary-hover-color);
 }
-p.primary:active, a.primary:active, span.primary:active {
+p.primary:active, a.primary:active, span.primary:active, strong.primary:active, em.primary:active, i.primary:active, b.primary:active, u.primary:active {
     color: var(--primary-active-color);
 }
 p.addition, a.addition, span.addition {
     color: var(--addition-color);
 }
-p.addition:hover, a.addition:hover, span.addition:hover {
+p.addition:hover, a.addition:hover, span.addition:hover, strong.addition:hover, em.addition:hover, i.addition:hover, b.addition:hover, u.addition:hover {
     color: var(--addition-hover-color);
 }
-p.addition:active, a.addition:active, span.addition:active {
+p.addition:active, a.addition:active, span.addition:active, strong.addition:active, em.addition:active, i.addition:active, b.addition:active, u.addition:active {
     color: var(--addition-active-color);
 }
 p.secondary, a.secondary, span.secondary {
     color: var(--secondary-color);
 }
-p.secondary:hover, a.secondary:hover, span.secondary:hover {
+p.secondary:hover, a.secondary:hover, span.secondary:hover, strong.secondary:hover, em.secondary:hover, i.secondary:hover, b.secondary:hover, u.secondary:hover {
     color: var(--secondary-hover-color);
 }
-p.secondary:active, a.secondary:active, span.secondary:active {
+p.secondary:active, a.secondary:active, span.secondary:active, strong.secondary:active, em.secondary:active, i.secondary:active, b.secondary:active, u.secondary:active {
     color: var(--secondary-active-color);
 }
-p.error, a.error, span.error {
+p.error, a.error, span.error, strong.error, em.error, i.error, b.error, u.error {
     color: var(--error-color);
 }
-p.error-light, a.error-light, span.error-light {
+p.error-light, a.error-light, span.error-light, strong.error-light, em.error-light, i.error-light, b.error-light, u.error-light {
     color: var(--error-color-light);
 }
-p.error:hover, a.error:hover, span.error:hover {
+p.error:hover, a.error:hover, span.error:hover, strong.error:hover, em.error:hover, i.error:hover, b.error:hover, u.error:hover {
     color: var(--error-hover-color);
 }
-p.error-light:hover, a.error-light:hover, span.error-light:hover {
+p.error-light:hover, a.error-light:hover, span.error-light:hover, strong.error-light:hover, em.error-light:hover, i.error-light:hover, b.error-light:hover, u.error-light:hover {
     color: var(--error-hover-color-light);
 }
-p.error:active, a.error:active, span.error:active {
+p.error:active, a.error:active, span.error:active, strong.error:active, em.error:active, i.error:active, b.error:active, u.error:active {
     color: var(--error-active-color);
 }
-p.error-light:active, a.error-light:active, span.error-light:active {
+p.error-light:active, a.error-light:active, span.error-light:active, strong.error-light:active, em.error-light:active, i.error-light:active, b.error-light:active, u.error-light:active {
     color: var(--error-active-color-light);
 }
-p.success, a.success, span.success {
+p.success, a.success, span.success, strong.success, em.success, i.success, b.success, u.success {
     color: var(--success-color);
 }
-p.success:hover, a.success:hover, span.success:hover {
+p.success:hover, a.success:hover, span.success:hover, strong.success:hover, em.success:hover, i.success:hover, b.success:hover, u.success:hover {
     color: var(--success-hover-color);
 }
-p.success:active, a.success:active, span.success:active {
+p.success:active, a.success:active, span.success:active, strong.success:active, em.success:active, i.success:active, b.success:active, u.success:active {
     color: var(--success-active-color);
 }
 
 .search {
     height: 48px;
-    width: 600px;
+    max-width: 600px;
     position: relative;
     display: flex;
     align-items: center;

@@ -2,8 +2,8 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Хост: 192.168.31.39:3306
--- Время создания: Май 07 2023 г., 06:53
+-- Хост: 127.0.0.1:3306
+-- Время создания: Май 07 2023 г., 08:37
 -- Версия сервера: 8.0.30
 -- Версия PHP: 8.1.9
 
@@ -29,10 +29,10 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `additional_fields` (
   `id` int UNSIGNED NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'ключ поля',
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'название для админ-панели',
-  `value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT 'значение'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Дополнительные поля, которые размещены по сайту';
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'ключ поля',
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'название для админ-панели',
+  `value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'значение'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Дополнительные поля, которые размещены по сайту';
 
 --
 -- Дамп данных таблицы `additional_fields`
@@ -71,13 +71,6 @@ CREATE TABLE `company` (
   `timezone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'основная временная зона',
   `place` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'адрес'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Дамп данных таблицы `company`
---
-
-INSERT INTO `company` (`name`, `phone`, `inn`, `ogrn`, `pay_acc`, `bik`, `ks`, `timezone`, `place`) VALUES
-('MoVikk', '+79223127607', '592011319403', '314595810600339', '40802810900000116741', '044525974', '30101810145250000974', 'Asia/Yekaterinburg', NULL);
 
 -- --------------------------------------------------------
 
@@ -161,7 +154,7 @@ INSERT INTO `pages` (`id`, `fileName`, `title`, `description`, `isUniqueDescript
 CREATE TABLE `products` (
   `id` int UNSIGNED NOT NULL,
   `categoryId` int UNSIGNED NOT NULL COMMENT 'id категории',
-  `countryId` int UNSIGNED NOT NULL COMMENT 'id страны',
+  `countryId` int UNSIGNED DEFAULT NULL COMMENT 'id страны',
   `instructionId` int UNSIGNED DEFAULT NULL COMMENT 'id инструкции',
   `href` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'ссылка на товар',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'название',
@@ -169,12 +162,10 @@ CREATE TABLE `products` (
   `height` double DEFAULT NULL COMMENT 'параметр: высота',
   `width` double DEFAULT NULL COMMENT 'параметр: ширина',
   `length` double DEFAULT NULL COMMENT 'параметр: длина',
-  `features` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'преймещества',
-  `techSpec` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'характеристики',
-  `count` int UNSIGNED NOT NULL DEFAULT '0' COMMENT 'количество',
+  `features` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'преймещества',
+  `techSpec` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'характеристики',
   `price` double UNSIGNED NOT NULL COMMENT 'цена',
   `sale` int UNSIGNED NOT NULL DEFAULT '0' COMMENT 'скидка на това, %',
-  `preOrder` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'возможен ли предзаказ',
   `keywords` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ключевые слова',
   `sold` int UNSIGNED NOT NULL DEFAULT '0' COMMENT 'сколько продано',
   `added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'дата добавления',
@@ -206,7 +197,7 @@ CREATE TABLE `smtp_settings` (
   `host` varchar(255) NOT NULL,
   `cipher` varchar(100) NOT NULL,
   `port` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Дамп данных таблицы `smtp_settings`

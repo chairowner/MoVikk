@@ -91,9 +91,11 @@ if (isset($_POST['height'])) {
         trim($_POST['height']) !== "" ?
             (float) $_POST['height'] : null;
     if (isset($_POST['height'])) {
-        if ($_POST['height'] <= 0) {
-            $response['info'][] = "Значение высоты не может равняться или быть меньше нуля";
+        if ($_POST['height'] < 0) {
+            $response['info'][] = "Значение высоты не может быть меньше нуля";
             $response['status'] = false;
+        } elseif ($_POST['height'] === 0) {
+        	$_POST['height'] = null;
         }
     }
 } else {
@@ -105,9 +107,11 @@ if (isset($_POST['width'])) {
         trim($_POST['width']) !== "" ?
             (float)$_POST['width'] : null;
     if (isset($_POST['width'])) {
-        if ($_POST['width'] <= 0) {
-            $response['info'][] = "Значение ширины не может равняться или быть меньше нуля";
+        if ($_POST['width'] < 0) {
+            $response['info'][] = "Значение ширины не может быть меньше нуля";
             $response['status'] = false;
+        } elseif ($_POST['width'] === 0) {
+        	$_POST['width'] = null;
         }
     }
 } else {
@@ -119,9 +123,11 @@ if (isset($_POST['length'])) {
         trim($_POST['length']) !== "" ?
             (float)$_POST['length'] : null;
     if (isset($_POST['length'])) {
-        if ($_POST['length'] <= 0) {
-            $response['info'][] = "Значение длины не может равняться или быть меньше нуля";
+        if ($_POST['length'] < 0) {
+            $response['info'][] = "Значение длины не может быть меньше нуля";
             $response['status'] = false;
+        } elseif ($_POST['length'] === 0) {
+        	$_POST['length'] = null;
         }
     }
 } else {
@@ -163,15 +169,6 @@ if (isset($_POST['techSpec'])) {
     }
 } else {
     $_POST['techSpec'] = null;
-}
-
-if (isset($_POST['count'])) {
-    $_POST['count'] =
-        trim($_POST['count']) !== "" ?
-            (int)$_POST['count'] : 0;
-    if ($_POST['count'] < 0) $_POST['count'] = 0;
-} else {
-    $_POST['count'] = 0;
 }
 
 if (isset($_POST['price'])) {

@@ -22,7 +22,7 @@ if (isset($_GET['page'])) {
     $_GET['page'] = $currentPageNumber = 1;
 }
 $sortArr = [
-    'popular' => 'По популярности',
+    //'popular' => 'По популярности',
     'new' => 'По новизне',
     'lowPrice' => 'Сначала дешёвые',
     'highPrice' => 'Сначала дорогие',
@@ -38,7 +38,7 @@ $categories = $conn->prepare("SELECT * FROM categories");
 $categories->execute();
 $categories = $categories->fetchAll(PDO::FETCH_ASSOC);
 $sql =
-"SELECT DISTINCT p.id, p.categoryId, p.href, p.name, p.description, p.height, p.width, p.length, p.features, p.techSpec, p.countryId, p.count, p.price, (p.price - (p.price * p.sale / 100)) discounted, p.preOrder, p.keywords, p.sold, p.added, p.isDeleted";
+"SELECT DISTINCT p.id, p.categoryId, p.href, p.name, p.description, p.height, p.width, p.length, p.features, p.techSpec, p.countryId, p.price, (p.price - (p.price * p.sale / 100)) discounted, p.keywords, p.sold, p.added, p.isDeleted";
 $all_products_count = "SELECT COUNT(p.id) `counter`";
 
 if ($categoryHref !== 'all') {
@@ -61,14 +61,15 @@ if ($categoryHref !== 'all') {
     $all_products_count .= " c.href = :href AND";
 }
 
-$sql .= " p.price >= 1 AND p.isDeleted = 0 AND ((p.count > 0) OR (p.count = 0 AND p.preOrder = 1))";
-$all_products_count .= " p.price >= 1 AND p.isDeleted = 0 AND ((p.count > 0) OR (p.count = 0 AND p.preOrder = 1))";
+$sql .= " p.price >= 1 AND p.isDeleted = 0";
+$all_products_count .= " p.price >= 1 AND p.isDeleted = 0";
 
 if (isset($sort)) {
     $sql .= " ORDER BY ";
-    if ($sort === 'popular') {
-        $sql .= "p.sold DESC";
-    } else if ($sort === 'new') {
+    // if ($sort === 'popular') {
+    //     $sql .= "p.sold DESC";
+    // } else 
+    if (!isset($sort) || $sort === 'new') {
         $sql .= "p.added DESC";
     } else if ($sort === 'lowPrice') {
         $sql .= "discounted ASC";
@@ -177,7 +178,7 @@ $pagesData = [
                                 <div class="product-card-body">
                                     <p class="product-card-title"><?=$product['name']?></p>
                                     <div class="product-card-text">
-                                        <p><?=isset($product['description']) ? trim(substr($product['description'], 0, 300)) : '<i class="text-none">Описание отсутствует</i>'?></p>
+                                        <p><?=isset($product['description']) ? trim(mb_substr($product['description'], 0, 300)) : '<i class="text-none">Описание отсутствует</i>'?></p>
                                     </div>
                                     <div class="product-card-buy">
                                         <p class="product-card-price">

@@ -11,9 +11,9 @@
                         <img class="social-icon" src="/assets/icons/social-vk.svg" alt="ВКонтакте">
                         <span><?=$_COMPANY->socials['vk']['title']?></span>
                     </a>
-                    <a class="d-flex justify-content-center align-items-center flex-wrap" style="gap:10px;" target="_blank" href="<?=$_COMPANY->socials['instagram']['href']?>" title="<?=$_COMPANY->socials['instagram']['name']?>">
-                        <img class="social-icon" src="/assets/icons/social-instagram.svg" alt="Инстаграм">
-                        <span><?=$_COMPANY->socials['instagram']['title']?></span>
+                    <a class="d-flex justify-content-center align-items-center flex-wrap" style="gap:10px;" target="_blank" href="<?=$_COMPANY->socials['telegram']['href']?>" title="<?=$_COMPANY->socials['telegram']['name']?>">
+                        <img class="social-icon" src="/assets/icons/social-telegram.svg" alt="Инстаграм">
+                        <span><?=$_COMPANY->socials['telegram']['title']?></span>
                     </a>
                 </div>
                 <div class="footer__callUs">
