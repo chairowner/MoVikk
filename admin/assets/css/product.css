@@ -1,0 +1,41 @@
+#productImages {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+    cursor: default !important;
+}
+#productImages > .productImage {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    object-position: center;
+    position: relative;
+}
+#productImages > .productImage > img {
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    object-fit: contain;
+}
+#productImages > .productImage > .productImage-action {
+    display: flex;
+    gap: 5px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+#productImages > .productImage > .productImage-action > .item {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: #22222263 0 0 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer !important;
+}

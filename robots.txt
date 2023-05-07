@@ -1,0 +1,9 @@
+User-Agent: *
+Disallow: 
+Disallow: /functions/
+Disallow: /includes/
+Disallow: /classes/
+Disallow: /actions/
+Disallow: /assets/
+Host: https://movikk.ru
+Sitemap: https://movikk.ru/sitemap.xml

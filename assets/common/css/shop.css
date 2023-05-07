@@ -1,0 +1,115 @@
+.common-block {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    /* gap: 40px; */
+}
+.main {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.side-block {
+    position: sticky;
+    top: calc(70px + 20px);
+    margin-right: 5px;
+
+    min-width: 256px;
+    /* height: calc(100vh - (70px + 20px) - 20px); */
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 8px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.categoryMenu {
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    background-color: var(--primary-hover-color);
+}
+.categoryMenu .item {
+    min-height: 50px;
+    padding: 15px 20px;
+    
+    background-color: var(--primary-color);
+    color: white;
+    transition: all 400ms ease-in-out;
+    cursor: pointer;
+}
+.categoryMenu .item:hover,
+.categoryMenu .item.active {
+    background-color: var(--primary-color-light);
+    text-shadow: 0 0 8px #00000040;
+}
+.categoryMenu .item:first-child {
+    border-radius: 8px 8px 0 0;
+}
+.categoryMenu .item:last-child {
+    border-radius: 0 0 8px 8px;
+}
+.sortMenu {
+    /* position: relative; */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border-radius: 8px;
+}
+#sort {
+    background-color: white;
+    padding: 15px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 0px 0px 8px 8px;
+}
+.sort-title, #sort .item {
+    min-height: 50px;
+    padding: 15px 20px;
+    transition: all 400ms ease-in-out;
+}
+.sort-title {
+    background-color: var(--primary-hover-color);
+    border-radius: 8px 8px 0px 0px;
+    color: white;
+    font-weight: normal;
+}
+#sort .item, #sort .item > * {cursor: pointer;}
+#sort .item {
+    background-color: var(--primary-color);
+}
+#sort .item:hover {
+    background-color: var(--primary-hover-color);
+}
+#sort .item:active {
+    background-color: var(--primary-active-color);
+}
+
+@media (max-width: 1440px) {
+    .product-card {
+        width: calc(33.3333333333% - 15px);
+    }
+}
+@media (max-width: 1240px) {
+    .main {
+        flex-direction: column;
+        gap: 40px;
+    }
+    .side-block, .product-cards {width: 100%;}
+    .side-block {
+        height: auto;
+        position: static;
+        top: 0;
+    }
+    .product-card {
+        width: calc(33.3333333333% - 13.4px);
+    }
+}
+@media (max-width: 968px) {
+    .product-card {
+        width: 100%;
+    }
+}

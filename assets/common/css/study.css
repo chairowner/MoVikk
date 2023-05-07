@@ -1,0 +1,51 @@
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+main {
+    min-height: 25vh;
+}
+.instruction {
+    display: flex;
+    gap: 20px;
+}
+.instruction .item {
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+}
+.instruction-text {
+    flex-grow: 1;
+    white-space: pre-wrap;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.instruction-video {
+    padding: 5px !important;
+    width: 700px;
+    height: 500px;
+}
+.copy-href {
+    cursor: pointer;
+    width: 30px;
+    transition: all 100ms ease-in-out;
+}
+.copy-href:hover {
+    filter: invert(78%) sepia(31%) saturate(450%) hue-rotate(135deg) brightness(89%) contrast(90%);
+}
+.copy-href:active {
+    filter: invert(32%) sepia(47%) saturate(712%) hue-rotate(135deg) brightness(94%) contrast(86%);
+}
+
+@media (max-width: 1440px) {
+    .instruction-video {
+        width: 500px;
+    }
+}
+@media (max-width: 1024px) {
+    .instruction {flex-direction: column;}
+    .instruction .item {
+        width: 100% !important;
+    }
+}

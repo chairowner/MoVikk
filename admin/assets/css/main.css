@@ -1,0 +1,88 @@
+.item-list > .item {
+    font-weight: normal !important;
+}
+.page__title {
+    margin-top: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.page__title .container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+}
+.page__title .container h1 {
+    margin: 0;
+    width: auto;
+    display: block;
+    overflow-wrap: anywhere;
+}
+#main {
+    margin: 40px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+#main #buttons {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+#main #items {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+#main #items .item:not(.button) {
+    min-height: 60px;
+    height: auto;
+    width: 100%;
+    /* width: calc(25% - 20px); */
+    padding: 10px;
+    background-color: white;
+    color: var(--primary-color);
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 200ms ease-in-out;
+}
+#main #items .item:not(.button) {
+    background-color: white;
+    color: var(--primary-color);
+}
+#main > #items > .item, #main > .item > * { cursor: pointer; }
+#main #items .item:hover, #main #items .button:hover {
+    transform: scale(.95);
+    transition: transform 400ms ease-in-out;
+}
+#main #items .item:active, #main #items .button:active {
+    transform: scale(.90);
+}
+#main > #items > .button {
+    width: 100% !important;
+}
+
+#main > #formData {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+#main > #formData > .item {
+    max-width: 600px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+#main > #formData .field {
+    width: 100% !important;
+}
+
+.page__title { margin: 0; }

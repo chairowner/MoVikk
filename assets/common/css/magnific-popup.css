@@ -1,0 +1,28 @@
+.magnific-popup-block {
+    max-width: 650px;
+    margin: 40px auto;
+    padding: 20px 30px;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    text-align: center;
+    position: relative;
+}
+.magnific-popup-block > .magnific-popup-block-content {
+    margin: 10px 0;
+}
+.magnific-popup-block > .magnific-popup-block-buttons {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+.magnific-popup-block > .magnific-popup-block-buttons > * {
+    min-width: 0;
+    padding: 5px;
+    width: 100%;
+}
+@media (max-width: 450px){
+    .magnific-popup-block > .magnific-popup-block-buttons {
+        flex-wrap: wrap;
+    }
+}

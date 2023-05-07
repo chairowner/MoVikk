@@ -1,0 +1,13 @@
+.table {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.table-row {
+    display: flex;
+    align-items: center;
+
+}
+.table-cell {
+    flex: 1;
+}

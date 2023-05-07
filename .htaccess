@@ -1,16 +1,53 @@
 AddDefaultCharset UTF-8
 
+ErrorDocument 503 /503.php
 ErrorDocument 500 /500.php
 ErrorDocument 404 /404.php
 ErrorDocument 403 /404.php
 
+php_flag display_startup_errors on
+php_flag display_errors on
+php_flag html_errors on
+
+Options All -Indexes
+
 RewriteEngine On
 RewriteBase /
 
-# remove .php
+# # убираем слэш в конце
+RewriteCond %{HTTP_HOST} (.*)
+RewriteCond %{REQUEST_URI} /$ [NC]
+RewriteRule ^(.*)(/)$ $1 [L,R=301]
+
+# убираем расширение .php
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^([^\.]+)$ $1.php [NC,L]
 
-# product page
-RewriteRule ^product/([0-9]+) /product?id=$1 [NC,L]
+# КАРТОЧКА ТОВАРА
+RewriteRule ^product/([a-z0-9\-]+)-([0-9]+) /product?href=$1&id=$2 [NC,L]
+
+# КАТАЛОГ
+# категория, сортировка, страница
+RewriteRule ^shop/([a-z0-9\-]+)/([a-z]+)/([0-9]+) /shop?category=$1&sort=$2&page=$3 [NC,L]
+# категория, сортировка
+RewriteRule ^shop/([a-z0-9\-]+)/([a-z]+) /shop?category=$1&sort=$2 [NC,L]
+# категория, страница
+RewriteRule ^shop/([a-z0-9\-]+)/([0-9]+) /shop?category=$1&page=$2 [NC,L]
+# категория
+RewriteRule ^shop/([a-z0-9\-]+) /shop?category=$1 [NC,L]
+# страница
+RewriteRule ^shop/([0-9]+) /shop?category=all&page=$1 [NC,L]
+# сортировка
+RewriteRule ^shop/([a-z]+) /shop?category=all&sort=$1 [NC,L]
+
+# ОБУЧЕНИЕ
+RewriteRule ^study/([0-9]+) /study?id=$1 [NC,L]
+
+# АДМИНИСТРАТИВНАЯ ПАНЕЛЬ
+# RewriteCond %{HTTP_HOST} (.*)
+# RewriteCond %{REQUEST_URI} /$ [NC]
+RewriteRule ^admin$ /admin/index [L,R=301]
+
+# ВОССТАНОВЛЕНИЕ ПАРОЛЯ
+RewriteRule ^recoverPassword/([a-z0-9]+) /admin/recoverPassword?hash=$1 [NC,L]
