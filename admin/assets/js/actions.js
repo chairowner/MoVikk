@@ -14,7 +14,7 @@ function act(action, params, redirectToCategory = true) {
     if (action === "get") {
         type = "GET";
     }
-    const url = "/admin/actions/"+category+"/"+action;
+    const url = "actions/"+category+"/"+action;
     $.ajax({
         url: url,
         cache: false,
@@ -29,7 +29,7 @@ function act(action, params, redirectToCategory = true) {
             if (data.status) {
                 messageType = "success";
                 if (redirectToCategory) {
-                    location.href = "/admin/"+category;
+                    location.href = category;
                 } else {
                     location.reload();
                 }

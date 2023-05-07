@@ -1,14 +1,11 @@
 #login-form-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
-    display: none;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    opacity: 0;
+    opacity: 1;
     backdrop-filter: blur(5px);
     background-color: #0000006b;
     z-index: 1100;

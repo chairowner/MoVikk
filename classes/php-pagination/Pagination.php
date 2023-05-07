@@ -173,7 +173,6 @@ class Pagination {
      */
     public function Render() {
         if ($this->currentPage > $this->maxPage || $this->maxPage <= 1) return null;
-        echo('$this->currentPage: '.$this->currentPage.'; $this->maxPage: '.$this->maxPage);
         
         $response = null;
         $items = [];
@@ -285,8 +284,8 @@ class Pagination {
     }
 
     /**
-     * Returns true/false of the following page
-     * @return bool
+     * Returns string|null value of the following page
+     * @return string|null
      */
     function GetNextPage() {
         $page = $this->currentPage + 1;
@@ -297,8 +296,8 @@ class Pagination {
     }
 
     /**
-     * Returns the true/false value of the previous page
-     * @return bool
+     * Returns string|null value of the previous page
+     * @return string|null
      */
     function GetPreviousPage() {
         $page = $this->currentPage - 1;

@@ -1,12 +1,11 @@
 <?php
-set_include_path(".");
+set_include_path("./");
 require_once('includes/autoload.php');
 require_once('functions/formatPrice.php');
 require_once('functions/numWord.php');
 $_PAGE = new Page($conn);
 $_COMPANY = new Company($conn);
 $_USER = new User($conn);
-$_CART = new Cart($conn);
 
 require_once('classes/php-pagination/Pagination.php');
 
@@ -151,11 +150,9 @@ $pagesData = [
                 </div>
             </div>
             <main class="product-cards">
-                <?php $index = 0;
+                <?php $index = 1;
                 if (count($products) > 0):?>
-                    <?php foreach($products as $key => $product): $index++;?>
-                        <?php if ($index === $viewCount): break;?>
-                        <?php else:
+                    <?php foreach($products as $key => $product):
                         $noImage = false;
                         $product['image'] = $conn->prepare("SELECT `image` FROM products_images WHERE productId = :productId AND isMain = 1 LIMIT 1");
                         $product['image']->execute(['productId' => (int) $product['id']]);
@@ -203,8 +200,7 @@ $pagesData = [
                                 </div>
                             </div>
                             <?php if(false && ($index / 4) === 1): $index = 0?></div><?php endif;?>
-                        <?php endif;?>
-                    <?php endforeach;?>
+                    <?php $index++; endforeach;?>
                 <?php else:?>
                     <p class="w-100 text-center" style="font-size:20px;">К сожалению, в этой категории пока нет доступных товаров</p>
                 <?php endif;?>

@@ -44,7 +44,7 @@ if (isset($_GET['page'])) {
 if (isset($editId)) {
     $categories = $_CATEGORIES->Get("all");
     $data = $_PRODUCTS->getProduct($editId,"",true);
-    if (!isset($data)||$data['notFound']) $_PAGE->Redirect("admin/$editCategory");
+    if (!isset($data)||$data['notFound']) $_PAGE->Redirect("$adminUrl/$editCategory");
 } else {
     if ($action !== "create") {
         $execute = [];
@@ -62,19 +62,19 @@ if (isset($editId)) {
     }
 }
 
-if (isset($editId) && count($data) < 1) $_PAGE->Redirect("admin/$editCategory");
-elseif (($currentPageNumber !== 1) && count($data) < 1) $_PAGE->Redirect("admin/$editCategory");
+if (isset($editId) && count($data) < 1) $_PAGE->Redirect("$adminUrl/$editCategory");
+elseif (($currentPageNumber !== 1) && count($data) < 1) $_PAGE->Redirect("$adminUrl/$editCategory");
 
 if (isset($editId)) {
-    $pattern .= "/admin/$editCategory?action=edit&id=#";
+    $pattern .= "$editCategory?action=edit&id=#";
 } else {
     $all_count_execute = [];
     if (isset($search)) {
-        $pattern .= "/admin/$editCategory?search=".addslashes(htmlspecialchars(trim($search)))."&page=#";
+        $pattern .= "$editCategory?search=".addslashes(htmlspecialchars(trim($search)))."&page=#";
         $all_count = "SELECT COUNT(`id`) `counter` FROM `{$_CATEGORIES->GetTable()}` WHERE `name` LIKE :search";
         $all_count_execute = ['search' => "%$search%"];
     } else {
-        $pattern .= "/admin/$editCategory?page=#";
+        $pattern .= "$editCategory?page=#";
         $all_count = "SELECT COUNT(`id`) `counter` FROM `{$_CATEGORIES->GetTable()}`";
     }
 
@@ -118,7 +118,7 @@ function getArray(PDO $conn, string $table) {
     <div class="page__title">
         <div class="container">
             <a href="/"><img src="/assets/icons/logo.svg" class="logo" alt="<?= $_COMPANY->name ?>"></a>
-            <h1 class="container"><a href="/admin"><?= $_PAGE->title ?></a> - <a href="/admin/<?= $editCategory ?>"><?= $_PAGE->description ?></a></h1>
+            <h1 class="container"><a href="/<?=$adminUrl?>"><?= $_PAGE->title ?></a> - <a href="<?= $editCategory ?>"><?= $_PAGE->description ?></a></h1>
         </div>
     </div>
     <main style="min-height: 35vh;">
@@ -131,7 +131,7 @@ function getArray(PDO $conn, string $table) {
                         
                         <?php if (count($categories['items']) > 0) : /* если есть категории */ ?>
 
-                            <form method="POST" enctype="multipart/form-data" redirectToCategory="false" action="/admin/actions/<?= $editCategory ?>/add" id="formData">
+                            <form method="POST" enctype="multipart/form-data" redirectToCategory="false" action="actions/<?= $editCategory ?>/add" id="formData">
                                 <label class="item">
                                     <span>Категория<span class="error">*</span></span>
                                     <select name="categoryId" required class="field">
@@ -164,16 +164,6 @@ function getArray(PDO $conn, string $table) {
                                             <option value="<?= $item['id'] ?>"
                                                 <?=(isset($data['instructionId'])&&($item['id']===$data['instructionId']))?' selected':null?>
                                             ><?= $item['name'] ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </label>
-                                <label class="item">
-                                    <span>Признак предмета расчёта<span class="error">*</span></span>
-                                    <select name="payment_object_id" required class="field">
-                                        <?php $items = getArray($conn, "payment_objects");
-                                        foreach ($items as $key => $item) : $item['id'] = (int)$item['id'];?>
-                                            <option value="<?= $item['id'] ?>"<?=(isset($data['payment_object']['id'])&&($item['id']===$data['payment_object']['id']))?' selected':null?>
-                                            ><?= $item['description'] ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </label>
@@ -284,11 +274,11 @@ function getArray(PDO $conn, string $table) {
                                 <div class="item flex-row flex-wrap justify-content-between gap-20">
                                     <?php if($action === 'edit'):?>
                                         <input type="submit" class="button w-100" value="Сохранить">
-                                        <a href="/admin/<?= $editCategory ?>" class="button secondary w-100">Отмена</a>
+                                        <a href="<?= $editCategory ?>" class="button secondary w-100">Отмена</a>
                                         <input type="button" class="button error delete w-100" value="Удалить">
                                     <?php elseif($action === 'add'):?>
                                         <input type="submit" class="button w-100" value="Добавить">
-                                        <a href="/admin/<?= $editCategory ?>" class="button secondary w-100">Отмена</a>
+                                        <a href="<?= $editCategory ?>" class="button secondary w-100">Отмена</a>
                                     <?php endif;?>
                                 </div>
                             </form>
@@ -297,7 +287,7 @@ function getArray(PDO $conn, string $table) {
 
                             <div class="d-flex flex-column justify-content-center align-items-center gap-10">
                                 <span>Сначала добавьте категорию</span>
-                                <a href="/admin/category?action=add" class="button">Добавить категорию</a>
+                                <a href="category?action=add" class="button">Добавить категорию</a>
                             </div>
 
                         <?php endif; ?>
@@ -310,7 +300,7 @@ function getArray(PDO $conn, string $table) {
                             </div>
                         </form>
 
-                        <a class="button shadowBox" href="/admin/<?= $editCategory ?>?action=add">Добавить товар</a>
+                        <a class="button shadowBox" href="<?= $editCategory ?>?action=add">Добавить товар</a>
 
                         <?php if (count($data) > 0) : ?>
 
@@ -320,7 +310,7 @@ function getArray(PDO $conn, string $table) {
                                     $item['id'] = (int) $item['id'];
                                     $item['name'] = trim($item['name']);?>
 
-                                    <a class="item shadowBox" href="/admin/<?=$editCategory?>?action=edit&id=<?=$item['id']?>">
+                                    <a class="item shadowBox" href="<?=$editCategory?>?action=edit&id=<?=$item['id']?>">
                                         <div class="item-content d-flex flex-column align-items-start">
                                             <span class="d-flex flex-row flex-wrap gap-5"><?=$item['name']?></span>
                                         </div>

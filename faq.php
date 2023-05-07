@@ -1,11 +1,10 @@
 <?php
-set_include_path(".");
+set_include_path("./");
 require_once('functions/numWord.php');
 require_once('includes/autoload.php');
 $_PAGE = new Page($conn);
 $_COMPANY = new Company($conn);
 $_USER = new User($conn);
-$_CART = new Cart($conn);
 ?>
 <!DOCTYPE html>
 <html lang="ru">

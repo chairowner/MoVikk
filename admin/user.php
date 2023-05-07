@@ -10,8 +10,6 @@ $_PAGE->description = "Пользователи";
 $_PAGE->title = "Административная панель";
 $_COMPANY = new Company($conn);
 $_USER = new User($conn);
-$_ORDER = new Order($conn);
-$_CART = new Cart($conn);
 
 if (!$_USER->isAdmin()) {
     $_PAGE->Redirect();
@@ -57,19 +55,19 @@ $data = $conn->prepare($data);
 $data->execute($execute);
 $data = $data->fetchAll(PDO::FETCH_ASSOC); 
 
-if (isset($editId) && count($data) < 1) $_PAGE->Redirect("admin/$editCategory");
-elseif (($currentPageNumber !== 1) && count($data) < 1) $_PAGE->Redirect("admin/$editCategory");
+if (isset($editId) && count($data) < 1) $_PAGE->Redirect("$adminUrl/$editCategory");
+elseif (($currentPageNumber !== 1) && count($data) < 1) $_PAGE->Redirect("$adminUrl/$editCategory");
 
 if (isset($editId)) {
-    $pattern .= "/admin/$editCategory?action=edit&id=#";
+    $pattern .= "$editCategory?action=edit&id=#";
 } else {
     $all_count_execute = [];
     if (isset($search)) {
-        $pattern .= "/admin/$editCategory?search=".addslashes(htmlspecialchars(trim($search)))."&page=#";
+        $pattern .= "$editCategory?search=".addslashes(htmlspecialchars(trim($search)))."&page=#";
         $all_count = "SELECT COUNT(`id`) `counter` FROM `{$_USER->GetTable()}` WHERE `name` LIKE :search OR `href` LIKE :search";
         $all_count_execute = ['search' => "%$search%"];
     } else {
-        $pattern .= "/admin/$editCategory?page=#";
+        $pattern .= "$editCategory?page=#";
         $all_count = "SELECT COUNT(`id`) `counter` FROM `{$_USER->GetTable()}`";
     }
 
@@ -105,7 +103,7 @@ if (isset($editId)) {
     <div class="page__title">
         <div class="container">
             <a href="/"><img src="/assets/icons/logo.svg" class="logo" alt="<?=$_COMPANY->name?>"></a>
-            <h1 class="container"><a href="/admin"><?=$_PAGE->title?></a> - <a href="/admin/<?=$editCategory?>"><?=$_PAGE->description?></a></h1>
+            <h1 class="container"><a href="/<?=$adminUrl?>"><?=$_PAGE->title?></a> - <a href="<?=$editCategory?>"><?=$_PAGE->description?></a></h1>
         </div>
     </div>
     <main>
@@ -141,48 +139,6 @@ if (isset($editId)) {
                                     <span><?=(bool)$item['isAdmin']?"Администратор":"Пользователь"?></span>
                                 </label>
                             </div>
-                            <div id="user-data">
-                                <label class="item">
-                                    <span class="fw-bold">Заказы пользователя</span>
-                                </label>
-                                <?php
-                                $orders_data = $conn->prepare("SELECT `id`, `status` FROM `orders` ORDER BY `id` DESC");
-                                $orders_data->execute();
-                                $orders_data = $orders_data->fetchAll(PDO::FETCH_ASSOC);
-                                if (count($orders_data) > 0):?>
-                                    <div id="order-list">
-                                        <?php foreach($orders_data as $order_key => $order):?>
-                                            <a href="/admin/order?action=edit&id=<?=$order['id']?>" class="order-list-item" target="_blank">
-                                                <span class="order-list-item-number">Заказ №<?=$order['id']?></span>
-                                                <span class="order-list-item-status">(<?=$order['status']?>)</span>
-                                            </a>
-                                        <?php endforeach;?>
-                                    </div>
-                                <?php else:?>
-                                    <p>Пользователь не совершал покупок</p>
-                                <?php endif;?>
-                            </div>
-                            <div id="user-data">
-                                <label class="item">
-                                    <span class="fw-bold">Корзина пользователя</span>
-                                </label>
-                                <?php
-                                $query = $_CART->getProducts($editId);
-                                $Amount = 0;
-                                if (count($query) > 0):?>
-                                    <?php foreach($query as $product_key => $product):
-                                        $Amount += $product['currentPrice'];?>
-                                        <label class="item">
-                                            <span class="d-flex flex-wrap gap-5">
-                                                <a href="<?=$product['href']?>" target="_blank" class="cursor-pointer"><?="{$product['name']}"?></a>
-                                                <span><?="({$product['countInCart']} ед.)"?></span>
-                                            </span>
-                                        </label>
-                                    <?php endforeach;?>
-                                <?php else:?>
-                                    <p>Корзина пользователя пуста</p>
-                                <?php endif;?>
-                            </div>
                         </div>
 
                     <?php else: // вывод всех элементов?>
@@ -201,7 +157,7 @@ if (isset($editId)) {
                                     $item['patronymic'] = isset($item['patronymic']) ? mb_substr($item['patronymic'], 0, 1)."." : null;
                                     $item['name'] = isset($item['name']) ? mb_substr($item['name'], 0, 1)."." : null;?>
 
-                                    <a class="item shadowBox" href="/admin/<?=$editCategory?>?action=edit&id=<?=$item['id']?>">
+                                    <a class="item shadowBox" href="<?=$editCategory?>?action=edit&id=<?=$item['id']?>">
                                         <div class="item-content d-flex flex-column align-items-start">
                                             <span class="d-flex flex-row flex-wrap gap-5 fw-bold"><?=trim("{$item['surname']} {$item['name']} {$item['patronymic']}")?></span>
                                             <span class="d-flex flex-row flex-wrap gap-5"><?=$item['email']?></span>

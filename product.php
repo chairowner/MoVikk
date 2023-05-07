@@ -1,13 +1,14 @@
 <?php
-set_include_path(".");
+set_include_path("./");
 require_once('includes/autoload.php');
 require_once('functions/formatPrice.php');
 require_once('functions/numWord.php');
+
 $_PAGE = new Page($conn);
 $_COMPANY = new Company($conn);
 $_USER = new User($conn);
-$_CART = new Cart($conn);
 $_PRODUCT = new Product($conn);
+
 $product['id'] = isset($_GET['id']) ? (int) $_GET['id']: 0;
 $product['href'] = isset($_GET['href']) ? trim($_GET['href']) : null;
 $product = $_PRODUCT->getProduct($product['id'],$product['href']);
@@ -65,34 +66,6 @@ if ($product['notFound']) {
                                 <?php endif;?>
                             </div>
                             <div class="addCart_wrapper">
-                                <div class="addCart shadowBox">
-                                    <?php
-                                    $noProduct = formatPrice($product['price']);
-                                    $noProduct = (int) $noProduct;
-                                    $noProduct = $noProduct < 1 ? true : false;
-                                    if ($noProduct):?>
-                                        <h2 style="margin: 0; color: var(--main-color);" class="w-100">К сожалению, на данный момент товар не продаётся :(</h2>
-                                    <?php else:?>
-                                        <div class="addCart__price">
-                                            <?php // есть ли скидка
-                                            if($product['sale'] > 0):?>
-                                                <strong class="addCart__price__main"><?=formatPrice(($product['price'] - ($product['price'] * $product['sale'] / 100)))?></strong>
-                                                <span class="addCart__price__old"><?=formatPrice($product['price'])?></span>
-                                            <?php else:?>
-                                                <strong class="addCart__price__main"><?=formatPrice($product['price'])?></strong>
-                                            <?php endif;?>
-                                        </div>
-                                        <div class="d-flex flex-column">
-                                            <h4 class="addCart_buyCounter"><?=$product['count'] > 0 ? "В наличии {$product['count']} ед." : 'Товара нет в наличии'?></h4>
-                                            <span class="addCart_buyCounter"><?=$product['sold'] > 0 ? "Товар приобрели ".numWord($product['sold'], ['раз', 'раза', 'раз']) : 'Товар ещё не покупали'?></span>
-                                        </div>
-                                        <?php if($_USER->isGuest()):?>
-                                            <a href="/lk" class="button w-100 item__data">Войти в систему</a>
-                                        <?php elseif($product['count'] > 0):?>
-                                            <div class="addCart__button"><img class="w-100 text-center" style="height: 50px;" src='/assets/icons/spinner.svg' alt="Загрузка..."></div>
-                                        <?php endif;?>
-                                    <?php endif;?>
-                                </div>
                                 <?php if(!empty($product['country']) || !empty($product['techSpec']) || !empty($product['features'])):?>
                                     <div class="product__shortInfo_desc shadowBox custom-scroll">
                                         <?php if (!empty($product['country'])):?>

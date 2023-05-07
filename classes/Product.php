@@ -68,9 +68,9 @@ class Product {
 
             $sql =
             "INSERT INTO `{$this->mainTable}`
-            (`categoryId`, `countryId`, `instructionId`, `payment_object_id`, `href`, `name`, `description`, `height`, `width`, `length`, `features`, `techSpec`, `count`, `price`, `sale`)
+            (`categoryId`, `countryId`, `instructionId`, `href`, `name`, `description`, `height`, `width`, `length`, `features`, `techSpec`, `count`, `price`, `sale`)
             VALUES
-            (:categoryId, :countryId, :instructionId, :payment_object_id, :href, :name, :description, :height, :width, :length, :features, :techSpec, :count, :price, :sale)";
+            (:categoryId, :countryId, :instructionId, , :href, :name, :description, :height, :width, :length, :features, :techSpec, :count, :price, :sale)";
             $query = $this->conn->prepare($sql);
             if ($query->execute($execute)) {
                 $response['id'] = (int)$this->conn->lastInsertId();
@@ -147,10 +147,10 @@ class Product {
                 $images_count = count($images['error']);
             }
 
-            $sql = "UPDATE `{$this->mainTable}` SET `categoryId` = :categoryId, `countryId` = :countryId, `instructionId` = :instructionId, `payment_object_id` = :payment_object_id, `href` = :href, `name` = :name, `description` = :description, `height` = :height, `width` = :width, `length` = :length, `features` = :features, `techSpec` = :techSpec, `count` = :count, `price` = :price, `sale` = :sale WHERE `id` = :id";
+            $sql = "UPDATE `{$this->mainTable}` SET `categoryId` = :categoryId, `countryId` = :countryId, `instructionId` = :instructionId, `href` = :href, `name` = :name, `description` = :description, `height` = :height, `width` = :width, `length` = :length, `features` = :features, `techSpec` = :techSpec, `count` = :count, `price` = :price, `sale` = :sale WHERE `id` = :id";
 
             if (DEBUG_MODE) {
-                $response['sql'] = "UPDATE `{$this->mainTable}` SET `categoryId` = '{$execute['categoryId']}', `countryId` = '{$execute['countryId']}', `instructionId` = '{$execute['instructionId']}', `payment_object_id` = '{$execute['payment_object_id']}', `href` = '{$execute['href']}', `name` = '{$execute['name']}', `description` = '{$execute['description']}', `height` = '{$execute['height']}', `width` = '{$execute['width']}', `length` = '{$execute['length']}', `features` = '{$execute['features']}', `techSpec` = '{$execute['techSpec']}', `count` = '{$execute['count']}', `price` = '{$execute['price']}', `sale` = '{$execute['sale']}' WHERE `id` = '{$execute['id']}'";
+                $response['sql'] = "UPDATE `{$this->mainTable}` SET `categoryId` = '{$execute['categoryId']}', `countryId` = '{$execute['countryId']}', `instructionId` = '{$execute['instructionId']}', `href` = '{$execute['href']}', `name` = '{$execute['name']}', `description` = '{$execute['description']}', `height` = '{$execute['height']}', `width` = '{$execute['width']}', `length` = '{$execute['length']}', `features` = '{$execute['features']}', `techSpec` = '{$execute['techSpec']}', `count` = '{$execute['count']}', `price` = '{$execute['price']}', `sale` = '{$execute['sale']}' WHERE `id` = '{$execute['id']}'";
             } 
 
             $query = $this->conn->prepare($sql);
@@ -294,7 +294,7 @@ class Product {
         $href = trim($href);
         try {
             $response = ['id'=>$id,'notFound'=>true];
-            $prepare = "SELECT `p`.`categoryId`,`p`.`countryId`,`p`.`instructionId`,`p`.`payment_object_id`,`po`.`code` `payment_object_code`,`p`.`name`,`p`.`href`,`p`.`description`,`p`.`height`,`p`.`width`,`p`.`length`,`p`.`features`,`p`.`techSpec`,`p`.`count`,`p`.`price`,`p`.`sale`,`p`.`preOrder`,`p`.`keywords`,`p`.`sold`,`p`.`added`,`p`.`isDeleted` FROM `{$this->mainTable}` `p` INNER JOIN `payment_objects` `po` ON `po`.`id` = `p`.`payment_object_id` WHERE `p`.`id` = :id";
+            $prepare = "SELECT `p`.`categoryId`,`p`.`countryId`,`p`.`instructionId`,`p`.`name`,`p`.`href`,`p`.`description`,`p`.`height`,`p`.`width`,`p`.`length`,`p`.`features`,`p`.`techSpec`,`p`.`count`,`p`.`price`,`p`.`sale`,`p`.`preOrder`,`p`.`keywords`,`p`.`sold`,`p`.`added`,`p`.`isDeleted` FROM `{$this->mainTable}` `p` WHERE `p`.`id` = :id";
             $execute = ['id' => $id];
             if (!$isAdmin) {
                 $prepare .= " AND `href` = :href";
@@ -312,10 +312,6 @@ class Product {
             $response['categoryId'] = (int) ($product['categoryId']);
             $response['instructionId'] = isset($product['instructionId']) ?
                 (int) ($product['instructionId']) : null;
-            $response['payment_object'] = [
-                'id' => (int) ($product['payment_object_id']),
-                'code' => trim($product['payment_object_code'])
-            ];
             $response['href'] = trim($product['href']);
             $response['name'] = trim($product['name']);
             $response['description'] = isset($product['description']) ?

@@ -1,8 +1,7 @@
 User-Agent: *
-Disallow: /admin/
+Disallow: 
 Disallow: /functions/
 Disallow: /includes/
-Disallow: /payment/
 Disallow: /classes/
 Disallow: /actions/
 Disallow: /assets/

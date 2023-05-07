@@ -20,7 +20,7 @@ if (isset($_POST['name'])) {
     $name = trim($_POST['name']) !== '' ? trim($_POST['name']) : null;
     if (!isset($name)) {
         $response['status'] = false;
-        $response['info'][] = 'Вопрос не может быть пустым';
+        $response['info'][] = 'Наименование инструкции не может быть пустым';
     }
 } else {
     $response['status'] = false;
@@ -29,28 +29,22 @@ if (isset($_POST['name'])) {
 
 if (isset($_POST['text'])) {
     $text = trim($_POST['text']) !== '' ? trim($_POST['text']) : null;
-    if (!isset($text)) {
-        $response['status'] = false;
-        $response['info'][] = 'Ответ не может быть пустым';
-    }
-} else {
-    $response['status'] = false;
-    $response['info'][] = 'Не указан ответ';
 }
-exit(json_encode($_FILES,JSON_UNESCAPED_UNICODE));
+
 if (isset($_FILES['video']) && !empty($_FILES['video'])) {
     if (is_array($_FILES['video']['name'])) {
         $response['status'] = false;
         $response['info'][] = "Видео может быть только одно";
     } else {
-        if ($_FILES['video']['error'] === 0 && in_array($_FILES['video']['type'], $_INSTRUCTIONS->fileTypes)) {
+        if ($_FILES['video']['error'] === 0 && key_exists($_FILES['video']['type'], $_INSTRUCTIONS->fileTypes)) {
             $video = $_FILES['video'];
-        } else {
-            $video = null;
         }
     }
-} else {
-    $video = null;
+}
+
+if (!isset($video) && !isset($text)) {
+    $response['status'] = false;
+    $response['info'][] = "Для занесения инструкции либо введите текст, либо заргузите видео1";
 }
 
 if ($response['status']) $response = $_INSTRUCTIONS->Add($name, $text, $video);

@@ -1,12 +1,11 @@
 <?php
 header('Content-type: text/html; charset=utf-8');
 header("HTTP/1.0 404 Not found");
-set_include_path(".");
+set_include_path("./");
 require_once('includes/autoload.php');
 $_PAGE = new Page($conn);
 $_COMPANY = new Company($conn);
 $_USER = new User($conn);
-$_CART = new Cart($conn);
 ?>
 <!DOCTYPE html>
 <html lang="ru">

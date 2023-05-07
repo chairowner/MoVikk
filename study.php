@@ -1,13 +1,12 @@
 <?php
 $thisUrl = "https://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
-set_include_path(".");
+set_include_path("./");
 require_once('functions/formSQL.php');
 require_once('functions/numWord.php');
 require_once('includes/autoload.php');
 $_PAGE = new Page($conn);
 $_COMPANY = new Company($conn);
 $_USER = new User($conn);
-$_CART = new Cart($conn);
 
 $sqlSelect = ['i.id iId','i.name iName','i.video iVideo','i.text iText','p.id pId','p.name pName'];
 $sqlFrom = ['instructions i'];
@@ -51,10 +50,12 @@ $main_header = "Обучения по пользованию аппаратам�
                     <div class="container">
                         <div class="instruction">
                             <?php if(isset($instruction['iText'])):$instruction['iText'] = trim($instruction['iText']);?><p class="item instruction-text"><?=$instruction['iText']?></p><?php endif;?>
-                            <?php if(isset($instruction['iVideo'])):$instruction['iVideo'] = trim($instruction['iVideo']);?><video controls class="item instruction-video">
-                                <source src="/assets/videos/instructions/<?=$instruction['iVideo']?>" type="video/mp4">
-                                <p>К сожалению, ваш браузер не поддерживает данный формат видео.</p>
-                            </video><?php endif;?>
+                            <?php if(isset($instruction['iVideo'])):$instruction['iVideo'] = trim($instruction['iVideo']);?>
+                                <video controls class="item instruction-video">
+                                    <source src="/assets/videos/instructions/<?=$instruction['iVideo']?>" type="video/mp4">
+                                    <p>К сожалению, ваш браузер не поддерживает данный формат видео.</p>
+                                </video>
+                            <?php endif;?>
                         </div>
                     </div>
                 </section>

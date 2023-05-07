@@ -41,7 +41,7 @@ if (isset($_GET['page'])) {
 $execute = [];
 if (isset($editId)) {
     $data = $_CATEGORIES->Get($editId);
-    if (!isset($data['items'][0])) $_PAGE->Redirect("admin/$editCategory");
+    if (!isset($data['items'][0])) $_PAGE->Redirect("$adminUrl/$editCategory");
 } else {
     if (isset($_GET['search']) && trim($_GET['search']) !== "") {
         $search = trim($_GET['search']);
@@ -55,19 +55,19 @@ if (isset($editId)) {
     $data = $data->fetchAll(PDO::FETCH_ASSOC); 
 }
 
-if (isset($editId) && count($data) < 1) $_PAGE->Redirect("admin/$editCategory");
-elseif (($currentPageNumber !== 1) && count($data) < 1) $_PAGE->Redirect("admin/$editCategory");
+if (isset($editId) && count($data) < 1) $_PAGE->Redirect("$adminUrl/$editCategory");
+elseif (($currentPageNumber !== 1) && count($data) < 1) $_PAGE->Redirect("$adminUrl/$editCategory");
 
 if (isset($editId)) {
-    $pattern .= "/admin/$editCategory?action=edit&id=#";
+    $pattern .= "$editCategory?action=edit&id=#";
 } else {
     $all_count_execute = [];
     if (isset($search)) {
-        $pattern .= "/admin/$editCategory?search=".addslashes(htmlspecialchars(trim($search)))."&page=#";
+        $pattern .= "$editCategory?search=".addslashes(htmlspecialchars(trim($search)))."&page=#";
         $all_count = "SELECT COUNT(`id`) `counter` FROM `{$_CATEGORIES->GetTable()}` WHERE `name` LIKE :search";
         $all_count_execute = ['search' => "%$search%"];
     } else {
-        $pattern .= "/admin/$editCategory?page=#";
+        $pattern .= "$editCategory?page=#";
         $all_count = "SELECT COUNT(`id`) `counter` FROM `{$_CATEGORIES->GetTable()}`";
     }
 
@@ -105,7 +105,7 @@ if (isset($editId)) {
     <div class="page__title">
         <div class="container">
             <a href="/"><img src="/assets/icons/logo.svg" class="logo" alt="<?=$_COMPANY->name?>"></a>
-            <h1 class="container"><a href="/admin"><?= $_PAGE->title ?></a> - <a href="/admin/<?= $editCategory ?>"><?= $_PAGE->description ?></a></h1>
+            <h1 class="container"><a href="/<?=$adminUrl?>"><?= $_PAGE->title ?></a> - <a href="<?= $editCategory ?>"><?= $_PAGE->description ?></a></h1>
         </div>
     </div>
     <main style="min-height: 35vh;">
@@ -116,7 +116,7 @@ if (isset($editId)) {
 
                     <?php if ($action === "add"): // создание?>
 
-                        <form method="POST" action="/admin/actions/<?=$editCategory?>/add" id="formData">
+                        <form method="POST" action="actions/<?=$editCategory?>/add" id="formData">
                             <label class="item">
                                 <span>Название<span class="error">*</span></span>
                                 <input type="text" name="name" require class="field" maxlength="255">
@@ -128,7 +128,7 @@ if (isset($editId)) {
                             <input type="hidden" name="action" value="add">
                             <div class="item flex-row flex-wrap justify-content-between gap-20">
                                 <input type="submit" class="button w-100" value="Добавить">
-                                <a href="/admin/<?=$editCategory?>" class="button secondary w-100">Отмена</a>
+                                <a href="<?=$editCategory?>" class="button secondary w-100">Отмена</a>
                             </div>
                         </form>
 
@@ -137,7 +137,7 @@ if (isset($editId)) {
                         <?php if (isset($editId)): // редактирование?>
 
                             <?php $item = $data['items'][0];?>
-                            <form method="POST" action="/admin/actions/<?=$editCategory?>/edit" id="formData">
+                            <form method="POST" action="actions/<?=$editCategory?>/edit" id="formData">
                                 <label class="item">
                                     <span>Название<span class="error">*</span></span>
                                     <input type="text" name="name" require class="field" maxlength="255" value="<?=$item['name']?>">
@@ -161,7 +161,7 @@ if (isset($editId)) {
                                 <input type="hidden" name="id" value="<?=$item['id']?>">
                                 <div class="item flex-row flex-wrap justify-content-between gap-20">
                                     <input type="submit" class="button w-100" value="Сохранить">
-                                    <a href="/admin/<?=$editCategory?>" class="button secondary w-100">Отмена</a>
+                                    <a href="<?=$editCategory?>" class="button secondary w-100">Отмена</a>
                                     <input type="button" class="button error delete w-100" value="Удалить">
                                 </div>
                             </form>
@@ -174,7 +174,7 @@ if (isset($editId)) {
                                 </div>
                             </form>
 
-                            <a class="button shadowBox" href="/admin/<?=$editCategory?>?action=add">Добавить категорию</a>
+                            <a class="button shadowBox" href="<?=$editCategory?>?action=add">Добавить категорию</a>
 
                             <?php if(count($data) > 0):?>
 
@@ -184,7 +184,7 @@ if (isset($editId)) {
                                         $item['id'] = (int) $item['id'];
                                         $item['name'] = trim($item['name']);?>
 
-                                        <a class="item shadowBox" href="/admin/<?=$editCategory?>?action=edit&id=<?=$item['id']?>">
+                                        <a class="item shadowBox" href="<?=$editCategory?>?action=edit&id=<?=$item['id']?>">
                                             <div class="item-content d-flex flex-column align-items-start">
                                                 <span class="d-flex flex-row flex-wrap gap-5"><?=$item['name']?></span>
                                             </div>

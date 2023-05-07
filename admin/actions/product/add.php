@@ -48,24 +48,6 @@ if (isset($_POST['countryId'])) {
     $_POST['countryId'] = null;
 }
 
-if (isset($_POST['payment_object_id'])) {
-    $_POST['payment_object_id'] =
-        trim($_POST['payment_object_id']) !== "" ?
-            (int) $_POST['payment_object_id'] : null;
-    if (isset($_POST['payment_object_id'])) {
-        if ($_POST['payment_object_id'] < 1) {
-            $response['info'][] = "Указан неверный признака предмета расчёта";
-            $response['status'] = false;
-        }
-    } else {
-        $response['info'][] = "Укажите признака предмета расчёта";
-        $response['status'] = false;
-    }
-} else {
-    $response['info'][] = "Укажите признака предмета расчёта";
-    $response['status'] = false;
-}
-
 if (isset($_POST['instructionId'])) {
     $_POST['instructionId'] =
         trim($_POST['instructionId']) !== "" ?

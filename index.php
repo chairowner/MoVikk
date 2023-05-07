@@ -1,11 +1,10 @@
 <?php
-set_include_path(".");
+set_include_path("./");
 require_once('includes/autoload.php');
 require_once('functions/formatPrice.php');
 $_PAGE = new Page($conn);
 $_COMPANY = new Company($conn);
 $_USER = new User($conn);
-$_CART = new Cart($conn);
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -57,12 +56,18 @@ $_CART = new Cart($conn);
                 </div>
             </div>
         </section>
-        <section>
-            <div class="container">
-                <h2 class="text-center">При покупке оборудования, обучение по эксплуатации в подарок!</h2>
-                <iframe class="video-block" src="https://vk.com/video_ext.php?oid=-179978507&id=456240267&hash=fd0b36296619d848&hd=2" allow="autoplay; encrypted-media; fullscreen; picture-in-picture;" frameborder="0" allowfullscreen></iframe>
-            </div>
-        </section>
+        <?php
+        $welcomeVideo = $conn->prepare("SELECT `value` FROM `additional_fields` WHERE `name` = 'main_page_welcome_video'");
+        $welcomeVideo->execute();
+        $welcomeVideo = $welcomeVideo->fetch(PDO::FETCH_ASSOC);
+        if(isset($welcomeVideo) && isset($welcomeVideo['value']) && !empty(trim($welcomeVideo['value']))):?>
+            <section>
+                <div class="container">
+                    <h2 class="text-center">При покупке оборудования, обучение по эксплуатации в подарок!</h2>
+                    <iframe class="video-block" src="<?=trim($welcomeVideo['value'])?>" allow="autoplay; encrypted-media; allowfullscreen; picture-in-picture;" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </section>
+        <?php endif;?>
         <section>
             <?php
             $features = [

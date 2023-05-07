@@ -1,4 +1,6 @@
 <?php
+# Версия приложения
+define('APP_VERSION', '1.0.0');
 # Режим разрабоки
 define('DEBUG_MODE', true);
 # Публичный reCAPTCHA ключ
