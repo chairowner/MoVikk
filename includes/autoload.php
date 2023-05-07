@@ -2,7 +2,7 @@
 # Версия приложения
 define('APP_VERSION', '1.0.0');
 # Режим разрабоки
-define('DEBUG_MODE', true);
+define('DEBUG_MODE', false);
 # Публичный reCAPTCHA ключ
 define('reCAPTCHA_SITE_KEY', '6LdyVx8jAAAAAFpzmmmkEB4Hr_pAanZrZ-YxMz3L');
 # Секретный reCAPTCHA ключ

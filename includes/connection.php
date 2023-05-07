@@ -4,13 +4,13 @@ if (DEBUG_MODE) error_reporting(E_ALL);
 else error_reporting(0);
 
 # адрес сервера (имя хоста или IP-адрес)
-define('DATABASE_HOST', "192.168.31.39");
+define('DATABASE_HOST', "");
 # имя пользователя базы данных
-define('DATABASE_USER', "cv33474_movikk");
+define('DATABASE_USER', "");
 # пароль базы  данных
-define('DATABASE_PASS', "#L!Aqu1f511BqmZN%n6xOYW");
+define('DATABASE_PASS', "");
 # имя базы данных
-define('DATABASE_NAME', "cv33474_movikk");
+define('DATABASE_NAME', "");
 
 try /* создание подключения */ {
 	$conn = new PDO(
