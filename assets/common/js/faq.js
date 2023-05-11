@@ -1,9 +1,8 @@
-
 for (let i = 0; i < $('.question.open').length; i++) {
     const item = $($('.question.open').get(i));
     item.find('.answer').css({
         padding: '20px',
-        height: (item.find('.answer span').height() * 3) + 'px',
+        height: (item.find('.answer span').height() + 40) + 'px',
         opacity: 1
     });
 }
@@ -15,7 +14,7 @@ $('.question').on('click', function(){
     if (item.hasClass('open')) {
         params = {
             padding: '20px',
-            height: (item.find('.answer span').height() * 3) + 'px',
+            height: (item.find('.answer span').height() + 40) + 'px',
             opacity: 1
         };
     } else {

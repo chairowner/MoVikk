@@ -66,7 +66,19 @@ if ($product['notFound']) {
                                 <?php endif;?>
                             </div>
                             <div class="addCart_wrapper">
-                                <?php if(!empty($product['country']) || !empty($product['techSpec']) || !empty($product['features'])):?>
+                                <div class="addCart shadowBox">
+                                    <div class="addCart__price">
+                                        <span style="font-weight: 270;" class="addCart__price__main">Стоимость:</span>
+                                        <?php // есть ли скидка
+                                        if($product['sale'] > 0):?>
+                                            <strong class="addCart__price__main"><?=formatPrice(($product['price'] - ($product['price'] * $product['sale'] / 100)))?></strong>
+                                            <span class="addCart__price__old"><?=formatPrice($product['price'])?></span>
+                                        <?php else:?>
+                                            <strong class="addCart__price__main"><?=formatPrice($product['price'])?></strong>
+                                        <?php endif;?>
+                                    </div>
+                                </div>
+                                <?php if(!empty($product['country']) || !empty($product['techSpec']) || !empty($product['features']) || !empty($product['width']) || !empty($product['height']) || !empty($product['length'])):?>
                                     <div class="product__shortInfo_desc shadowBox custom-scroll">
                                         <?php if (!empty($product['country'])):?>
                                             <div class="shortInfo__desc__country item">
@@ -96,6 +108,22 @@ if ($product['notFound']) {
                                                 </div>
                                             </div>
                                         <?php endif;?>
+                                        <?php if(!empty($product['width']) || !empty($product['height']) || !empty($product['length'])):?>
+                                            <div class="shortInfo__desc__lists item">
+                                                <strong class="headTitle">Размеры</strong>
+                                                <div class="shortInfo__desc__lists__list">
+                                                    <?php if(!empty($product['width'])):?>
+                                                        <span class="item"><strong>Ширина</strong>: <?=$product['width']?></span>
+                                                    <?php endif;?>
+                                                    <?php if(!empty($product['height'])):?>
+                                                        <span class="item"><strong>Высота</strong>: <?=$product['height']?></span>
+                                                    <?php endif;?>
+                                                    <?php if(!empty($product['length'])):?>
+                                                        <span class="item"><strong>Длина</strong>: <?=$product['length']?></span>
+                                                    <?php endif;?>
+                                                </div>
+                                            </div>
+                                        <?php endif;?>
                                     </div>
                                 <?php endif;?>
                             </div>
@@ -106,6 +134,14 @@ if ($product['notFound']) {
                                 <p class="product__description__data"><?=$product['description']?></p>
                             </div>
                         </div>
+                        <?php if(isset($product['instructionId']) && (int)$product['instructionId'] > 0):?>
+                            <div class="product__row">
+                                <div class="product__description shadowBox">
+                                    <h2 class="product__description__title">Инструкция</h2>
+                                    <p class="product__description__data"><a href="/study/<?=$product['instructionId']?>" class="d-flex align-items-center"><img src="/assets/icons/document.svg" width="20px"> Перейти к инструкции</a></p>
+                                </div>
+                            </div>
+                        <?php endif;?>
                     </div>
                 <?php endif;?>
             </div>

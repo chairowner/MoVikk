@@ -44,17 +44,17 @@ if (isset($_GET['page'])) {
 if (isset($editId)) {
     $categories = $_CATEGORIES->Get("all");
     $data = $_PRODUCTS->getProduct($editId,"",true);
-    if (!isset($data)||$data['notFound']) $_PAGE->Redirect("$adminUrl/$editCategory");
+    if (!isset($data)||$data['notFound']) $_PAGE->Redirect(ADMIN_URL."/$editCategory");
 } else {
     if ($action !== "create") {
         $execute = [];
         $categories = $_CATEGORIES->Get("all");
         if (isset($_GET['search']) && trim($_GET['search']) !== "") {
             $search = trim($_GET['search']);
-            $data = "SELECT `c`.`name` `categoryName`,`p`.`name`,`p`.`id`,`p`.`description`,`p`.`count`,`p`.`price`,`p`.`sale`,`p`.`isDeleted` FROM `{$_PRODUCTS->GetTable()}` `p` INNER JOIN `{$_CATEGORIES->GetTable()}` `c` ON `c`.`id` = `p`.`categoryId` WHERE `p`.`name` LIKE :search LIMIT ".(($currentPageNumber - 1) * $viewCount).", ".$viewCount;
+            $data = "SELECT `c`.`name` `categoryName`,`p`.`name`,`p`.`id`,`p`.`description`,`p`.`price`,`p`.`sale`,`p`.`isDeleted` FROM `{$_PRODUCTS->GetTable()}` `p` INNER JOIN `{$_CATEGORIES->GetTable()}` `c` ON `c`.`id` = `p`.`categoryId` WHERE `p`.`name` LIKE :search LIMIT ".(($currentPageNumber - 1) * $viewCount).", ".$viewCount;
             $execute['search'] = "%$search%";
         } else {
-            $data = "SELECT `c`.`name` `categoryName`,`p`.`name`,`p`.`id`,`p`.`description`,`p`.`count`,`p`.`price`,`p`.`sale`,`p`.`isDeleted` FROM `{$_PRODUCTS->GetTable()}` `p` INNER JOIN `{$_CATEGORIES->GetTable()}` `c` ON `c`.`id` = `p`.`categoryId` LIMIT ".(($currentPageNumber - 1) * $viewCount).", ".$viewCount;
+            $data = "SELECT `c`.`name` `categoryName`,`p`.`name`,`p`.`id`,`p`.`description`,`p`.`price`,`p`.`sale`,`p`.`isDeleted` FROM `{$_PRODUCTS->GetTable()}` `p` INNER JOIN `{$_CATEGORIES->GetTable()}` `c` ON `c`.`id` = `p`.`categoryId` LIMIT ".(($currentPageNumber - 1) * $viewCount).", ".$viewCount;
         }
         $data = $conn->prepare($data);
         $data->execute($execute);
@@ -62,20 +62,22 @@ if (isset($editId)) {
     }
 }
 
-if (isset($editId) && count($data) < 1) $_PAGE->Redirect("$adminUrl/$editCategory");
-elseif (($currentPageNumber !== 1) && count($data) < 1) $_PAGE->Redirect("$adminUrl/$editCategory");
+if (isset($editId) && count($data) < 1) $_PAGE->Redirect(ADMIN_URL."/$editCategory");
+elseif (($currentPageNumber !== 1) && count($data) < 1) $_PAGE->Redirect(ADMIN_URL."/$editCategory");
 
-if (isset($editId)) {
-    $pattern .= "$editCategory?action=edit&id=#";
-} else {
+if (isset($editId) ) {
+    $pattern .= "/".ADMIN_URL."/$editCategory?action=edit&id=#";
+} elseif ($action === "add") {
+    $pattern .= "/".ADMIN_URL."/$editCategory?action=add";
+}else {
     $all_count_execute = [];
     if (isset($search)) {
-        $pattern .= "$editCategory?search=".addslashes(htmlspecialchars(trim($search)))."&page=#";
-        $all_count = "SELECT COUNT(`id`) `counter` FROM `{$_CATEGORIES->GetTable()}` WHERE `name` LIKE :search";
+        $pattern .= "/".ADMIN_URL."/$editCategory?search=".addslashes(htmlspecialchars(trim($search)))."&page=#";
+        $all_count = "SELECT COUNT(`id`) `counter` FROM `{$_PRODUCTS->GetTable()}` WHERE `name` LIKE :search";
         $all_count_execute = ['search' => "%$search%"];
     } else {
-        $pattern .= "$editCategory?page=#";
-        $all_count = "SELECT COUNT(`id`) `counter` FROM `{$_CATEGORIES->GetTable()}`";
+        $pattern .= "/".ADMIN_URL."/$editCategory?page=#";
+        $all_count = "SELECT COUNT(`id`) `counter` FROM `{$_PRODUCTS->GetTable()}`";
     }
 
     $all_count = $conn->prepare($all_count);
@@ -108,6 +110,7 @@ function getArray(PDO $conn, string $table) {
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="/classes/php-pagination/css/main.css">
     <link rel="stylesheet" href="assets/css/<?= $editCategory ?>.css">
+    <script defer src="/assets/common/js/disableForm.js"></script>
     <script defer src="/assets/common/js/showLoad.js"></script>
     <script defer src="/assets/common/js/formatPrice.js"></script>
     <script defer src="assets/js/actions.js"></script>
@@ -118,7 +121,7 @@ function getArray(PDO $conn, string $table) {
     <div class="page__title">
         <div class="container">
             <a href="/"><img src="/assets/icons/logo.svg" class="logo" alt="<?= $_COMPANY->name ?>"></a>
-            <h1 class="container"><a href="/<?=$adminUrl?>"><?= $_PAGE->title ?></a> - <a href="<?= $editCategory ?>"><?= $_PAGE->description ?></a></h1>
+            <h1 class="container"><a href="/<?=ADMIN_URL?>"><?= $_PAGE->title ?></a> - <a href="<?= $editCategory ?>"><?= $_PAGE->description ?></a></h1>
         </div>
     </div>
     <main style="min-height: 35vh;">
@@ -130,6 +133,12 @@ function getArray(PDO $conn, string $table) {
                     <?php if ($action === "add" || $action === "edit") : /* создание */ ?>
                         
                         <?php if (count($categories['items']) > 0) : /* если есть категории */ ?>
+                            
+                            <?php if($action === "edit"):?>
+                                <div class="text-center">
+                                    <a style="max-width: 600px; margin: 0 auto;" target="_blank" class="button" href="/product/<?=trim($data['href'])?>-<?=$data['id']?>">Открыть страницу товара</a>
+                                </div>
+                            <?php endif;?>
 
                             <form method="POST" enctype="multipart/form-data" redirectToCategory="false" action="actions/<?= $editCategory ?>/add" id="formData">
                                 <label class="item">
@@ -173,15 +182,11 @@ function getArray(PDO $conn, string $table) {
                                 </label>
                                 <label class="item">
                                     <span>Описание<span class="error">*</span></span>
-                                    <textarea name="description" class="field" maxlength="255"><?=isset($data['description'])?trim($data['description']):null?></textarea>
+                                    <textarea name="description" class="field"><?=isset($data['description'])?trim($data['description']):null?></textarea>
                                 </label>
                                 <label class="item">
                                     <span>Цена<span class="error">*</span></span>
                                     <input type="number" min="1" step="0.01" name="price" required class="field" value="<?=isset($data['price'])?(float)$data['price']:null?>">
-                                </label>
-                                <label class="item">
-                                    <span>Количество</span>
-                                    <input type="number" placeholder="0" min="0" step="1" name="count" class="field" value="<?=isset($data['count'])?(int)$data['count']:null?>">
                                 </label>
                                 <label class="item">
                                     <span>Преймущества (разделять знаком ";")</span>

@@ -13,7 +13,7 @@ class Page {
     private string $mainTable = 'pages';
 
     public function __construct(PDO $conn = null) {
-        $this->current = substr(str_replace('.php','',$_SERVER['PHP_SELF']), 1);
+        $this->current = mb_substr(str_replace('.php','',$_SERVER['PHP_SELF']), 1);
         if (isset($conn)) {
             $pages = $conn->prepare("SELECT * FROM `{$this->mainTable}`");
             $pages->execute();
@@ -38,6 +38,10 @@ class Page {
                 }
             }
         }
+    }
+
+    public function GetTable():string {
+        return $this->mainTable;
     }
 
     /**

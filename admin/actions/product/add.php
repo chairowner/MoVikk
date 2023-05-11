@@ -165,15 +165,6 @@ if (isset($_POST['techSpec'])) {
     $_POST['techSpec'] = null;
 }
 
-if (isset($_POST['count'])) {
-    $_POST['count'] =
-        trim($_POST['count']) !== "" ?
-            (int)$_POST['count'] : 0;
-    if ($_POST['count'] < 0) $_POST['count'] = 0;
-} else {
-    $_POST['count'] = 0;
-}
-
 if (isset($_POST['price'])) {
     if (trim($_POST['price']) !== "") {
         $_POST['price'] = (float)$_POST['price'];
@@ -219,6 +210,6 @@ if (isset($_FILES) && !empty($_FILES)) {
     $_POST['files'] = [];
 }
 
-if ($response['status']) $response = $_PRODUCT->add($_POST);
+if ($response['status']) $response = $_PRODUCT->Add($_POST);
 
 exit(json_encode($response, JSON_UNESCAPED_UNICODE)); // return

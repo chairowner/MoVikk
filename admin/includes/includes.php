@@ -3,8 +3,6 @@
 $editCategory = explode('/', $_SERVER['PHP_SELF']);
 $editCategory = basename($editCategory[count($editCategory) - 1], '.php');
 
-$adminUrl = basename(dirname(__DIR__));
-
 $action = null;
 $editId = null;
 if (isset($_GET['action'])) {

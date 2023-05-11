@@ -5,9 +5,9 @@
                 <img class="social-icon" src="/assets/icons/social-vk.svg" alt="ВКонтакте">
                 <span><?=$_COMPANY->socials['vk']['title']?></span>
             </a>
-            <a target="_blank" href="<?=$_COMPANY->socials['instagram']['href']?>" class="text-uppercase d-flex align-items-center" title="<?=$_COMPANY->socials['instagram']['name']?>">
-            <img class="social-icon" src="/assets/icons/social-instagram.svg" alt="Инстаграм">
-                <span><?=$_COMPANY->socials['instagram']['title']?></span>
+            <a target="_blank" href="<?=$_COMPANY->socials['telegram']['href']?>" class="text-uppercase d-flex align-items-center" title="<?=$_COMPANY->socials['telegram']['name']?>">
+            <img class="social-icon" src="/assets/icons/social-telegram.svg" alt="Инстаграм">
+                <span><?=$_COMPANY->socials['telegram']['title']?></span>
             </a>
         </div>
         <a href="/" class="text-uppercase" title="<?=$_COMPANY->name?>">
@@ -44,7 +44,7 @@
                     </a>
                     <?php if(!$_USER->isGuest()):?>
                         <div class="lk-menu shadowBox">
-                            <a href="/admin" class="item" title="Административная панель">Административная панель</a>
+                            <a href="/<?=ADMIN_URL?>" class="item" title="Административная панель">Административная панель</a>
                             <span class="item lk-menu-exit" title="Выйти">Выйти</span>
                         </div>
                     <?php endif;?>
@@ -63,17 +63,30 @@
                 '/shop' => [
                     'title' => 'Каталог',
                     'icon' => 'shop.svg',
+                ],
+                '/study' => [
+                    'title' => 'Обучение',
+                    'icon' => 'study.svg',
+                ],
+                '/faq' => [
+                    'title' => 'FAQ',
+                    'icon' => 'faq.svg',
                 ]
             ];
-            $headerAdd['/admin'] = [
-                'title' => 'Административная панель',
-                'icon' => 'user.svg',
-            ];
+            if (!$_USER->isGuest()) {
+                $headerAdd['/admin'] = [
+                    'title' => 'Административная панель',
+                    'icon' => 'user.svg',
+                ];
+            }
             foreach($headerAdd as $href => $item):?>
                 <div class="item mobile">
-                    <?php if($href === '/admin' &&!$_USER->isGuest()):?>
+                    <a class="item__data" href="<?=$href?>">
+                        <img src="/assets/icons/<?=$item['icon']?>" alt="<?=$item['title']?>" title="<?=$item['title']?>">
+                    </a>
+                    <?php if($href === '/admin' && !$_USER->isGuest()):?>
                         <div class="lk-menu shadowBox">
-                            <a href="/admin" class="item" title="Административная панель">Административная панель</a>
+                            <a href="/<?=ADMIN_URL?>" class="item" title="Административная панель">Административная панель</a>
                             <span class="item lk-menu-exit" title="Выйти">Выйти</span>
                         </div>
                     <?php endif;?>

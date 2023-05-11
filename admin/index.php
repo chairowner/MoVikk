@@ -13,10 +13,12 @@ if (!$_USER->isAdmin()) {
 
 $items = [
     // 'user' => ['text' => 'Пользователи', 'title' => 'Список пользователей'],
+    'company' => ['text' => 'Компания', 'title' => 'Данные о компании'],
+    'page' => ['text' => 'Страницы', 'title' => 'Список страниц'],
     'category' => ['text' => 'Категории', 'title' => 'Список категорий'],
     'product' => ['text' => 'Товары', 'title' => 'Список товаров'],
-    'instruction' => ['text' => 'Инструкции', 'title' => 'Список инструкций'],
     'country' => ['text' => 'Страны-изготовители', 'title' => 'Список стран-изготовителей'],
+    'instruction' => ['text' => 'Инструкции', 'title' => 'Список инструкций'],
     'faq' => ['text' => 'FAQ', 'title' => 'Часто задаваемые вопросы и ответы на них'],
     'additionalFields' => ['text' => 'Дополнительные поля', 'title' => 'Дополнительные поля'],
 ];
@@ -38,7 +40,7 @@ $items = [
         <section class="m-0">
             <div id="main">
                 <div class="container">
-                    <div class="item-list">
+                    <div class="item-list center">
                         <?php foreach ($items as $href => $item):?>
                             <a class="item shadowBox" href="<?=$href?>" title="<?=$item['title']?>"><?=$item['text']?></a>
                         <?php endforeach;?>

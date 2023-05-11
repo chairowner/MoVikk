@@ -1,5 +1,4 @@
 const mainMessageBox = $('#mainMessageBox');
-const mainCartCounter = $('.cart_number');
 const lkLink ='.header-nav__icons .item .item__data[href="/admin"]';
 const lk = $(lkLink);
 const menu = $('.lk-menu');

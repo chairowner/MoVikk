@@ -1,5 +1,10 @@
 .item-list > .item {
     font-weight: normal !important;
+    display: flex;
+}
+.item-list.additional > .item {
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 .page__title {
     margin-top: 0;

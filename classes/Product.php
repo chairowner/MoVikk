@@ -47,12 +47,12 @@ class Product {
      * @param array $execute параметры товара
      * @return array
      */
-    function add(array $execute) {
+    function Add(array $execute) {
+        $response = [
+            'status' => false,
+            'info' => []
+        ];
         try {
-            $response = [
-                'status' => false,
-                'info' => []
-            ];
             if (!isset($execute['name']) || !isset($execute['href'])) {
                 $response['info'][] = 'Не указаны имя или ссылка на категорию';
                 return $response;
@@ -68,9 +68,9 @@ class Product {
 
             $sql =
             "INSERT INTO `{$this->mainTable}`
-            (`categoryId`, `countryId`, `instructionId`, `href`, `name`, `description`, `height`, `width`, `length`, `features`, `techSpec`, `count`, `price`, `sale`)
+            (`categoryId`, `countryId`, `instructionId`, `href`, `name`, `description`, `height`, `width`, `length`, `features`, `techSpec`, `price`, `sale`)
             VALUES
-            (:categoryId, :countryId, :instructionId, , :href, :name, :description, :height, :width, :length, :features, :techSpec, :count, :price, :sale)";
+            (:categoryId, :countryId, :instructionId, :href, :name, :description, :height, :width, :length, :features, :techSpec, :price, :sale)";
             $query = $this->conn->prepare($sql);
             if ($query->execute($execute)) {
                 $response['id'] = (int)$this->conn->lastInsertId();
@@ -147,10 +147,10 @@ class Product {
                 $images_count = count($images['error']);
             }
 
-            $sql = "UPDATE `{$this->mainTable}` SET `categoryId` = :categoryId, `countryId` = :countryId, `instructionId` = :instructionId, `href` = :href, `name` = :name, `description` = :description, `height` = :height, `width` = :width, `length` = :length, `features` = :features, `techSpec` = :techSpec, `count` = :count, `price` = :price, `sale` = :sale WHERE `id` = :id";
+            $sql = "UPDATE `{$this->mainTable}` SET `categoryId` = :categoryId, `countryId` = :countryId, `instructionId` = :instructionId, `href` = :href, `name` = :name, `description` = :description, `height` = :height, `width` = :width, `length` = :length, `features` = :features, `techSpec` = :techSpec, `price` = :price, `sale` = :sale WHERE `id` = :id";
 
             if (DEBUG_MODE) {
-                $response['sql'] = "UPDATE `{$this->mainTable}` SET `categoryId` = '{$execute['categoryId']}', `countryId` = '{$execute['countryId']}', `instructionId` = '{$execute['instructionId']}', `href` = '{$execute['href']}', `name` = '{$execute['name']}', `description` = '{$execute['description']}', `height` = '{$execute['height']}', `width` = '{$execute['width']}', `length` = '{$execute['length']}', `features` = '{$execute['features']}', `techSpec` = '{$execute['techSpec']}', `count` = '{$execute['count']}', `price` = '{$execute['price']}', `sale` = '{$execute['sale']}' WHERE `id` = '{$execute['id']}'";
+                $response['sql'] = "UPDATE `{$this->mainTable}` SET `categoryId` = '{$execute['categoryId']}', `countryId` = '{$execute['countryId']}', `instructionId` = '{$execute['instructionId']}', `href` = '{$execute['href']}', `name` = '{$execute['name']}', `description` = '{$execute['description']}', `height` = '{$execute['height']}', `width` = '{$execute['width']}', `length` = '{$execute['length']}', `features` = '{$execute['features']}', `techSpec` = '{$execute['techSpec']}', `price` = '{$execute['price']}', `sale` = '{$execute['sale']}' WHERE `id` = '{$execute['id']}'";
             } 
 
             $query = $this->conn->prepare($sql);
@@ -294,7 +294,7 @@ class Product {
         $href = trim($href);
         try {
             $response = ['id'=>$id,'notFound'=>true];
-            $prepare = "SELECT `p`.`categoryId`,`p`.`countryId`,`p`.`instructionId`,`p`.`name`,`p`.`href`,`p`.`description`,`p`.`height`,`p`.`width`,`p`.`length`,`p`.`features`,`p`.`techSpec`,`p`.`count`,`p`.`price`,`p`.`sale`,`p`.`preOrder`,`p`.`keywords`,`p`.`sold`,`p`.`added`,`p`.`isDeleted` FROM `{$this->mainTable}` `p` WHERE `p`.`id` = :id";
+            $prepare = "SELECT `p`.`categoryId`,`p`.`countryId`,`p`.`instructionId`,`p`.`name`,`p`.`href`,`p`.`description`,`p`.`height`,`p`.`width`,`p`.`length`,`p`.`features`,`p`.`techSpec`,`p`.`price`,`p`.`sale`,`p`.`keywords`,`p`.`sold`,`p`.`added`,`p`.`isDeleted` FROM `{$this->mainTable}` `p` WHERE `p`.`id` = :id";
             $execute = ['id' => $id];
             if (!$isAdmin) {
                 $prepare .= " AND `href` = :href";
@@ -317,10 +317,11 @@ class Product {
             $response['description'] = isset($product['description']) ?
                 trim($product['description']) : null;
             $response['images'] = $this->getImages($id, $isAdmin);
-            $response['count'] = (int) ($product['count']);
             $response['price'] = (float)$product['price'];
             $response['sale'] = (float)$product['sale'];
-            $response['preOrder'] = (int) ($product['preOrder']) === 1 ? true : false;
+            $response['width'] = (double)$product['width'];
+            $response['height'] = (double)$product['height'];
+            $response['length'] = (double)$product['length'];
             $response['sold'] = (int) ($product['sold']);
             $response['keywords'] = isset($product['keywords']) ? trim($product['keywords']) : null;
             $response['added'] = new DateTime($product['added']);

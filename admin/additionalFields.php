@@ -22,7 +22,7 @@ if (isset($editId)) {
     $data = $conn->prepare("SELECT `id`, `title`, `value` FROM `additional_fields` WHERE `id` = :id");
     $data->execute(['id' => $editId]);
     $data = $data->fetch();
-    if (!isset($data)) $_PAGE->Redirect("$adminUrl/$editCategory");
+    if (!isset($data)) $_PAGE->Redirect(ADMIN_URL."/$editCategory");
 } else {
     $data = $conn->prepare("SELECT `id`, `title` FROM `additional_fields`");
     $data->execute();
@@ -34,6 +34,7 @@ if (isset($editId)) {
 <head>
     <?=$_PAGE->GetHead($_USER->isGuest(), "{$_PAGE->title} - {$_PAGE->description}", $_PAGE->description)?>
     <link rel="stylesheet" href="assets/css/main.css">
+    <script defer src="/assets/common/js/disableForm.js"></script>
     <script defer src="/assets/common/js/showLoad.js"></script>
     <script defer src="assets/js/actions.js"></script>
 </head>
@@ -41,7 +42,7 @@ if (isset($editId)) {
     <div class="page__title">
         <div class="container">
             <a href="/"><img src="/assets/icons/logo.svg" class="logo" alt="<?=$_COMPANY->name?>"></a>
-            <h1 class="container"><a href="/<?=$adminUrl?>"><?=$_PAGE->title?></a> - <a href="<?=$editCategory?>"><?=$_PAGE->description?></a></h1>
+            <h1 class="container"><a href="/<?=ADMIN_URL?>"><?=$_PAGE->title?></a> - <a href="<?=$editCategory?>"><?=$_PAGE->description?></a></h1>
         </div>
     </div>
     <main style="min-height: 35vh;">
@@ -63,7 +64,7 @@ if (isset($editId)) {
                             </label>
                             <label class="item">
                                 <span>Текст</span>
-                                <textarea name="value" class="field" maxlength="255"><?=isset($item['value'])?$item['value']:null?></textarea>
+                                <textarea name="value" class="field"><?=isset($item['value'])?$item['value']:null?></textarea>
                             </label>
                             <input type="hidden" name="id" value="<?=$item['id']?>">
                             <div class="item flex-row flex-wrap justify-content-between gap-20">
@@ -73,8 +74,6 @@ if (isset($editId)) {
                         </form>
 
                     <?php else: // вывод всех элементов?>
-
-                        <a class="button shadowBox" href="<?=$editCategory?>?action=add">Добавить вопрос</a>
 
                         <?php if(count($data) > 0):?>
 
@@ -96,7 +95,7 @@ if (isset($editId)) {
 
                         <?php else:?>
                             
-                            <p class="text-center">Не найдено ни одного вопроса</p>
+                            <p class="text-center">Не найдено ни одного дополнительного поля</p>
                             
                         <?php endif;?>
 
